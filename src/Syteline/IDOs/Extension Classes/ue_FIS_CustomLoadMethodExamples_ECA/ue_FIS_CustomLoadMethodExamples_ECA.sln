@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ue_FIS_CustomLoadMethodExamples_ECA", "ue_FIS_CustomLoadMethodExamples_ECA\ue_FIS_CustomLoadMethodExamples_ECA.csproj", "{37EB2A3E-A8B1-4D5F-A52D-FAF6E7EC8B27}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37EB2A3E-A8B1-4D5F-A52D-FAF6E7EC8B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37EB2A3E-A8B1-4D5F-A52D-FAF6E7EC8B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37EB2A3E-A8B1-4D5F-A52D-FAF6E7EC8B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37EB2A3E-A8B1-4D5F-A52D-FAF6E7EC8B27}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29C21CCC-1197-4647-9616-92C3F25CEE63}
+	EndGlobalSection
+EndGlobal
