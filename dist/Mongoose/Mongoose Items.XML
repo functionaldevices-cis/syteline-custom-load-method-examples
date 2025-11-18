@@ -135,11 +135,11 @@
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
                <ResponseType>8</ResponseType>
-               <Response>FDI_GenerateFilterStringSQL(FilterInPlaceValues) COLID(object)</Response>
+               <Response>ue_FIS_GenerateFilterString(FilterInPlaceValues) COLID(object)</Response>
             </EventHandler>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="1">
                <ResponseType>35</ResponseType>
-               <Response>FDI_ShowCurrentFilters() DISABLED()</Response>
+               <Response>ShowCurrentFilters() DISABLED()</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
@@ -183,13 +183,7 @@
                <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_01A</ScriptLine>
                <ScriptLine>   Inherits FormScript</ScriptLine>
                <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowFilter()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Application.ShowMessage(ThisForm.Variables("FilterInPlaceVariables").Value)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowCurrentFilters()</ScriptLine>
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
                <ScriptLine />
                <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
                <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
@@ -335,11 +329,11 @@
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
                <ResponseType>8</ResponseType>
-               <Response>FDI_GenerateFilterStringSQL(FilterInPlaceValues) COLID(object)</Response>
+               <Response>ue_FIS_GenerateFilterString(FilterInPlaceValues) COLID(object)</Response>
             </EventHandler>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="1">
                <ResponseType>35</ResponseType>
-               <Response>FDI_ShowCurrentFilters() DISABLED()</Response>
+               <Response>ShowCurrentFilters() DISABLED()</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
@@ -383,13 +377,7 @@
                <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_01B</ScriptLine>
                <ScriptLine>   Inherits FormScript</ScriptLine>
                <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowFilter()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Application.ShowMessage(ThisForm.Variables("FilterInPlaceVariables").Value)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowCurrentFilters()</ScriptLine>
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
                <ScriptLine />
                <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
                <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
@@ -535,11 +523,11 @@
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
                <ResponseType>8</ResponseType>
-               <Response>FDI_GenerateFilterStringSQL(FilterInPlaceValues) COLID(object)</Response>
+               <Response>ue_FIS_GenerateFilterString(FilterInPlaceValues) COLID(object)</Response>
             </EventHandler>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="1">
                <ResponseType>35</ResponseType>
-               <Response>FDI_ShowCurrentFilters() DISABLED()</Response>
+               <Response>ShowCurrentFilters() DISABLED()</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
@@ -583,13 +571,7 @@
                <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_01C</ScriptLine>
                <ScriptLine>   Inherits FormScript</ScriptLine>
                <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowFilter()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Application.ShowMessage(ThisForm.Variables("FilterInPlaceVariables").Value)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowCurrentFilters()</ScriptLine>
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
                <ScriptLine />
                <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
                <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
@@ -735,11 +717,11 @@
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
                <ResponseType>8</ResponseType>
-               <Response>FDI_GenerateFilterStringSQL(FilterInPlaceValues) COLID(object)</Response>
+               <Response>ue_FIS_GenerateFilterString(FilterInPlaceValues) COLID(object)</Response>
             </EventHandler>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="1">
                <ResponseType>35</ResponseType>
-               <Response>FDI_ShowCurrentFilters() DISABLED()</Response>
+               <Response>ShowCurrentFilters() DISABLED()</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
@@ -783,13 +765,7 @@
                <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_01D</ScriptLine>
                <ScriptLine>   Inherits FormScript</ScriptLine>
                <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowFilter()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Application.ShowMessage(ThisForm.Variables("FilterInPlaceVariables").Value)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowCurrentFilters()</ScriptLine>
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
                <ScriptLine />
                <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
                <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
@@ -935,11 +911,11 @@
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
                <ResponseType>8</ResponseType>
-               <Response>FDI_GenerateFilterStringSQL(FilterInPlaceValues) COLID(object)</Response>
+               <Response>ue_FIS_GenerateFilterString(FilterInPlaceValues) COLID(object)</Response>
             </EventHandler>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="1">
                <ResponseType>35</ResponseType>
-               <Response>FDI_ShowCurrentFilters() DISABLED()</Response>
+               <Response>ShowCurrentFilters() DISABLED()</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
@@ -983,13 +959,7 @@
                <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_02</ScriptLine>
                <ScriptLine>   Inherits FormScript</ScriptLine>
                <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowFilter()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Application.ShowMessage(ThisForm.Variables("FilterInPlaceVariables").Value)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowCurrentFilters()</ScriptLine>
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
                <ScriptLine />
                <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
                <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
@@ -1150,6 +1120,7 @@
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
+               <PropertyClassName>PriceCode</PropertyClassName>
                <Post301Format />
                <EffectiveCaption>sPriceCode</EffectiveCaption>
             </Component>
@@ -1157,7 +1128,7 @@
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
                <ResponseType>8</ResponseType>
-               <Response>FDI_GenerateFilterStringSQL(FilterInPlaceValues) COLID(object)</Response>
+               <Response>ue_FIS_GenerateFilterString(FilterInPlaceValues) COLID(object)</Response>
             </EventHandler>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="1">
                <ResponseType>35</ResponseType>
@@ -1205,13 +1176,7 @@
                <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_03A</ScriptLine>
                <ScriptLine>   Inherits FormScript</ScriptLine>
                <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowFilter()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Application.ShowMessage(ThisForm.Variables("FilterInPlaceVariables").Value)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowCurrentFilters()</ScriptLine>
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
                <ScriptLine />
                <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
                <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
@@ -1372,6 +1337,7 @@
                <ReadOnly>True</ReadOnly>
                <Hidden>False</Hidden>
                <HelpContextID>0</HelpContextID>
+               <PropertyClassName>PriceCode</PropertyClassName>
                <Post301Format />
                <EffectiveCaption>sPriceCode</EffectiveCaption>
             </Component>
@@ -1379,11 +1345,11 @@
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
                <ResponseType>8</ResponseType>
-               <Response>FDI_GenerateFilterStringSQL(FilterInPlaceValues) COLID(object)</Response>
+               <Response>ue_FIS_GenerateFilterString(FilterInPlaceValues) COLID(object)</Response>
             </EventHandler>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="1">
                <ResponseType>35</ResponseType>
-               <Response>FDI_ShowCurrentFilters() DISABLED()</Response>
+               <Response>ShowCurrentFilters() DISABLED()</Response>
             </EventHandler>
          </EventHandlers>
          <Variables>
@@ -1427,13 +1393,7 @@
                <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_03B</ScriptLine>
                <ScriptLine>   Inherits FormScript</ScriptLine>
                <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowFilter()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Application.ShowMessage(ThisForm.Variables("FilterInPlaceVariables").Value)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub FDI_ShowCurrentFilters()</ScriptLine>
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
                <ScriptLine />
                <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
                <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
@@ -1446,4 +1406,397 @@
          </Script>
       </Form>
    </Forms>
+   <Scripts Type="6">
+      <Script Language="Visual C#" Name="ue_FIS_GenerateFilterString" Scope="1" ScopeName="[NULL]">
+         <ScriptLines>
+            <ScriptLine>using System;</ScriptLine>
+            <ScriptLine>using System.Linq;</ScriptLine>
+            <ScriptLine>using Microsoft.VisualBasic;</ScriptLine>
+            <ScriptLine>using Mongoose.IDO.Protocol;</ScriptLine>
+            <ScriptLine>using Mongoose.Scripting;</ScriptLine>
+            <ScriptLine>using System.Collections.Generic;</ScriptLine>
+            <ScriptLine>using System.Globalization;</ScriptLine>
+            <ScriptLine>using System.Threading;</ScriptLine>
+            <ScriptLine>using System.Linq.Expressions;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>namespace Mongoose.GlobalScripts</ScriptLine>
+            <ScriptLine>{</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>    public class ue_FIS_GenerateFilterString : GlobalScript</ScriptLine>
+            <ScriptLine>    {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        /**********************************************************************************************************/</ScriptLine>
+            <ScriptLine>        /**********************************************************************************************************/</ScriptLine>
+            <ScriptLine>        /*</ScriptLine>
+            <ScriptLine>        /* Name:     ue_FIS_GenerateFilterString</ScriptLine>
+            <ScriptLine>        /* Date:     2025-11-18</ScriptLine>
+            <ScriptLine>        /* Authors:  Andy Mercer</ScriptLine>
+            <ScriptLine>        /* Purpose:  This script will build an SQL filter string that can be sent to Custom Load Methods using the</ScriptLine>
+            <ScriptLine>        /*           values which the user has entered while in FilterInPlace mode on a form. It should be triggered</ScriptLine>
+            <ScriptLine>        /*           from the StdFormFilterInPlaceExecute event. For an example, look at the Resources form, which</ScriptLine>
+            <ScriptLine>        /*           uses the Vendor script GenerateFilterStringXML, which is what this script is based on. The</ScriptLine>
+            <ScriptLine>        /*           difference between this and the vendor XML version is that this script will give the exact same</ScriptLine>
+            <ScriptLine>        /*           SQL string that you'd get from ThisForm.PrimaryIDOCollection.Filter.</ScriptLine>
+            <ScriptLine>        /*</ScriptLine>
+            <ScriptLine>        /* Copyright 2025, Functional Devices, Inc</ScriptLine>
+            <ScriptLine>        /*</ScriptLine>
+            <ScriptLine>        /**********************************************************************************************************/</ScriptLine>
+            <ScriptLine>        /**********************************************************************************************************/</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        public void Main()</ScriptLine>
+            <ScriptLine>        {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            try</ScriptLine>
+            <ScriptLine>            {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // RETRIEVE AND VALIDATE THE PARAMETERS</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                string variableName = this.GetParameterWithDefault(0, "vFilterString");</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // LOOP THROUGH ALL PROPERTIES AND GENERATE THE SQL STRING</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                string SQL = this.GenerateFromCollection();</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // INSERT THE SQL STRING INTO THE FORM VARIABLE</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                this.ThisForm.Variables(variableName).SetValue(SQL);</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // SET RETURN VALUE TO 0 FOR SUCCESS</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                this.ReturnValue = "0";</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            }</ScriptLine>
+            <ScriptLine>            catch (Exception ex)</ScriptLine>
+            <ScriptLine>            {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // SHOW ERROR</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                this.Application.ShowMessage("FDI_GenerateFilterStringSQL Error: " + ex.Message);</ScriptLine>
+            <ScriptLine>                this.ReturnValue = "1";</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        public string GenerateFromCollection()</ScriptLine>
+            <ScriptLine>        {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            // SET UP VARIABLES</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            IWSIDOCollection currentCollection = this.ThisForm.CurrentIDOCollection;</ScriptLine>
+            <ScriptLine>            IDictionary&lt;string, IWSFormComponent&gt; components = this.ThisForm.Components;</ScriptLine>
+            <ScriptLine>            List&lt;Filter&gt; filters = new List&lt;Filter&gt;();</ScriptLine>
+            <ScriptLine>            Filter filter = new Filter();</ScriptLine>
+            <ScriptLine>            string propertyName;</ScriptLine>
+            <ScriptLine>            string propertyValue;</ScriptLine>
+            <ScriptLine>            int counter;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            // LOOP THROUGH THE PROPERTIES ON THE PRIMARY IDO COLLECTION</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            for (counter = 0; counter &lt;= currentCollection.GetNumProperties() - 1; counter++)</ScriptLine>
+            <ScriptLine>            {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // GET THE CURRENT PROPERTY NAME AND VALUE</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                propertyName = currentCollection.GetPropertyName(counter);</ScriptLine>
+            <ScriptLine>                propertyValue = currentCollection.CurrentItem[propertyName].Value.Trim();</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // IF THE PROPERTY HASN'T BEEN INTERACTED WITH BY THE USER OR ISN'T EVEN ON THE FORM, THEN SKIP TO NEXT PROPERTY</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                if (propertyValue.Length &gt; 0 &amp;&amp; currentCollection.GetComponentsBoundToProperty(propertyName).Count &gt; 0)</ScriptLine>
+            <ScriptLine>                {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    // PASS IN THE PROPERTY NAME, VALUE, AND TYPE TO THE FILTER CLASS, WHICH WILL CONVERT IT TO THE </ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    filter = new Filter(</ScriptLine>
+            <ScriptLine>                        propertyName: propertyName,</ScriptLine>
+            <ScriptLine>                        propertyValue: propertyValue.Replace(this.Application.WildCardCharacter, "%"),</ScriptLine>
+            <ScriptLine>                        propertyType: components[currentCollection.GetComponentsBoundToProperty(propertyName).First()].DataType.ToLower()</ScriptLine>
+            <ScriptLine>                    );</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    // BUILD THE FILTER STRING(S) AND ADD TO LIST</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    filters.Add(filter);</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                }</ScriptLine>
+            <ScriptLine>            }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            // JOIN THE FILTERS LIST AND RETURN</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            return string.Join(" AND ", filters.SelectMany(f =&gt; f.FilterStrings));</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        public string GetParameterWithDefault(int index, string defaultValue = "")</ScriptLine>
+            <ScriptLine>        {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            string parameterValue = defaultValue;</ScriptLine>
+            <ScriptLine>            string rawParameterValue;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            // VALIDATE THE PARAMETER COUNT</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            if (this.ParameterCount() &gt; index)</ScriptLine>
+            <ScriptLine>            {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                rawParameterValue = this.GetParameter(0);</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                // VALIDATE THAT THE VALUE ISN'T NULL OR EMPTY</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                if (rawParameterValue != null &amp;&amp; rawParameterValue.Length &gt; 0)</ScriptLine>
+            <ScriptLine>                {</ScriptLine>
+            <ScriptLine>                    parameterValue = rawParameterValue;</ScriptLine>
+            <ScriptLine>                }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            return parameterValue;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>    }</ScriptLine>
+            <ScriptLine>    public class Filter {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        public string PropertyName { get; set; }</ScriptLine>
+            <ScriptLine>        public string PropertyValue { get; set; }</ScriptLine>
+            <ScriptLine>        public string OperatorString { get; set; }</ScriptLine>
+            <ScriptLine>        public string MatchMethod { get; set; }</ScriptLine>
+            <ScriptLine>        public string PropertyType { get; set; }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        public List&lt;string&gt; FilterStrings {</ScriptLine>
+            <ScriptLine>            get {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                List&lt;string&gt; filters = new List&lt;string&gt;();</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                switch (this.PropertyType) {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    // decimal | char | date | i1 | i2</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    case "date":</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        if (this.MatchMethod == "fuzzy") {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                            // TRY TO PARSE OUT THE DATE INTO THE MONTH, DAY, AND YEAR PARTS</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                            Dictionary&lt;string, string&gt; datePartPair = this.ParseDateWithWildcard(this.PropertyValue);</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                            // IF WE HAVE ALL THREE PARTS</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                            if (datePartPair.ContainsKey("DATE.YEAR") &amp; datePartPair.ContainsKey("DATE.MONTH") &amp; datePartPair.ContainsKey("DATE.DAY")) {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                // IF THE MONTH IS NOT A WILDCARD, THEN APPEND IT TO THE FILTER USING THE "DATEPART(mm, PROPERTYNAME)" SYNTAX</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                if (datePartPair["DATE.MONTH"] != "%") {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                    filters.Add(" ( " + "DATEPART( mm, " + this.PropertyName + " ) " + this.OperatorString + " N'" + datePartPair["DATE.MONTH"] + "' ) ");</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                // IF THE DAY IS NOT A WILDCARD, THEN APPEND IT TO THE FILTER USING THE "DATEPART(dd, PROPERTYNAME)" SYNTAX</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                if (datePartPair["DATE.DAY"] != "%") {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                    filters.Add(" ( " + "DATEPART( dd, " + this.PropertyName + " ) " + this.OperatorString + " N'" + datePartPair["DATE.DAY"] + "' ) ");</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                // IF THE YEAR IS NOT A WILDCARD, THEN APPEND IT TO THE FILTER USING THE "DATEPART(yyyy, PROPERTYNAME)" SYNTAX</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                if (datePartPair["DATE.YEAR"] != "%") {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                    filters.Add(" ( " + "DATEPART( yyyy, " + this.PropertyName + " ) " + this.OperatorString + " N'" + datePartPair["DATE.YEAR"] + "' ) ");</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                            }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        } else {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                            switch (this.OperatorString) {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                case "&gt;=":</ScriptLine>
+            <ScriptLine>                                    if (this.PropertyValue.Length &lt; 10) {</ScriptLine>
+            <ScriptLine>                                       this.PropertyValue = DateTime.Parse(this.PropertyValue).ToString("yyyyMMdd HH:mm:ss.fff", CultureInfo.InvariantCulture);</ScriptLine>
+            <ScriptLine>                                    }</ScriptLine>
+            <ScriptLine>                                    filters.Add(" ( " + this.PropertyName + " " + this.OperatorString + " '" + this.PropertyValue + "' ) ");</ScriptLine>
+            <ScriptLine>                                    break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                case "&lt;=":</ScriptLine>
+            <ScriptLine>                                    if (this.PropertyValue.Length &lt; 10) {</ScriptLine>
+            <ScriptLine>                                       this.PropertyValue = DateTime.Parse(this.PropertyValue).AddDays(1).AddMilliseconds(-3).ToString("yyyyMMdd HH:mm:ss.fff", CultureInfo.InvariantCulture);</ScriptLine>
+            <ScriptLine>                                    }</ScriptLine>
+            <ScriptLine>                                    filters.Add(" ( " + this.PropertyName + " " + this.OperatorString + " '" + this.PropertyValue + "' ) ");</ScriptLine>
+            <ScriptLine>                                    break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                case "&gt;":</ScriptLine>
+            <ScriptLine>                                    if (this.PropertyValue.Length &lt; 10) {</ScriptLine>
+            <ScriptLine>                                       this.PropertyValue = DateTime.Parse(this.PropertyValue).AddDays(1).AddMilliseconds(-3).ToString("yyyyMMdd HH:mm:ss.fff", CultureInfo.InvariantCulture);</ScriptLine>
+            <ScriptLine>                                    }</ScriptLine>
+            <ScriptLine>                                    filters.Add(" ( " + this.PropertyName + " " + this.OperatorString + " '" + this.PropertyValue + "' ) ");</ScriptLine>
+            <ScriptLine>                                    break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                case "&lt;":</ScriptLine>
+            <ScriptLine>                                    if (this.PropertyValue.Length &lt; 10) {</ScriptLine>
+            <ScriptLine>                                       this.PropertyValue = DateTime.Parse(this.PropertyValue).ToString("yyyyMMdd HH:mm:ss.fff", CultureInfo.InvariantCulture);</ScriptLine>
+            <ScriptLine>                                    }</ScriptLine>
+            <ScriptLine>                                    filters.Add(" ( " + this.PropertyName + " " + this.OperatorString + " '" + this.PropertyValue + "' ) ");</ScriptLine>
+            <ScriptLine>                                    break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                case "&lt;&gt;":</ScriptLine>
+            <ScriptLine>                                    this.PropertyValue = DateTime.Parse(this.PropertyValue).ToString("yyyyMMdd", CultureInfo.InvariantCulture);</ScriptLine>
+            <ScriptLine>                                    filters.Add(</ScriptLine>
+            <ScriptLine>                                        " ( " + this.PropertyName + " &lt; CAST('" + this.PropertyValue + "' as DateTime)"</ScriptLine>
+            <ScriptLine>                                        + " OR " </ScriptLine>
+            <ScriptLine>                                        + this.PropertyName + " &gt; DATEADD(ms, -3, dbo.MidnightOf(DATEADD(day, 1, CAST('" + this.PropertyValue  + "' as DateTime)))) ) "</ScriptLine>
+            <ScriptLine>                                    );</ScriptLine>
+            <ScriptLine>                                    break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                                default:</ScriptLine>
+            <ScriptLine>                                    this.PropertyValue = DateTime.Parse(this.PropertyValue).ToString("yyyyMMdd", CultureInfo.InvariantCulture);</ScriptLine>
+            <ScriptLine>                                    filters.Add(</ScriptLine>
+            <ScriptLine>                                        " ( " + this.PropertyName + " &gt;= CAST('" + this.PropertyValue + "' as DateTime)"</ScriptLine>
+            <ScriptLine>                                        + " AND "</ScriptLine>
+            <ScriptLine>                                        + this.PropertyName + " &lt; dbo.MidnightOf(DATEADD(DAY, 1, CAST('" + this.PropertyValue  + "' as DateTime))) ) "</ScriptLine>
+            <ScriptLine>                                    );</ScriptLine>
+            <ScriptLine>                                    break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                            }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    case "char":</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        filters.Add(" ( " + this.PropertyName + " " + ( this.MatchMethod == "fuzzy" ? this.OperatorString.Replace("=", "like").Replace("&lt;&gt;", "not like") : this.OperatorString ) + " N'" + this.PropertyValue + "' ) ");</ScriptLine>
+            <ScriptLine>                        break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    case "guid":</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        string temp = this.PropertyName + " " + ( this.MatchMethod == "fuzzy" ? this.OperatorString.Replace("=", "like").Replace("&lt;&gt;", "not like") : this.OperatorString );</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        filters.Add(" ( " + temp + " '{" + this.PropertyValue + "}' ) ");</ScriptLine>
+            <ScriptLine>                        break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                    default:</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                        filters.Add(" ( " + this.PropertyName + " " + ( this.MatchMethod == "fuzzy" ? this.OperatorString.Replace("=", "like").Replace("&lt;&gt;", "not like") : this.OperatorString ) + " " + this.PropertyValue + " ) ");</ScriptLine>
+            <ScriptLine>                        break;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>                }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine />
+            <ScriptLine>                return filters;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            }</ScriptLine>
+            <ScriptLine>        }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        public Filter(string propertyName = "", string propertyValue = "", string propertyType = "") {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            this.PropertyName = propertyName;</ScriptLine>
+            <ScriptLine>            this.PropertyValue = propertyValue;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            // DETERMINE THE OPERATOR</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            if (this.PropertyValue.StartsWith("&lt;&gt;")) {</ScriptLine>
+            <ScriptLine>                this.OperatorString = "&lt;&gt;";</ScriptLine>
+            <ScriptLine>                this.PropertyValue = this.PropertyValue.Remove(0, 2);</ScriptLine>
+            <ScriptLine>            } else if (this.PropertyValue.StartsWith("&gt;=")) {</ScriptLine>
+            <ScriptLine>                this.OperatorString = "&gt;=";</ScriptLine>
+            <ScriptLine>                this.PropertyValue = this.PropertyValue.Remove(0, 2);</ScriptLine>
+            <ScriptLine>            } else if (this.PropertyValue.StartsWith("&lt;=")) {</ScriptLine>
+            <ScriptLine>                this.OperatorString = "&lt;=";</ScriptLine>
+            <ScriptLine>                this.PropertyValue = this.PropertyValue.Remove(0, 2);</ScriptLine>
+            <ScriptLine>            } else if (this.PropertyValue.StartsWith("&gt;")) {</ScriptLine>
+            <ScriptLine>                this.OperatorString = "&gt;";</ScriptLine>
+            <ScriptLine>                this.PropertyValue = this.PropertyValue.Remove(0, 1);</ScriptLine>
+            <ScriptLine>            } else if (this.PropertyValue.StartsWith("&lt;")) {</ScriptLine>
+            <ScriptLine>                this.OperatorString = "&lt;";</ScriptLine>
+            <ScriptLine>                this.PropertyValue = this.PropertyValue.Remove(0, 1);</ScriptLine>
+            <ScriptLine>            } else {</ScriptLine>
+            <ScriptLine>                this.OperatorString = "=";</ScriptLine>
+            <ScriptLine>            }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            this.MatchMethod = this.PropertyValue.Contains("%") ? "fuzzy" : "exact";</ScriptLine>
+            <ScriptLine>            this.PropertyType = this.PropertyValue == "null" ? "null" : propertyType;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        private Dictionary&lt;string, string&gt; ParseDateWithWildcard(string filterDate) {</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            // THIS PARSES THE DATE INTO A DICTIONARY OF PARTS. AS AN EXAMPLE, 9/1/2023 WOULD BECOME</ScriptLine>
+            <ScriptLine>            // {</ScriptLine>
+            <ScriptLine>            //     "DATE.YEAR" : "2023"</ScriptLine>
+            <ScriptLine>            //     "DATE.MONTH" : "9"</ScriptLine>
+            <ScriptLine>            //     "DATE.DAY" : "1"</ScriptLine>
+            <ScriptLine>            // }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            string[] dateFormatParts = Thread.CurrentThread.CurrentUICulture.DateTimeFormat.ShortDatePattern.Split(new char[] { '/', ' ', '-' });</ScriptLine>
+            <ScriptLine>            string[] dateValueParts = filterDate.Split(new char[] { '/', ' ', '-' });</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            Dictionary&lt;string, string&gt; parsedDateParts = new Dictionary&lt;string, string&gt;();</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            if (dateFormatParts.Length &gt;= 3 &amp; dateValueParts.Length &gt;= 3) {</ScriptLine>
+            <ScriptLine>                for (int i = 0; i &lt;= 2; i++) {</ScriptLine>
+            <ScriptLine>                    if (dateFormatParts[i].ToLower().Contains("y")) {</ScriptLine>
+            <ScriptLine>                        parsedDateParts.Add("DATE.YEAR", dateValueParts[i]);</ScriptLine>
+            <ScriptLine>                    } else if (dateFormatParts[i].ToLower().Contains("m")) {</ScriptLine>
+            <ScriptLine>                        parsedDateParts.Add("DATE.MONTH", dateValueParts[i]);</ScriptLine>
+            <ScriptLine>                    } else if (dateFormatParts[i].ToLower().Contains("d")) {</ScriptLine>
+            <ScriptLine>                        parsedDateParts.Add("DATE.DAY", dateValueParts[i]);</ScriptLine>
+            <ScriptLine>                    }</ScriptLine>
+            <ScriptLine>                }</ScriptLine>
+            <ScriptLine>            }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>            return parsedDateParts;</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>        }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>    }</ScriptLine>
+            <ScriptLine />
+            <ScriptLine>}</ScriptLine>
+         </ScriptLines>
+      </Script>
+   </Scripts>
+   <Strings Type="7">
+      <String Name="sFISCustomerPrice" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Customer Price</String>
+      </String>
+      <String Name="sFISDoubledPrice" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Doubled Price</String>
+      </String>
+      <String Name="sFISUnitPriceDoubled1" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Unit Price 1 Doubled</String>
+      </String>
+      <String Name="ue_FIS_fCLM01ALoadItemPricesBase" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 01A - Load ItemPrices Base</String>
+      </String>
+      <String Name="ue_FIS_fCLM01BLoadItemPricesWithQueryFiltering" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 01B - Load ItemPrices With Query Filtering</String>
+      </String>
+      <String Name="ue_FIS_fCLM01CLoadItemPricesWithPostFiltering" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 01C - Load ItemPrices With Post Filtering</String>
+      </String>
+      <String Name="ue_FIS_fCLM01DLoadItemPricesWithFilteringOrderingA" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 01D - Load ItemPrices With Filtering, Ordering, and Capping</String>
+      </String>
+      <String Name="ue_FIS_fCLM02LoadCurrentItemPrices" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 02 - Load Current ItemPrices</String>
+      </String>
+      <String Name="ue_FIS_fCLM03ALoadPricesForPricecode_Base" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 03A - Load Prices for Pricecode Base</String>
+      </String>
+      <String Name="ue_FIS_fCLM03BLoadPricesForPricecode_PagingAndIncr" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 03B - Load Prices for Pricecode, with Paging and Incremental Loading</String>
+      </String>
+   </Strings>
 </FormsAndObjectsExport>
