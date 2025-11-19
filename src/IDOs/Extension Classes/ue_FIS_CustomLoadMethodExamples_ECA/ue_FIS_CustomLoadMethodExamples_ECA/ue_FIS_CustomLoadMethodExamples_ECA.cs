@@ -1253,8 +1253,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             }
 
             filteredTable.DefaultView.Sort = parsedOrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
+            if (parsedRecordCap > 0)
+            {
+                filteredTable = filteredTable.AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+            }
 
-            return filteredTable.DefaultView.ToTable().AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+            return filteredTable;
 
         }
 
@@ -1604,8 +1609,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             }
 
             filteredTable.DefaultView.Sort = parsedOrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
+            if (parsedRecordCap > 0)
+            {
+                filteredTable = filteredTable.AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+            }
 
-            return filteredTable.DefaultView.ToTable().AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+            return filteredTable;
 
         }
 
@@ -1989,9 +1999,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 filteredTable = fullTable;
             }
 
-            filteredTable.DefaultView.Sort = parsedOrderBy; 
+            filteredTable.DefaultView.Sort = parsedOrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
+            if (parsedRecordCap > 0)
+            {
+                filteredTable = filteredTable.AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+            }
 
-            return filteredTable.DefaultView.ToTable().AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+            return filteredTable;
 
         }
 
