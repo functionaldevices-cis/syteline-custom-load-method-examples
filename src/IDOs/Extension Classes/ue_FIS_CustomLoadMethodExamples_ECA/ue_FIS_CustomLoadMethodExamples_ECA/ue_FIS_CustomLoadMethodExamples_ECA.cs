@@ -1000,7 +1000,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, string> itempriceQueryFilters = new Dictionary<string, string>() {
                 { "Item", "" },
                 { "EffectDate", "" },
-                { "UnitPrice1", "" }
+                { "ListPrice", "" },
             };
 
             Dictionary<string, string> priceMatrixQueryFilters = new Dictionary<string, string>() {
@@ -1321,7 +1321,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 { "Item", "" },
                 { "EffectDate", "" },
                 { "ListPrice", "" },
-                { "CustomerPrice", "" },
                 { "RecordDate", "" },
                 { "RowPointer", "" }
             };
@@ -1566,7 +1565,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // FILL IN OUTPUT ROW
 
-                    outputRow["PriceCode"] = customerPriceCode;
+                    outputRow["PriceCode"] = custPriceCode;
                     outputRow["Item"] = item;
                     outputRow["ListPrice"] = listPrice;
                     outputRow["CustomerPrice"] = customerPrice;
