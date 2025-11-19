@@ -1294,7 +1294,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE FILTERS
             /********************************************************************/
 
-            string customerPriceCode = "000"; // !! CHANGE THIS TO WHATEVER YOUR BASE LIST PRICE CODE IS !!
+            string custPriceCode = "000"; // !! CHANGE THIS TO WHATEVER YOUR BASE LIST PRICE CODE IS !!
             string userFilterValue;
             string userFilterOperator;
             List<string> userFilters = new List<string>();
@@ -1326,7 +1326,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             };
 
             Dictionary<string, string> priceMatrixQueryFilters = new Dictionary<string, string>() {
-                { "CustPricecode", "CustPricecode = '" + customerPriceCode + "'" }
+                { "CustPricecode", "CustPricecode = '" + custPriceCode + "'" }
             };
 
             Dictionary<string, string> postQueryFilters = new Dictionary<string, string>() {
@@ -1343,7 +1343,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (userFilter.Contains("PriceCode"))
                 {
                     priceMatrixQueryFilters["CustPricecode"] = userFilter.Replace("PriceCode", "CustPricecode");
-                    customerPriceCode = userFilterValue;
+                    custPriceCode = userFilterValue;
                 }
 
                 if (userFilter.Contains("Item"))
