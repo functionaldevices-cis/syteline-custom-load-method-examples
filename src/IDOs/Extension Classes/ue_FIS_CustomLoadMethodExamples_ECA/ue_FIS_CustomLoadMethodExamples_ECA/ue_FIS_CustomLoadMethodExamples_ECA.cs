@@ -1084,12 +1084,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
-            string uniqueEscapedPriceFormulasCommaDel = string.Join(
+            string uniqueEscapedPriceFormulasCommaDel = priceMatrixRecords.Items.Count > 0 ? string.Join(
                 ",",
-                priceMatrixRecords.Items.Select(record => {
+                priceMatrixRecords.Items.Select(record =>
+                {
                     return "'" + utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]) + "'";
                 }).Distinct()
-            );
+            ) : "''";
 
 
 
@@ -1422,12 +1423,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
-            string uniqueEscapedPriceFormulasCommaDel = string.Join(
+            string uniqueEscapedPriceFormulasCommaDel = priceMatrixRecords.Items.Count > 0 ? string.Join(
                 ",",
-                priceMatrixRecords.Items.Select(record => {
+                priceMatrixRecords.Items.Select(record =>
+                {
                     return "'" + utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]) + "'";
                 }).Distinct()
-            );
+            ) : "''";
 
 
 
@@ -1774,6 +1776,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 IDOName: "SLCustomers",
                 properties: new List<string>() {
                     { "CustNum" },
+                    { "Name" },
                     { "Pricecode" }
                 },
                 filter: utils.BuildFilterString(customerQueryFilters.Values.ToList()),
@@ -1809,12 +1812,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
-            string uniqueEscapedPriceFormulasCommaDel = string.Join(
+            string uniqueEscapedPriceFormulasCommaDel = priceMatrixRecords.Items.Count > 0 ? string.Join(
                 ",",
-                priceMatrixRecords.Items.Select(record => {
+                priceMatrixRecords.Items.Select(record =>
+                {
                     return "'" + utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]) + "'";
                 }).Distinct()
-            );
+            ) : "''";
 
 
 
