@@ -254,6 +254,7 @@ namespace Mongoose.GlobalScripts
 
                         break;
 
+                    case "numsortchar":
                     case "char":
 
                         filters.Add(" ( " + this.PropertyName + " " + ( this.MatchMethod == "fuzzy" ? this.OperatorString.Replace("=", "like").Replace("<>", "not like") : this.OperatorString ) + " N'" + this.PropertyValue + "' ) ");
