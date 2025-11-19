@@ -1259,6 +1259,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         }
 
 
+
         /**********************************************************************************************************/
         /**********************************************************************************************************/
         /*
@@ -1373,7 +1374,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 if (userFilter.Contains("RowPointer"))
                 {
-                    postQueryFilters["RowPointer"] = userFilter;
+                    itempriceQueryFilters["RowPointer"] = userFilter;
                 }
 
             });
