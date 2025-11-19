@@ -1609,6 +1609,392 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
         }
 
+
+
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+        /*
+        /* Name:     Example_04A_LoadPricesForCustomer_Matrix
+        /* Date:     2025-11-19
+        /* Authors:  Andy Mercer
+        /* Purpose:  This example loads the all prices for a specified customer, taking into account their pricecode
+        /*           and any customer contract prices they have. It does NOT filter which products they are allowed
+        /*           to purchase, which is something that would have to be taken into account for real use.
+        /*
+        /* Copyright 2025, Functional Devices, Inc
+        /*
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+
+        [IDOMethod(MethodFlags.CustomLoad)]
+        public DataTable Example_04A_LoadPricesForCustomer_Matrix(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        {
+
+            /********************************************************************/
+            /* SET UP HELPER VARIABLES
+            /********************************************************************/
+
+            ue_FDI_Utilities utils = new ue_FDI_Utilities()
+            {
+                IDOCommands = this.Context.Commands
+            };
+
+
+
+            /********************************************************************/
+            /* PARSE FILTERS
+            /********************************************************************/
+
+            string custNum = "C000001";
+            string userFilterValue;
+            string userFilterOperator;
+            List<string> userFilters = new List<string>();
+            if (sFilter != null)
+            {
+                userFilters = sFilter.Split(
+                    new string[] { "AND" }, StringSplitOptions.None
+                ).Select(
+                    sPropertyFilter =>
+                        "( "
+                        + sPropertyFilter
+                            .Trim()
+                            .Replace(" <> N", " <> ")
+                            .Replace(" = N", " = ")
+                            .Replace(" like N", " like ")
+                            .Replace("DATEPART( yyyy, ", "YEAR( ")
+                            .Replace("DATEPART( mm, ", "MONTH( ")
+                            .Replace("DATEPART( dd, ", "DAY( ")
+                        + " )"
+                ).ToList();
+            }
+
+            Dictionary<string, string> itempriceQueryFilters = new Dictionary<string, string>() {
+                { "Item", "" },
+                { "EffectDate", "" },
+                { "ListPrice", "" },
+                { "RecordDate", "" },
+                { "RowPointer", "" }
+            };
+
+            Dictionary<string, string> customerQueryFilters = new Dictionary<string, string>() {
+                { "CustNum", "CustNum = '" + custNum + "'" }
+            };
+
+            Dictionary<string, string> priceMatrixQueryFilters = new Dictionary<string, string>() {
+                { "CustPricecode", "CustPricecode = ''" }
+            };
+
+            Dictionary<string, string> postQueryFilters = new Dictionary<string, string>() {
+                { "CustomerPrice", "" }
+            };
+
+            userFilters.ForEach(userFilter =>
+            {
+
+                userFilter = utils.FixParenthesis(userFilter);
+                userFilterValue = utils.ExtractValue(userFilter);
+                userFilterOperator = utils.ExtractOperator(userFilter);
+
+                if (userFilter.Contains("CustNum"))
+                {
+                    customerQueryFilters["CustNum"] = userFilter;
+                    custNum = userFilterValue;
+                }
+
+                if (userFilter.Contains("Item"))
+                {
+                    itempriceQueryFilters["Item"] = userFilter;
+                }
+
+                if (userFilter.Contains("EffectDate"))
+                {
+                    itempriceQueryFilters["EffectDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("ListPrice"))
+                {
+                    itempriceQueryFilters["ListPrice"] = userFilter;
+                }
+
+                if (userFilter.Contains("CustomerPrice"))
+                {
+                    postQueryFilters["CustomerPrice"] = userFilter.Replace(" null ", " '' ");
+                }
+
+                if (userFilter.Contains("RecordDate"))
+                {
+                    postQueryFilters["RecordDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RowPointer"))
+                {
+                    itempriceQueryFilters["RowPointer"] = userFilter;
+                }
+
+            });
+
+
+
+            /********************************************************************/
+            /* PARSE ORDER BY
+            /********************************************************************/
+
+            string parsedOrderBy = sOrderBy ?? "Item ASC, EffectDate DESC";
+
+
+
+            /********************************************************************/
+            /* PARSE RECORD CAP
+            /********************************************************************/
+
+
+            int parsedRecordCap = 0;
+            if (sRecordCap != null && sRecordCap != "")
+            {
+                int.TryParse(sRecordCap, out parsedRecordCap);
+            }
+
+
+
+            /********************************************************************/
+            /* LOAD THE CUSTOMER RECORDS
+            /********************************************************************/
+
+            LoadRecordsResponseData customerRecords = utils.LoadRecords(
+                IDOName: "SLCustomers",
+                properties: new List<string>() {
+                    { "CustNum" },
+                    { "Pricecode" }
+                },
+                filter: utils.BuildFilterString(customerQueryFilters.Values.ToList()),
+                orderBy: "CustNum",
+                recordCap: 1
+            );
+
+            if (customerRecords.Items.Count == 1)
+            {
+                string queriedCustNum = utils.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
+                string custPriceCode = utils.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
+                if (queriedCustNum == custNum)
+                {
+                    priceMatrixQueryFilters["CustPricecode"] = "CustPricecode = '" + custPriceCode + "'";
+                }
+            }
+
+
+
+            /********************************************************************/
+            /* LOAD THE PRICE MATRIX RECORDS
+            /********************************************************************/
+
+            LoadRecordsResponseData priceMatrixRecords = utils.LoadRecords(
+                IDOName: "SLPricematrixs",
+                properties: new List<string>() {
+                    { "CustPricecode" },
+                    { "ItemPricecode" },
+                    { "Priceformula" },
+                    { "RecordDate" }
+                },
+                filter: utils.BuildFilterString(priceMatrixQueryFilters.Values.ToList()),
+                orderBy: "CustPricecode, ItemPricecode"
+            );
+
+            string uniqueEscapedPriceFormulasCommaDel = string.Join(
+                ",",
+                priceMatrixRecords.Items.Select(record => {
+                    return "'" + utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]) + "'";
+                }).Distinct()
+            );
+
+
+
+            /********************************************************************/
+            /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
+            /********************************************************************/
+
+            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
+                IDOName: "SLPriceformulas",
+                properties: new List<string>() {
+                    { "Priceformula" },
+                    { "FirstDolPercent" },
+                    { "FirstPrice" },
+                    { "EffectDate" },
+                    { "RecordDate" }
+                },
+                filter: "Priceformula IN ( " + uniqueEscapedPriceFormulasCommaDel + " )",
+                orderBy: "Priceformula ASC, EffectDate DESC"
+            );
+
+            Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
+            priceFormulasRecords.Items.ForEach(record => {
+                string priceFormula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                if (!activePriceFormulaLookupTable.ContainsKey(priceFormula))
+                {
+                    activePriceFormulaLookupTable[priceFormula] = record;
+                }
+            });
+
+
+
+            /********************************************************************/
+            /* USE THE PRICE FORMULA RECORDS TO GET THE MULTIPLIER OR FIXED 
+            /* PRICE FOR EACH ITEM PRICE CODE
+            /********************************************************************/
+
+            Dictionary<string, ItemPriceCodePriceInfo> priceCalculatorLookupTable = new Dictionary<string, ItemPriceCodePriceInfo>();
+            priceMatrixRecords.Items.ForEach(priceMatrixRecord => {
+
+                string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
+                DateTime priceMatrixRecordDate = utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]);
+                string priceFormula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+
+                if (!priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                {
+
+                    IDOItem priceFormulaRecord = activePriceFormulaLookupTable[priceFormula];
+
+                    priceCalculatorLookupTable[itemPricecode] = new ItemPriceCodePriceInfo(
+                        priceCode: itemPricecode,
+                        priceMatrixRecordDate: priceMatrixRecordDate,
+                        type: utils.ParseIDOPropertyValue<string>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]),
+                        value: utils.ParseIDOPropertyValue<decimal>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]),
+                        priceFormulaRecordDate: utils.ParseIDOPropertyValue<DateTime>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]])
+                    );
+
+                }
+
+            });
+
+
+
+            /********************************************************************/
+            /* QUERY ITEM PRICES TO GET BASE RECORDS
+            /********************************************************************/
+
+            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+                IDOName: "SLItemprices",
+                properties: new List<string>() {
+                    { "Item" },
+                    { "Pricecode" },
+                    { "UnitPrice1" },
+                    { "EffectDate" },
+                    { "RecordDate" },
+                    { "RowPointer" },
+                },
+                filter: utils.BuildFilterString(itempriceQueryFilters.Values.ToList()),
+                orderBy: "Item ASC, EffectDate DESC", // THIS WILL BE HARDCODED SO THAT THE FIRST RECORD FOR EACH ITEM WILL ALWAYS BE THE HIGHEST EFFECT DATE
+                recordCap: 0
+            );
+
+
+
+            /********************************************************************/
+            /* CREATE EMPTY TABLE
+            /********************************************************************/
+
+            DataTable fullTable = new DataTable("FullTable");
+            DataTable filteredTable = new DataTable("PostFilteredTable");
+            Dictionary<string, int> itemIndices = new Dictionary<string, int>();
+            DataRow outputRow;
+
+            // ADD COLUMN STRUCTURE
+
+            fullTable.Columns.Add("PriceCode", typeof(string));
+            fullTable.Columns.Add("Item", typeof(string));
+            fullTable.Columns.Add("ListPrice", typeof(decimal));
+            fullTable.Columns.Add("CustomerPrice", typeof(decimal));
+            fullTable.Columns.Add("PriceType", typeof(string));
+            fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
+            fullTable.Columns.Add("RowPointer", typeof(string));
+
+
+
+            /********************************************************************/
+            /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
+            /********************************************************************/
+
+            foreach (IDOItem itemPriceRecord in itemPriceRecords.Items)
+            {
+
+                // GRAB THE ITEM
+
+                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                decimal customerPrice = listPrice;
+                string priceType = "List";
+                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+
+                // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
+
+                if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                {
+                    customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
+                    recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
+                    priceType = "Matrix";
+                }
+
+                if (!itemIndices.ContainsKey(item))
+                {
+
+                    // SAVE INDEX
+
+                    itemIndices[item] = fullTable.Rows.Count;
+
+                    // CREATE OUTPUT ROW
+
+                    outputRow = fullTable.NewRow();
+
+                    // FILL IN OUTPUT ROW
+
+                    outputRow["CustNum"] = custNum;
+                    outputRow["Item"] = item;
+                    outputRow["ListPrice"] = listPrice;
+                    outputRow["CustomerPrice"] = customerPrice;
+                    outputRow["PriceType"] = priceType;
+                    outputRow["EffectDate"] = effectDate;
+                    outputRow["RecordDate"] = recordDate;
+                    outputRow["RowPointer"] = rowPointer;
+
+                    // ADD ROW TO OUTPUT
+
+                    fullTable.Rows.Add(outputRow);
+
+                }
+
+            }
+
+
+
+            /********************************************************************/
+            /* APPLY POST-FILTERS
+            /********************************************************************/
+
+            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
+
+            if (userPostQueryFilterString != "")
+            {
+                filteredTable = fullTable.Clone();
+                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
+                foreach (DataRow row in filteredRows)
+                {
+                    filteredTable.ImportRow(row);
+                }
+            }
+            else
+            {
+                filteredTable = fullTable;
+            }
+
+            filteredTable.DefaultView.Sort = parsedOrderBy; 
+
+            return filteredTable.DefaultView.ToTable().AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+
+        }
+
     }
 
 }
