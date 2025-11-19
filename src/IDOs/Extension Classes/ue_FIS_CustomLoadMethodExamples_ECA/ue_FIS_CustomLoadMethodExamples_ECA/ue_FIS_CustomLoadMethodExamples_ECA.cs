@@ -1909,7 +1909,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             // ADD COLUMN STRUCTURE
 
-            fullTable.Columns.Add("PriceCode", typeof(string));
+            fullTable.Columns.Add("CustNum", typeof(string));
             fullTable.Columns.Add("Item", typeof(string));
             fullTable.Columns.Add("ListPrice", typeof(decimal));
             fullTable.Columns.Add("CustomerPrice", typeof(decimal));
