@@ -1188,50 +1188,53 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
             /********************************************************************/
 
-            foreach(IDOItem itemPriceRecord in itemPriceRecords.Items)
+            if (priceMatrixRecords.Items.Count > 0)
             {
 
-                // GRAB THE ITEM
-
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
-                decimal customerPrice = listPrice;
-                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-
-                if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
-                {
-                    customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
-                }
-
-                if (!itemIndices.ContainsKey(item))
+                foreach (IDOItem itemPriceRecord in itemPriceRecords.Items)
                 {
 
-                    // SAVE INDEX
+                    // GRAB THE ITEM
 
-                    itemIndices[item] = fullTable.Rows.Count;
+                    string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                    string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                    decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                    decimal customerPrice = listPrice;
+                    DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
 
-                    // CREATE OUTPUT ROW
+                    if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    {
+                        customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
+                    }
 
-                    outputRow = fullTable.NewRow();
+                    if (!itemIndices.ContainsKey(item))
+                    {
 
-                    // FILL IN OUTPUT ROW
+                        // SAVE INDEX
 
-                    outputRow["PriceCode"] = customerPriceCode;
-                    outputRow["Item"] = item;
-                    outputRow["ListPrice"] = listPrice;
-                    outputRow["CustomerPrice"] = customerPrice;
-                    outputRow["EffectDate"] = effectDate;
+                        itemIndices[item] = fullTable.Rows.Count;
 
-                    // ADD ROW TO OUTPUT
+                        // CREATE OUTPUT ROW
 
-                    fullTable.Rows.Add(outputRow);
+                        outputRow = fullTable.NewRow();
+
+                        // FILL IN OUTPUT ROW
+
+                        outputRow["PriceCode"] = customerPriceCode;
+                        outputRow["Item"] = item;
+                        outputRow["ListPrice"] = listPrice;
+                        outputRow["CustomerPrice"] = customerPrice;
+                        outputRow["EffectDate"] = effectDate;
+
+                        // ADD ROW TO OUTPUT
+
+                        fullTable.Rows.Add(outputRow);
+
+                    }
 
                 }
 
             }
-
-
 
             /********************************************************************/
             /* APPLY POST-FILTERS
@@ -1538,57 +1541,60 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
             /********************************************************************/
 
-            foreach (IDOItem itemPriceRecord in itemPriceRecords.Items)
+            if (priceMatrixRecords.Items.Count > 0)
             {
 
-                // GRAB THE ITEM
-
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
-                decimal customerPrice = listPrice;
-                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
-
-                // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
-
-                if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
-                {
-                    customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
-                    recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
-                }
-
-                if (!itemIndices.ContainsKey(item))
+                foreach (IDOItem itemPriceRecord in itemPriceRecords.Items)
                 {
 
-                    // SAVE INDEX
+                    // GRAB THE ITEM
 
-                    itemIndices[item] = fullTable.Rows.Count;
+                    string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                    string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                    decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                    decimal customerPrice = listPrice;
+                    DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                    DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                    string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
-                    // CREATE OUTPUT ROW
+                    // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
-                    outputRow = fullTable.NewRow();
+                    if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    {
+                        customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
+                        recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
+                    }
 
-                    // FILL IN OUTPUT ROW
+                    if (!itemIndices.ContainsKey(item))
+                    {
 
-                    outputRow["PriceCode"] = custPriceCode;
-                    outputRow["Item"] = item;
-                    outputRow["ListPrice"] = listPrice;
-                    outputRow["CustomerPrice"] = customerPrice;
-                    outputRow["EffectDate"] = effectDate;
-                    outputRow["RecordDate"] = recordDate;
-                    outputRow["RowPointer"] = rowPointer;
+                        // SAVE INDEX
 
-                    // ADD ROW TO OUTPUT
+                        itemIndices[item] = fullTable.Rows.Count;
 
-                    fullTable.Rows.Add(outputRow);
+                        // CREATE OUTPUT ROW
+
+                        outputRow = fullTable.NewRow();
+
+                        // FILL IN OUTPUT ROW
+
+                        outputRow["PriceCode"] = custPriceCode;
+                        outputRow["Item"] = item;
+                        outputRow["ListPrice"] = listPrice;
+                        outputRow["CustomerPrice"] = customerPrice;
+                        outputRow["EffectDate"] = effectDate;
+                        outputRow["RecordDate"] = recordDate;
+                        outputRow["RowPointer"] = rowPointer;
+
+                        // ADD ROW TO OUTPUT
+
+                        fullTable.Rows.Add(outputRow);
+
+                    }
 
                 }
 
             }
-
-
 
             /********************************************************************/
             /* APPLY POST-FILTERS
