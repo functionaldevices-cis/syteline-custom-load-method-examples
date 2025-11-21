@@ -1202,7 +1202,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     decimal customerPrice = listPrice;
                     DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
 
-                    if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
                     {
                         customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
                     }
@@ -1559,7 +1559,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
-                    if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
                     {
                         customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
                         recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
@@ -1950,14 +1950,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
-                if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
                 {
                     customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
                     recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
                     priceType = "Matrix";
                 }
 
-                if (!itemIndices.ContainsKey(item))
+                if (item != null && !itemIndices.ContainsKey(item))
                 {
 
                     // SAVE INDEX
@@ -2372,7 +2372,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
 
-                if (!itemIndices.ContainsKey(item))
+                if (item != null && !itemIndices.ContainsKey(item))
                 {
 
                     // LOAD DATA FROM THE ITEM PRICE RECORD
@@ -2387,7 +2387,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // IF THERE IS A MATRIX PRICE FOR THIS ITEM'S PRICECODE, WE NEED TO GET THE DATA FROM IT
 
-                    if (priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
                     {
                         customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
                         priceType = "Matrix";
@@ -2400,7 +2400,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // IF THERE IS A CUSTOMER CONTRACT PRICE FOR THIS ITEM, WE NEED TO GET DATA FROM IT
 
-                    if (customerContractPriceIndexLookupTable.ContainsKey(item))
+                    if (item != null && customerContractPriceIndexLookupTable.ContainsKey(item))
                     {
                         IDOItem customerContractPriceRecord = customerContractPriceIndexLookupTable[item];
                         customerPrice = utils.ParseIDOPropertyValue<decimal>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["ContPrice"]]);
