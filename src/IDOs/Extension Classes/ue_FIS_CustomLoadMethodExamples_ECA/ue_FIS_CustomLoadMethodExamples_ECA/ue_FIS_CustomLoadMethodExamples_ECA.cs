@@ -1300,6 +1300,36 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
+            /* DETERMINE USER INPUT
+            /********************************************************************/
+
+            LoadCollectionRequestData request = this.Context.Request as LoadCollectionRequestData ?? new LoadCollectionRequestData(
+                idoName: "ue_FIS_CustomLoadMethodExamples",
+                propertyList: "",
+                filter: "",
+                orderBy: "",
+                recordCap: 0
+            );
+
+            if (sFilter != null)
+            {
+                request.Filter = sFilter;
+            }
+
+            if (sOrderBy != null)
+            {
+                request.OrderBy = sOrderBy;
+            }
+
+            if (sRecordCap != null && sRecordCap != "")
+            {
+                int parsedRecordCap = 0;
+                int.TryParse(sRecordCap, out parsedRecordCap);
+                request.RecordCap = parsedRecordCap;
+            }
+
+
+            /********************************************************************/
             /* PARSE FILTERS
             /********************************************************************/
 
@@ -1307,9 +1337,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string userFilterValue;
             string userFilterOperator;
             List<string> userFilters = new List<string>();
-            if (sFilter != null)
+            if (request.Filter != null)
             {
-                userFilters = sFilter.Split(
+                userFilters = request.Filter.Split(
                     new string[] { "AND" }, StringSplitOptions.None
                 ).Select(
                     sPropertyFilter =>
@@ -1327,7 +1357,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             }
 
             Dictionary<string, string> itempriceQueryFilters = new Dictionary<string, string>() {
-                { "Item", "" },
+                { "Item", "Item LIKE 'BI%'" },
                 { "EffectDate", "" },
                 { "ListPrice", "" },
                 { "RecordDate", "" },
@@ -1393,20 +1423,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE ORDER BY
             /********************************************************************/
 
-            string parsedOrderBy = sOrderBy ?? "Item ASC, EffectDate DESC";
-
-
-
-            /********************************************************************/
-            /* PARSE RECORD CAP
-            /********************************************************************/
-
-
-            int parsedRecordCap = 0;
-            if (sRecordCap != null && sRecordCap != "")
-            {
-                int.TryParse(sRecordCap, out parsedRecordCap);
-            }
+            string parsedOrderBy = request.OrderBy ?? "Item ASC, EffectDate DESC";
 
 
 
@@ -1535,6 +1552,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             fullTable.Columns.Add("RecordDate", typeof(DateTime));
             fullTable.Columns.Add("RowPointer", typeof(string));
 
+            fullTable.PrimaryKey = new DataColumn[] { fullTable.Columns[6] };
 
 
             /********************************************************************/
@@ -1616,12 +1634,23 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 filteredTable = fullTable;
             }
 
-            filteredTable.DefaultView.Sort = parsedOrderBy;
+            filteredTable.DefaultView.Sort = request.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
-            if (parsedRecordCap > 0)
+
+            if (request.RecordCap > 0)
             {
-                filteredTable = filteredTable.AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+
+                filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[6] };
+                int index = 0;
+                if (request.Bookmark != null && request.Bookmark != "")
+                {
+                    index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { request.Bookmark }));
+                }
+
+                filteredTable = filteredTable.AsEnumerable().Skip(index + 1).Take(request.RecordCap + 1).CopyToDataTable();
             }
+
+            request.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
 
             return filteredTable;
 
