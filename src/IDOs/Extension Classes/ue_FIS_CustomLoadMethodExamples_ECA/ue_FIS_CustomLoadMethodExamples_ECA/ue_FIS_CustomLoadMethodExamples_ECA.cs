@@ -1250,7 +1250,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
         /**********************************************************************************************************/
         /*
-        /* Name:     Example_03_LoadPricesForPricecode_PagingAndIncremental
+        /* Name:     Example_03_LoadPricesForPricecode
         /* Date:     2025-11-14
         /* Authors:  Andy Mercer
         /* Purpose:  This example loads a set of prices based on a specific PriceCode. There are a number of
@@ -1283,7 +1283,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_03_LoadPricesForPricecode_PagingAndIncremental(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_03_LoadPricesForPricecode(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
         {
 
             /********************************************************************/
