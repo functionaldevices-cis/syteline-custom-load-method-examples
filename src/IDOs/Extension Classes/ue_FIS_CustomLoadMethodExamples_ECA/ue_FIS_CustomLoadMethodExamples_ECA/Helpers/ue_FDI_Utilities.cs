@@ -18,6 +18,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
         public int BGTaskNum { get; set; }
         public int DebugLevel { get; set; }
 
+        public ue_FDI_Utilities(IIDOCommands commands, int bGTaskNum = 0, int debugLevel = 0)
+        {
+            this.IDOCommands = commands;
+            this.BGTaskNum = bGTaskNum;
+            this.DebugLevel = debugLevel;
+        }
+
         public string ParseFilterArgument(string arg, string defaultVal)
         {
             if (string.IsNullOrEmpty(arg))
