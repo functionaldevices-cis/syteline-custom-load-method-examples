@@ -1300,10 +1300,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
-            /* DETERMINE USER INPUT
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
             /********************************************************************/
 
-            LoadCollectionRequestData request = this.Context.Request as LoadCollectionRequestData ?? new LoadCollectionRequestData(
+            LoadCollectionRequestData userRequest = this.Context.Request as LoadCollectionRequestData ?? new LoadCollectionRequestData(
                 idoName: "ue_FIS_CustomLoadMethodExamples",
                 propertyList: "",
                 filter: "",
@@ -1313,19 +1313,21 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             if (sFilter != null)
             {
-                request.Filter = sFilter;
+                userRequest.Filter = sFilter;
             }
+            userRequest.Filter = userRequest.Filter ?? "";
 
             if (sOrderBy != null)
             {
-                request.OrderBy = sOrderBy;
+                userRequest.OrderBy = sOrderBy;
             }
+            userRequest.OrderBy = userRequest.OrderBy ?? "Item ASC, EffectDate DESC";
 
             if (sRecordCap != null && sRecordCap != "")
             {
                 int parsedRecordCap = 0;
                 int.TryParse(sRecordCap, out parsedRecordCap);
-                request.RecordCap = parsedRecordCap;
+                userRequest.RecordCap = parsedRecordCap;
             }
 
 
@@ -1337,9 +1339,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string userFilterValue;
             string userFilterOperator;
             List<string> userFilters = new List<string>();
-            if (request.Filter != null)
+            if (userRequest.Filter != "")
             {
-                userFilters = request.Filter.Split(
+                userFilters = userRequest.Filter.Split(
                     new string[] { "AND" }, StringSplitOptions.None
                 ).Select(
                     sPropertyFilter =>
@@ -1416,14 +1418,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 }
 
             });
-
-
-
-            /********************************************************************/
-            /* PARSE ORDER BY
-            /********************************************************************/
-
-            string parsedOrderBy = request.OrderBy ?? "Item ASC, EffectDate DESC";
 
 
 
@@ -1634,23 +1628,28 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 filteredTable = fullTable;
             }
 
-            filteredTable.DefaultView.Sort = request.OrderBy;
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
 
-            if (request.RecordCap > 0)
+            if (filteredTable.Rows.Count > 0)
             {
 
-                filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[6] };
-                int index = 0;
-                if (request.Bookmark != null && request.Bookmark != "")
+                if (userRequest.RecordCap > 0)
                 {
-                    index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { request.Bookmark }));
+
+                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[6] };
+                    int index = 0;
+                    if (userRequest.Bookmark != null && userRequest.Bookmark != "")
+                    {
+                        index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark }));
+                    }
+
+                    filteredTable = filteredTable.AsEnumerable().Skip(index + 1).Take(userRequest.RecordCap + 1).CopyToDataTable();
                 }
 
-                filteredTable = filteredTable.AsEnumerable().Skip(index + 1).Take(request.RecordCap + 1).CopyToDataTable();
-            }
+                userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
 
-            request.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+            }
 
             return filteredTable;
 
