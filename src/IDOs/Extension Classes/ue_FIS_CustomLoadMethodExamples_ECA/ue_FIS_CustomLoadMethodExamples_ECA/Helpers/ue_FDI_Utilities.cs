@@ -322,10 +322,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
             // LOAD THE RECORD(S)
 
-            if (this.IDOCommands != null)
-            {
-                oLoadResponse = this.IDOCommands.LoadCollection(oLoadRequest);
-            }
+            oLoadResponse = this.IDOCommands.LoadCollection(oLoadRequest);
 
             // IF WE HAVE A VALID RECORD
 
