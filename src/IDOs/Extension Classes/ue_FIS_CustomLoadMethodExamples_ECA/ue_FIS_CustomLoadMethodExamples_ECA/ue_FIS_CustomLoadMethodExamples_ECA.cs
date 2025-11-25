@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using ue_FIS_CustomLoadMethodExamples_ECA.Helpers;
 using ue_FIS_CustomLoadMethodExamples_ECA.Models;
 
@@ -48,17 +49,16 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_01A_LoadItemPrices_Base(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_01A_LoadItemPrices_Base()
         {
 
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
 
 
 
@@ -72,6 +72,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Item" },
                     { "UnitPrice1" },
                     { "EffectDate" },
+                    { "RecordDate" }
                 },
                 filter: "",
                 orderBy: "Item ASC, EffectDate DESC",
@@ -93,6 +94,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             fullTable.Columns.Add("UnitPrice1", typeof(decimal));
             fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
             fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
 
 
 
@@ -108,6 +110,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
 
                 // CREATE OUTPUT ROW
 
@@ -119,6 +122,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 outputRow["UnitPrice1"] = price;
                 outputRow["UnitPriceDoubled1"] = price * 2;
                 outputRow["EffectDate"] = effectDate;
+                outputRow["RecordDate"] = recordDate;
 
                 // ADD ROW TO OUTPUT
                 fullTable.Rows.Add(outputRow);
@@ -137,13 +141,15 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
         /**********************************************************************************************************/
         /*
-        /* Name:     Example_01B_LoadItemPrices_QueryFiltering
+        /* Name:     Example_01B_LoadItemPrices_QueryFilteringOrderingAndCapping
         /* Date:     2025-11-14
         /* Authors:  Andy Mercer
         /* Purpose:  This example loads 10 records from the SLPricecodes IDO. It includes the bound properties of
         /*           Item, UnitPrice1, and EffectDate, and a calculated property called UnitPriceDoubled1, which
-        /*           is just UnitPrice1 * 2. This example introduces standard query filtering, so the three bound
-        /*           properties can now be filtered.
+        /*           is just UnitPrice1 * 2.
+        /*
+        /*           Version B introduces user inputs such as filter, orderBy, and recordCap using the standard
+        /*           LoadRecordsRequestData object.
         /*
         /* Copyright 2025, Functional Devices, Inc
         /*
@@ -151,17 +157,24 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_01B_LoadItemPrices_QueryFiltering(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_01B_LoadItemPrices_QueryFilteringOrderingAndCapping()
         {
 
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadCollectionRequestData userRequest = this.Context.Request as LoadCollectionRequestData;
 
 
 
@@ -172,9 +185,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string userFilterValue;
             string userFilterOperator;
             List<string> userFilters = new List<string>();
-            if (sFilter != null)
+            if (userRequest.Filter != null && userRequest.Filter != "")
             {
-                userFilters = sFilter.Split(
+                userFilters = userRequest.Filter.Split(
                     new string[] { "AND" }, StringSplitOptions.None
                 ).Select(
                     sPropertyFilter =>
@@ -194,7 +207,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, string> itempricesQueryFilters = new Dictionary<string, string>() {
                 { "Item", "" },
                 { "EffectDate", "" },
-                { "UnitPrice1", "" }
+                { "UnitPrice1", "" },
+                { "RecordDate", "" }
             };
 
             userFilters.ForEach(userFilter =>
@@ -214,12 +228,25 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     itempricesQueryFilters["EffectDate"] = userFilter;
                 }
 
+                if (userFilter.Contains("RecordDate"))
+                {
+                    itempricesQueryFilters["RecordDate"] = userFilter;
+                }
+
                 if (userFilter.Contains("UnitPrice1"))
                 {
                     itempricesQueryFilters["UnitPrice1"] = userFilter;
                 }
 
             });
+
+
+
+            /********************************************************************/
+            /* SET DEFAULT ORDER BY
+            /********************************************************************/
+
+            userRequest.OrderBy = userRequest.OrderBy == null || userRequest.OrderBy == "" ? "Item ASC, EffectDate DESC" : userRequest.OrderBy;
 
 
 
@@ -233,10 +260,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Item" },
                     { "UnitPrice1" },
                     { "EffectDate" },
+                    { "RecordDate" }
                 },
                 filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
-                orderBy: "Item ASC, EffectDate DESC",
-                recordCap: 10
+                orderBy: userRequest.OrderBy,
+                recordCap: userRequest.RecordCap
             );
 
 
@@ -246,7 +274,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
 
             DataTable fullTable = new DataTable("FullTable");
-            DataTable dtFilteredTable = new DataTable("PostFilteredTable");
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
@@ -255,6 +282,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             fullTable.Columns.Add("UnitPrice1", typeof(decimal));
             fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
             fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
 
 
 
@@ -270,6 +298,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
 
                 // CREATE OUTPUT ROW
 
@@ -281,6 +310,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 outputRow["UnitPrice1"] = price;
                 outputRow["UnitPriceDoubled1"] = price * 2;
                 outputRow["EffectDate"] = effectDate;
+                outputRow["RecordDate"] = recordDate;
 
                 // ADD ROW TO OUTPUT
                 fullTable.Rows.Add(outputRow);
@@ -302,8 +332,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /* Authors:  Andy Mercer
         /* Purpose:  This example loads 10 records from the SLPricecodes IDO. It includes the bound properties of
         /*           Item, UnitPrice1, and EffectDate, and a calculated property called UnitPriceDoubled1, which
-        /*           is just UnitPrice1 * 2. This example introduces post-filtering, so all properties including
-        /*           the calculated property can now be filtered.
+        /*           is just UnitPrice1 * 2.
+        /*
+        /*           Version C introduces post-filtering, so all properties including the calculated property can
+        /*           now be filtered.
         /*
         /* Copyright 2025, Functional Devices, Inc
         /*
@@ -311,17 +343,24 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_01C_LoadItemPrices_PostFiltering(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_01C_LoadItemPrices_PostFiltering()
         {
 
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadCollectionRequestData userRequest = this.Context.Request as LoadCollectionRequestData;
 
 
 
@@ -332,9 +371,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string userFilterValue;
             string userFilterOperator;
             List<string> userFilters = new List<string>();
-            if (sFilter != null)
+            if (userRequest.Filter != null && userRequest.Filter != "")
             {
-                userFilters = sFilter.Split(
+                userFilters = userRequest.Filter.Split(
                     new string[] { "AND" }, StringSplitOptions.None
                 ).Select(
                     sPropertyFilter =>
@@ -378,6 +417,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     itempricesQueryFilters["EffectDate"] = userFilter;
                 }
 
+                if (userFilter.Contains("RecordDate"))
+                {
+                    itempricesQueryFilters["RecordDate"] = userFilter;
+                }
+
                 if (userFilter.Contains("UnitPrice1"))
                 {
                     itempricesQueryFilters["UnitPrice1"] = userFilter;
@@ -393,6 +437,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
+            /* SET DEFAULT ORDER BY
+            /********************************************************************/
+
+            userRequest.OrderBy = userRequest.OrderBy == null || userRequest.OrderBy == "" ? "Item ASC, EffectDate DESC" : userRequest.OrderBy;
+
+
+
+            /********************************************************************/
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
@@ -402,10 +454,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Item" },
                     { "UnitPrice1" },
                     { "EffectDate" },
+                    { "RecordDate" }
                 },
                 filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
-                orderBy: "Item ASC, EffectDate DESC",
-                recordCap: 10
+                orderBy: userRequest.OrderBy,
+                recordCap: userRequest.RecordCap
             );
 
 
@@ -415,7 +468,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
 
             DataTable fullTable = new DataTable("FullTable");
-            DataTable dtFilteredTable = new DataTable("PostFilteredTable");
+            DataTable filteredTable = new DataTable("PostFilteredTable");
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
@@ -424,6 +477,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             fullTable.Columns.Add("UnitPrice1", typeof(decimal));
             fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
             fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
 
 
 
@@ -439,6 +493,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
 
                 // CREATE OUTPUT ROW
 
@@ -450,6 +505,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 outputRow["UnitPrice1"] = price;
                 outputRow["UnitPriceDoubled1"] = price * 2;
                 outputRow["EffectDate"] = effectDate;
+                outputRow["RecordDate"] = recordDate;
 
                 // ADD ROW TO OUTPUT
 
@@ -467,35 +523,35 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             if (userPostQueryFilterString != "")
             {
-                dtFilteredTable = fullTable.Clone();
+                filteredTable = fullTable.Clone();
                 DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
                 foreach (DataRow row in filteredRows)
                 {
-                    dtFilteredTable.ImportRow(row);
+                    filteredTable.ImportRow(row);
                 }
             }
             else
             {
-                dtFilteredTable = fullTable;
+                filteredTable = fullTable;
             }
 
-            return dtFilteredTable.DefaultView.ToTable();
+            return filteredTable.DefaultView.ToTable();
 
         }
 
         
-        
+
         /**********************************************************************************************************/
         /**********************************************************************************************************/
         /*
-        /* Name:     Example_01D_LoadItemPrices_FilteringOrderingAndCapping
+        /* Name:     Example_01D_LoadItemPrices_FilteringOrderingAndCappingWithParamOverride
         /* Date:     2025-11-14
         /* Authors:  Andy Mercer
         /* Purpose:  This example loads 10 records from the SLPricecodes IDO. It includes the bound properties of
         /*           Item, UnitPrice1, and EffectDate, and a calculated property called UnitPriceDoubled1, which
-        /*           is just UnitPrice1 * 2. This example adds support for the second and third method parameters
-        /*           and allows the caller (whether it is a Mongoose form or API) to override the default order by
-        /*           and record cap. The matching Mongoose form reverses the default ordering and sets the cap to 20.
+        /*           is just UnitPrice1 * 2. 
+        /*
+        /*           Version D adds support for passing input via Method parameters, to allow for custom invocation.
         /*
         /* Copyright 2025, Functional Devices, Inc
         /*
@@ -503,17 +559,29 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_01D_LoadItemPrices_FilteringOrderingAndCapping(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_01D_LoadItemPrices_ParamOverrides(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
         {
 
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap
+            );
 
 
 
@@ -524,9 +592,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string userFilterValue;
             string userFilterOperator;
             List<string> userFilters = new List<string>();
-            if (sFilter != null)
+            if (userRequest.Filter != null && userRequest.Filter != "")
             {
-                userFilters = sFilter.Split(
+                userFilters = userRequest.Filter.Split(
                     new string[] { "AND" }, StringSplitOptions.None
                 ).Select(
                     sPropertyFilter =>
@@ -570,6 +638,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     itempricesQueryFilters["EffectDate"] = userFilter;
                 }
 
+                if (userFilter.Contains("RecordDate"))
+                {
+                    itempricesQueryFilters["RecordDate"] = userFilter;
+                }
+
                 if (userFilter.Contains("UnitPrice1"))
                 {
                     itempricesQueryFilters["UnitPrice1"] = userFilter;
@@ -585,23 +658,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
-            /* PARSE ORDER BY
+            /* SET DEFAULT ORDER BY
             /********************************************************************/
 
-            string parsedOrderBy = sOrderBy ?? "Item ASC, EffectDate DESC";
-
-
-
-            /********************************************************************/
-            /* PARSE RECORD CAP
-            /********************************************************************/
-
-
-            int parsedRecordCap = 10;
-            if (sRecordCap != null && sRecordCap != "")
-            {
-                int.TryParse(sRecordCap, out parsedRecordCap);
-            }
+            userRequest.OrderBy = userRequest.OrderBy != "" ? "Item ASC, EffectDate DESC" : "";
 
 
 
@@ -615,10 +675,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Item" },
                     { "UnitPrice1" },
                     { "EffectDate" },
+                    { "RecordDate" }
                 },
                 filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
-                orderBy: parsedOrderBy,
-                recordCap: parsedRecordCap
+                orderBy: userRequest.OrderBy,
+                recordCap: userRequest.RecordCap
             );
 
 
@@ -628,7 +689,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
 
             DataTable fullTable = new DataTable("FullTable");
-            DataTable dtFilteredTable = new DataTable("PostFilteredTable");
+            DataTable filteredTable = new DataTable("PostFilteredTable");
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
@@ -637,6 +698,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             fullTable.Columns.Add("UnitPrice1", typeof(decimal));
             fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
             fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
 
 
 
@@ -652,6 +714,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
 
                 // CREATE OUTPUT ROW
 
@@ -663,10 +726,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 outputRow["UnitPrice1"] = price;
                 outputRow["UnitPriceDoubled1"] = price * 2;
                 outputRow["EffectDate"] = effectDate;
+                outputRow["RecordDate"] = recordDate;
 
                 // ADD ROW TO OUTPUT
-                fullTable.Rows.Add(outputRow);
 
+                fullTable.Rows.Add(outputRow);
 
             });
 
@@ -680,19 +744,297 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             if (userPostQueryFilterString != "")
             {
-                dtFilteredTable = fullTable.Clone();
+                filteredTable = fullTable.Clone();
                 DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
                 foreach (DataRow row in filteredRows)
                 {
-                    dtFilteredTable.ImportRow(row);
+                    filteredTable.ImportRow(row);
                 }
             }
             else
             {
-                dtFilteredTable = fullTable;
+                filteredTable = fullTable;
             }
 
-            return dtFilteredTable.DefaultView.ToTable();
+            return filteredTable.DefaultView.ToTable();
+
+        }
+
+
+
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+        /*
+        /* Name:     Example_01E_LoadItemPrices_BookmarkPagination
+        /* Date:     2025-11-14
+        /* Authors:  Andy Mercer
+        /* Purpose:  This example loads 10 records from the SLPricecodes IDO. It includes the bound properties of
+        /*           Item, UnitPrice1, and EffectDate, and a calculated property called UnitPriceDoubled1, which
+        /*           is just UnitPrice1 * 2. 
+        /*
+        /*           Version E adds support for standard bookmark-based pagination.
+        /*
+        /* Copyright 2025, Functional Devices, Inc
+        /*
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+
+        [IDOMethod(MethodFlags.CustomLoad)]
+        public DataTable Example_01E_LoadItemPrices_BookmarkPagination(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        {
+
+            /********************************************************************/
+            /* SET UP HELPER VARIABLES
+            /********************************************************************/
+
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap
+            );
+
+
+
+            /********************************************************************/
+            /* PARSE FILTERS
+            /********************************************************************/
+
+            string userFilterValue;
+            string userFilterOperator;
+            List<string> userFilters = new List<string>();
+            if (userRequest.Filter != null && userRequest.Filter != "")
+            {
+                userFilters = userRequest.Filter.Split(
+                    new string[] { "AND" }, StringSplitOptions.None
+                ).Select(
+                    sPropertyFilter =>
+                        "( "
+                        + sPropertyFilter
+                            .Trim()
+                            .Replace(" <> N", " <> ")
+                            .Replace(" = N", " = ")
+                            .Replace(" like N", " like ")
+                            .Replace("DATEPART( yyyy, ", "YEAR( ")
+                            .Replace("DATEPART( mm, ", "MONTH( ")
+                            .Replace("DATEPART( dd, ", "DAY( ")
+                        + " )"
+                ).ToList();
+            }
+
+            Dictionary<string, string> itempricesQueryFilters = new Dictionary<string, string>() {
+                { "Item", "" },
+                { "EffectDate", "" },
+                { "RecordDate", "" },
+                { "RowPointer", "" },
+                { "UnitPrice1", "" }
+            };
+
+            Dictionary<string, string> postQueryFilters = new Dictionary<string, string>() {
+                { "UnitPriceDoubled1", "" }
+            };
+
+            userFilters.ForEach(userFilter =>
+            {
+
+                userFilter = utils.FixParenthesis(userFilter);
+                userFilterValue = utils.ExtractValue(userFilter);
+                userFilterOperator = utils.ExtractOperator(userFilter);
+
+                if (userFilter.Contains("Item"))
+                {
+                    itempricesQueryFilters["Item"] = userFilter;
+                }
+
+                if (userFilter.Contains("EffectDate"))
+                {
+                    itempricesQueryFilters["EffectDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RecordDate"))
+                {
+                    itempricesQueryFilters["RecordDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RowPointer"))
+                {
+                    itempricesQueryFilters["RowPointer"] = userFilter;
+                }
+
+                if (userFilter.Contains("UnitPrice1"))
+                {
+                    itempricesQueryFilters["UnitPrice1"] = userFilter;
+                }
+
+                if (userFilter.Contains("UnitPriceDoubled1"))
+                {
+                    postQueryFilters["UnitPriceDoubled1"] = userFilter.Replace(" null ", " '' ");
+                }
+
+            });
+
+
+
+            /********************************************************************/
+            /* SET DEFAULT ORDER BY
+            /********************************************************************/
+
+            userRequest.OrderBy = userRequest.OrderBy != "" ? "Item ASC, EffectDate DESC" : "";
+
+
+
+            /********************************************************************/
+            /* QUERY ITEM PRICES TO GET BASE RECORDS
+            /********************************************************************/
+
+            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+                IDOName: "SLItemprices",
+                properties: new List<string>() {
+                    { "Item" },
+                    { "UnitPrice1" },
+                    { "EffectDate" },
+                    { "RecordDate" },
+                    { "RowPointer" }
+                },
+                filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
+                orderBy: userRequest.OrderBy,
+                recordCap: 0
+            );
+
+
+            /********************************************************************/
+            /* CREATE EMPTY TABLE
+            /********************************************************************/
+
+            DataTable fullTable = new DataTable("FullTable");
+            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataRow outputRow;
+
+            // ADD COLUMN STRUCTURE
+
+            fullTable.Columns.Add("Item", typeof(string));
+            fullTable.Columns.Add("UnitPrice1", typeof(decimal));
+            fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
+            fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
+            fullTable.Columns.Add("RowPointer", typeof(string));
+
+
+
+            /********************************************************************/
+            /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
+            /********************************************************************/
+
+            itemPriceRecords.Items.ForEach(itemPriceRecord =>
+            {
+
+                // GRAB THE ITEM
+
+                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+
+                // CREATE OUTPUT ROW
+
+                outputRow = fullTable.NewRow();
+
+                // FILL IN OUTPUT ROW
+
+                outputRow["Item"] = item;
+                outputRow["UnitPrice1"] = price;
+                outputRow["UnitPriceDoubled1"] = price * 2;
+                outputRow["EffectDate"] = effectDate;
+                outputRow["RecordDate"] = recordDate;
+                outputRow["RowPointer"] = rowPointer;
+
+                // ADD ROW TO OUTPUT
+
+                fullTable.Rows.Add(outputRow);
+
+            });
+
+            /********************************************************************/
+            /* APPLY POST-FILTERS AND SORTING
+            /********************************************************************/
+
+            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
+
+            if (userPostQueryFilterString != "")
+            {
+                filteredTable = fullTable.Clone();
+                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
+                foreach (DataRow row in filteredRows)
+                {
+                    filteredTable.ImportRow(row);
+                }
+            }
+            else
+            {
+                filteredTable = fullTable;
+            }
+
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
+
+            /********************************************************************/
+            /* APPLY RECORD CAPPING AND CREATE BOOKMARK
+            /********************************************************************/
+
+            if (filteredTable.Rows.Count > 0)
+            {
+
+                if (userRequest.RecordCap != 0 && filteredTable.Rows.Count > userRequest.RecordCap)
+                {
+
+                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[filteredTable.Columns["RowPointer"].Ordinal] }; // SET TO THE ROWPOINTER COLUMN
+                    int index = 0;
+                    if (userRequest.Bookmark != null && userRequest.Bookmark != "")
+                    {
+                        index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark })) + 1;
+                    }
+
+                    if (index < filteredTable.Rows.Count)
+                    {
+
+                        filteredTable = filteredTable.AsEnumerable().Skip(index).Take(userRequest.RecordCap + 1).CopyToDataTable();
+
+                        if (filteredTable.Rows.Count > userRequest.RecordCap)
+                        {
+                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                        }
+                        else
+                        {
+                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                        }
+
+                    }
+                    else
+                    {
+                        filteredTable.Clear();
+                        userRequest.Bookmark = "";
+                    }
+
+                }
+                else
+                {
+                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                }
+
+            }
+
+            return filteredTable;
 
         }
 
@@ -720,10 +1062,21 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap
+            );
 
 
 
@@ -733,25 +1086,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             string userFilterValue;
             string userFilterOperator;
-            List<string> userFilters = new List<string>();
-            if (sFilter != null)
-            {
-                userFilters = sFilter.Split(
-                    new string[] { "AND" }, StringSplitOptions.None
-                ).Select(
-                    sPropertyFilter =>
-                        "( "
-                        + sPropertyFilter
-                            .Trim()
-                            .Replace(" <> N", " <> ")
-                            .Replace(" = N", " = ")
-                            .Replace(" like N", " like ")
-                            .Replace("DATEPART( yyyy, ", "YEAR( ")
-                            .Replace("DATEPART( mm, ", "MONTH( ")
-                            .Replace("DATEPART( dd, ", "DAY( ")
-                        + " )"
-                ).ToList();
-            }
 
             Dictionary<string, string> itempricesQueryFilters = new Dictionary<string, string>() {
                 { "Item", "" },
@@ -763,7 +1097,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 { "UnitPriceDoubled1", "" }
             };
 
-            userFilters.ForEach(userFilter =>
+            userRequest.Filters.ForEach(userFilter =>
             {
 
                 userFilter = utils.FixParenthesis(userFilter);
@@ -795,23 +1129,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
-            /* PARSE ORDER BY
+            /* SET DEFAULT ORDER BY
             /********************************************************************/
 
-            string parsedOrderBy = sOrderBy ?? "Item ASC, EffectDate DESC";
-
-
-
-            /********************************************************************/
-            /* PARSE RECORD CAP
-            /********************************************************************/
-
-
-            int parsedRecordCap = 0;
-            if (sRecordCap != null && sRecordCap != "")
-            {
-                int.TryParse(sRecordCap, out parsedRecordCap);
-            }
+            userRequest.OrderBy = userRequest.OrderBy != "" ? "Item ASC, EffectDate DESC" : "";
 
 
 
@@ -828,7 +1149,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 },
                 filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
                 orderBy: "Item ASC, EffectDate DESC", // THIS WILL BE HARDCODED SO THAT THE FIRST RECORD FOR EACH ITEM WILL ALWAYS BE THE HIGHEST EFFECT DATE
-                recordCap: parsedRecordCap
+                recordCap: 0
             );
 
 
@@ -912,9 +1233,15 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 filteredTable = fullTable;
             }
 
-            filteredTable.DefaultView.Sort = parsedOrderBy;
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
+            if (userRequest.RecordCap > 0)
+            {
+                filteredTable = filteredTable.AsEnumerable().Take(userRequest.RecordCap).CopyToDataTable();
+            }
 
-            return filteredTable.DefaultView.ToTable();
+            return filteredTable;
+
 
         }
 
@@ -963,10 +1290,21 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap
+            );
 
 
 
@@ -977,25 +1315,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string customerPriceCode = "000"; // !! CHANGE THIS TO WHATEVER YOUR BASE LIST PRICE CODE IS !!
             string userFilterValue;
             string userFilterOperator;
-            List<string> userFilters = new List<string>();
-            if (sFilter != null)
-            {
-                userFilters = sFilter.Split(
-                    new string[] { "AND" }, StringSplitOptions.None
-                ).Select(
-                    sPropertyFilter =>
-                        "( "
-                        + sPropertyFilter
-                            .Trim()
-                            .Replace(" <> N", " <> ")
-                            .Replace(" = N", " = ")
-                            .Replace(" like N", " like ")
-                            .Replace("DATEPART( yyyy, ", "YEAR( ")
-                            .Replace("DATEPART( mm, ", "MONTH( ")
-                            .Replace("DATEPART( dd, ", "DAY( ")
-                        + " )"
-                ).ToList();
-            }
 
             Dictionary<string, string> itempriceQueryFilters = new Dictionary<string, string>() {
                 { "Item", "" },
@@ -1011,7 +1330,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 { "CustomerPrice", "" }
             };
 
-            userFilters.ForEach(userFilter =>
+            userRequest.Filters.ForEach(userFilter =>
             {
 
                 userFilter = utils.FixParenthesis(userFilter);
@@ -1047,25 +1366,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             });
 
 
-
             /********************************************************************/
-            /* PARSE ORDER BY
-            /********************************************************************/
-
-            string parsedOrderBy = sOrderBy ?? "Item ASC, EffectDate DESC";
-
-
-
-            /********************************************************************/
-            /* PARSE RECORD CAP
+            /* SET DEFAULT ORDER BY
             /********************************************************************/
 
-
-            int parsedRecordCap = 0;
-            if (sRecordCap != null && sRecordCap != "")
-            {
-                int.TryParse(sRecordCap, out parsedRecordCap);
-            }
+            userRequest.OrderBy = userRequest.OrderBy != "" ? "Item ASC, EffectDate DESC" : "";
 
 
 
@@ -1256,11 +1561,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 filteredTable = fullTable;
             }
 
-            filteredTable.DefaultView.Sort = parsedOrderBy;
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
-            if (parsedRecordCap > 0)
+            if (userRequest.RecordCap > 0)
             {
-                filteredTable = filteredTable.AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
+                filteredTable = filteredTable.AsEnumerable().Take(userRequest.RecordCap).CopyToDataTable();
             }
 
             return filteredTable;
@@ -1292,10 +1597,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
 
 
 
@@ -1303,32 +1607,15 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
             /********************************************************************/
 
-            LoadCollectionRequestData userRequest = this.Context.Request as LoadCollectionRequestData ?? new LoadCollectionRequestData(
-                idoName: "ue_FIS_CustomLoadMethodExamples",
-                propertyList: "",
-                filter: "",
-                orderBy: "",
-                recordCap: 0
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap
             );
 
-            if (sFilter != null)
-            {
-                userRequest.Filter = sFilter;
-            }
-            userRequest.Filter = userRequest.Filter ?? "";
+            userRequest.OrderBy = userRequest.OrderBy != "" ? "Item ASC, EffectDate DESC" : "";
 
-            if (sOrderBy != null)
-            {
-                userRequest.OrderBy = sOrderBy;
-            }
-            userRequest.OrderBy = userRequest.OrderBy ?? "Item ASC, EffectDate DESC";
-
-            if (sRecordCap != null && sRecordCap != "")
-            {
-                int parsedRecordCap = 0;
-                int.TryParse(sRecordCap, out parsedRecordCap);
-                userRequest.RecordCap = parsedRecordCap;
-            }
 
 
             /********************************************************************/
@@ -1338,25 +1625,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string custPriceCode = "000"; // !! CHANGE THIS TO WHATEVER YOUR BASE LIST PRICE CODE IS !!
             string userFilterValue;
             string userFilterOperator;
-            List<string> userFilters = new List<string>();
-            if (userRequest.Filter != "")
-            {
-                userFilters = userRequest.Filter.Split(
-                    new string[] { "AND" }, StringSplitOptions.None
-                ).Select(
-                    sPropertyFilter =>
-                        "( "
-                        + sPropertyFilter
-                            .Trim()
-                            .Replace(" <> N", " <> ")
-                            .Replace(" = N", " = ")
-                            .Replace(" like N", " like ")
-                            .Replace("DATEPART( yyyy, ", "YEAR( ")
-                            .Replace("DATEPART( mm, ", "MONTH( ")
-                            .Replace("DATEPART( dd, ", "DAY( ")
-                        + " )"
-                ).ToList();
-            }
 
             Dictionary<string, string> itempriceQueryFilters = new Dictionary<string, string>() {
                 { "Item", "Item LIKE 'BI%'" },
@@ -1374,7 +1642,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 { "CustomerPrice", "" }
             };
 
-            userFilters.ForEach(userFilter =>
+            userRequest.Filters.ForEach(userFilter =>
             {
 
                 userFilter = utils.FixParenthesis(userFilter);
@@ -1609,7 +1877,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             }
 
             /********************************************************************/
-            /* APPLY POST-FILTERS
+            /* APPLY POST-FILTERS AND SORTING
             /********************************************************************/
 
             string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
@@ -1631,13 +1899,17 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             filteredTable.DefaultView.Sort = userRequest.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
 
+            /********************************************************************/
+            /* APPLY RECORD CAPPING AND CREATE BOOKMARK
+            /********************************************************************/
+
             if (filteredTable.Rows.Count > 0)
             {
 
-                if (userRequest.RecordCap > 0)
+                if (userRequest.RecordCap != 0 && filteredTable.Rows.Count > userRequest.RecordCap)
                 {
 
-                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[6] };
+                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[filteredTable.Columns["RowPointer"].Ordinal] }; // SET TO THE ROWPOINTER COLUMN
                     int index = 0;
                     if (userRequest.Bookmark != null && userRequest.Bookmark != "")
                     {
@@ -1645,9 +1917,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     }
 
                     filteredTable = filteredTable.AsEnumerable().Skip(index + 1).Take(userRequest.RecordCap + 1).CopyToDataTable();
-                }
 
-                userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+
+                }
+                else
+                {
+                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                }
 
             }
 
@@ -1680,10 +1957,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
 
 
 
@@ -2073,10 +2349,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities()
-            {
-                IDOCommands = this.Context.Commands
-            };
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
 
 
 
