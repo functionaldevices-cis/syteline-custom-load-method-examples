@@ -1090,7 +1090,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, string> itempricesQueryFilters = new Dictionary<string, string>() {
                 { "Item", "" },
                 { "EffectDate", "" },
-                { "UnitPrice1", "" }
+                { "UnitPrice1", "" },
+                { "RecordDate", "" },
+                { "RowPointer", "" }
             };
 
             Dictionary<string, string> postQueryFilters = new Dictionary<string, string>() {
@@ -1112,6 +1114,16 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (userFilter.Contains("EffectDate"))
                 {
                     itempricesQueryFilters["EffectDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RecordDate"))
+                {
+                    itempricesQueryFilters["RecordDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RowPointer"))
+                {
+                    itempricesQueryFilters["RowPointer"] = userFilter;
                 }
 
                 if (userFilter.Contains("UnitPrice1"))
@@ -1146,6 +1158,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Item" },
                     { "UnitPrice1" },
                     { "EffectDate" },
+                    { "RecordDate" },
+                    { "RowPointer" }
                 },
                 filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
                 orderBy: "Item ASC, EffectDate DESC", // THIS WILL BE HARDCODED SO THAT THE FIRST RECORD FOR EACH ITEM WILL ALWAYS BE THE HIGHEST EFFECT DATE
@@ -1169,6 +1183,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             fullTable.Columns.Add("UnitPrice1", typeof(decimal));
             fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
             fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
+            fullTable.Columns.Add("RowPointer", typeof(string));
 
 
 
@@ -1184,6 +1200,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                 if (!itemIndices.ContainsKey(item))
                 {
@@ -1202,6 +1220,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     outputRow["UnitPrice1"] = price;
                     outputRow["UnitPriceDoubled1"] = price * 2;
                     outputRow["EffectDate"] = effectDate;
+                    outputRow["RecordDate"] = recordDate;
+                    outputRow["RowPointer"] = rowPointer;
 
                     // ADD ROW TO OUTPUT
 
@@ -1214,7 +1234,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
-            /* APPLY POST-FILTERS AND USER-SPECIFIED ORDER BY
+            /* APPLY POST-FILTERS AND SORTING
             /********************************************************************/
 
             string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
@@ -1235,13 +1255,54 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             filteredTable.DefaultView.Sort = userRequest.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
-            if (userRequest.RecordCap > 0)
+
+            /********************************************************************/
+            /* APPLY RECORD CAPPING AND CREATE BOOKMARK
+            /********************************************************************/
+
+            if (filteredTable.Rows.Count > 0)
             {
-                filteredTable = filteredTable.AsEnumerable().Take(userRequest.RecordCap).CopyToDataTable();
+
+                if (userRequest.RecordCap != 0 && filteredTable.Rows.Count > userRequest.RecordCap)
+                {
+
+                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[filteredTable.Columns["RowPointer"].Ordinal] }; // SET TO THE ROWPOINTER COLUMN
+                    int index = 0;
+                    if (userRequest.Bookmark != null && userRequest.Bookmark != "")
+                    {
+                        index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark })) + 1;
+                    }
+
+                    if (index < filteredTable.Rows.Count)
+                    {
+
+                        filteredTable = filteredTable.AsEnumerable().Skip(index).Take(userRequest.RecordCap + 1).CopyToDataTable();
+
+                        if (filteredTable.Rows.Count > userRequest.RecordCap)
+                        {
+                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                        }
+                        else
+                        {
+                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                        }
+
+                    }
+                    else
+                    {
+                        filteredTable.Clear();
+                        userRequest.Bookmark = "";
+                    }
+
+                }
+                else
+                {
+                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                }
+
             }
 
             return filteredTable;
-
 
         }
 
