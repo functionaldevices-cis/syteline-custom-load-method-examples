@@ -1913,12 +1913,29 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     int index = 0;
                     if (userRequest.Bookmark != null && userRequest.Bookmark != "")
                     {
-                        index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark }));
+                        index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark })) + 1;
                     }
 
-                    filteredTable = filteredTable.AsEnumerable().Skip(index + 1).Take(userRequest.RecordCap + 1).CopyToDataTable();
+                    if (index < filteredTable.Rows.Count)
+                    {
 
-                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                        filteredTable = filteredTable.AsEnumerable().Skip(index).Take(userRequest.RecordCap + 1).CopyToDataTable();
+
+                        if (filteredTable.Rows.Count > userRequest.RecordCap)
+                        {
+                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                        }
+                        else
+                        {
+                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                        }
+
+                    }
+                    else
+                    {
+                        filteredTable.Clear();
+                        userRequest.Bookmark = "";
+                    }
 
                 }
                 else
