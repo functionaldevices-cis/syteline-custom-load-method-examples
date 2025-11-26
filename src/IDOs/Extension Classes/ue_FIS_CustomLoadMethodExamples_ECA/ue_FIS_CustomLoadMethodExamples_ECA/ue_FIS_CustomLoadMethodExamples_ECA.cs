@@ -1082,8 +1082,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
             /********************************************************************/
 
-            string test = (this.Context.Request as LoadCollectionRequestData).RecordCap.ToString();
-
             LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
                 contextRequest: this.Context.Request as LoadCollectionRequestData,
                 filterOverride: sFilter,
@@ -1288,8 +1286,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             if (filteredTable.Rows.Count > 0)
             {
 
-                filteredTable.Rows[0]["Item"] = test;
-
                 if (userRequest.RecordCap != 0 && filteredTable.Rows.Count > userRequest.RecordCap)
                 {
 
@@ -1360,6 +1356,229 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 }
 
             }
+            else
+            {
+                userRequest.Bookmark = "<B/>";
+            }
+
+            return filteredTable;
+
+        }
+
+
+
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+        /*
+        /* Name:     Example_01G_LoadItemPrices_Standardized
+        /* Date:     2025-11-14
+        /* Authors:  Andy Mercer
+        /* Purpose:  This example loads 10 records from the SLPricecodes IDO. It includes the bound properties of
+        /*           Item, UnitPrice1, and EffectDate, and a calculated property called UnitPriceDoubled1, which
+        /*           is just UnitPrice1 * 2. 
+        /*
+        /*           Version G is functionally identical to version F. The differences are that some aspects have
+        /*           been abstracted into helper methods to reduce code repetition. This version will be the 
+        /*           template that further examples will be based on.
+        /*
+        /* Copyright 2025, Functional Devices, Inc
+        /*
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+
+        [IDOMethod(MethodFlags.CustomLoad)]
+        public DataTable Example_01G_LoadItemPrices_Standardized(string sFilter = null, string sOrderBy = null, string sRecordCap = null, string sBookmark = null)
+        {
+
+            /********************************************************************/
+            /* SET UP HELPER VARIABLES
+            /********************************************************************/
+
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap,
+                bookmarkOverride: sBookmark
+            );
+
+
+
+            /********************************************************************/
+            /* PARSE FILTERS
+            /********************************************************************/
+
+            string userFilterValue;
+            string userFilterOperator;
+
+            Dictionary<string, string> itempricesQueryFilters = new Dictionary<string, string>() {
+                { "Item", "" },
+                { "EffectDate", "" },
+                { "RecordDate", "" },
+                { "RowPointer", "" },
+                { "UnitPrice1", "" }
+            };
+
+            Dictionary<string, string> postQueryFilters = new Dictionary<string, string>() {
+                { "UnitPriceDoubled1", "" }
+            };
+
+            userRequest.Filters.ForEach(userFilter =>
+            {
+
+                userFilter = utils.FixParenthesis(userFilter);
+                userFilterValue = utils.ExtractValue(userFilter);
+                userFilterOperator = utils.ExtractOperator(userFilter);
+
+                if (userFilter.Contains("Item"))
+                {
+                    itempricesQueryFilters["Item"] = userFilter;
+                }
+
+                if (userFilter.Contains("EffectDate"))
+                {
+                    itempricesQueryFilters["EffectDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RecordDate"))
+                {
+                    itempricesQueryFilters["RecordDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RowPointer"))
+                {
+                    itempricesQueryFilters["RowPointer"] = userFilter;
+                }
+
+                if (userFilter.Contains("UnitPrice1"))
+                {
+                    itempricesQueryFilters["UnitPrice1"] = userFilter;
+                }
+
+                if (userFilter.Contains("UnitPriceDoubled1"))
+                {
+                    postQueryFilters["UnitPriceDoubled1"] = userFilter.Replace(" null ", " '' ");
+                }
+
+            });
+
+            if ((userRequest.OrderBy == "RowPointer" || userRequest.OrderBy == "RowPointer ASC") && userRequest.Bookmark != "<B/>")
+            {
+                postQueryFilters["RowPointer"] = "RowPointer > '" + userRequest.Bookmark + "'";
+            }
+
+
+
+            /********************************************************************/
+            /* SET DEFAULT ORDER BY
+            /********************************************************************/
+
+            userRequest.OrderBy = userRequest.OrderBy != "" ? "Item ASC, EffectDate DESC" : "";
+
+
+
+            /********************************************************************/
+            /* QUERY ITEM PRICES TO GET BASE RECORDS
+            /********************************************************************/
+
+            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+                IDOName: "SLItemprices",
+                properties: new List<string>() {
+                    { "Item" },
+                    { "UnitPrice1" },
+                    { "EffectDate" },
+                    { "RecordDate" },
+                    { "RowPointer" }
+                },
+                filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
+                orderBy: userRequest.OrderBy,
+                recordCap: (userRequest.Bookmark == "<B/>" || userRequest.OrderBy == "RowPointer") ? userRequest.RecordCap + 1 : 0
+            );
+
+
+            /********************************************************************/
+            /* CREATE EMPTY TABLE
+            /********************************************************************/
+
+            DataTable fullTable = new DataTable("FullTable");
+            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataRow outputRow;
+
+            // ADD COLUMN STRUCTURE
+
+            fullTable.Columns.Add("Item", typeof(string));
+            fullTable.Columns.Add("UnitPrice1", typeof(decimal));
+            fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
+            fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
+            fullTable.Columns.Add("RowPointer", typeof(string));
+
+
+
+            /********************************************************************/
+            /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
+            /********************************************************************/
+
+            itemPriceRecords.Items.ForEach(itemPriceRecord =>
+            {
+
+                // GRAB THE ITEM
+
+                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+
+                // CREATE OUTPUT ROW
+
+                outputRow = fullTable.NewRow();
+
+                // FILL IN OUTPUT ROW
+
+                outputRow["Item"] = item;
+                outputRow["UnitPrice1"] = price;
+                outputRow["UnitPriceDoubled1"] = price * 2;
+                outputRow["EffectDate"] = effectDate;
+                outputRow["RecordDate"] = recordDate;
+                outputRow["RowPointer"] = rowPointer;
+
+                // ADD ROW TO OUTPUT
+
+                fullTable.Rows.Add(outputRow);
+
+            });
+
+            /********************************************************************/
+            /* APPLY POST-FILTERS AND SORTING
+            /********************************************************************/
+
+            filteredTable = utils.ApplyPostFilters(
+                fullTable: fullTable,
+                userRequest: userRequest,
+                postQueryFilters: postQueryFilters
+            );
+
+
+
+            /********************************************************************/
+            /* APPLY RECORD CAPPING AND CREATE BOOKMARK
+            /********************************************************************/
+
+            filteredTable = utils.ApplyCapping(
+                filteredTable: filteredTable,
+                userRequest: userRequest
+            );
 
             return filteredTable;
 

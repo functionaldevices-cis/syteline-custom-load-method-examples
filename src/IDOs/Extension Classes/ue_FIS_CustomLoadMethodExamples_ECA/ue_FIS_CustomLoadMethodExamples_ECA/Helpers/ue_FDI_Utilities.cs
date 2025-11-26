@@ -4,6 +4,7 @@ using Mongoose.IDO.Metadata;
 using Mongoose.IDO.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -501,6 +502,118 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             }
 
             return oUpdateItem;
+
+        }
+
+        public DataTable ApplyPostFilters(DataTable fullTable, LoadRecordsRequestData userRequest, Dictionary<string, string> postQueryFilters)
+        {
+
+            DataTable filteredTable;
+
+            string userPostQueryFilterString = this.BuildFilterString(postQueryFilters.Values.ToList());
+
+            if (userPostQueryFilterString != "")
+            {
+                filteredTable = fullTable.Clone();
+                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
+                foreach (DataRow row in filteredRows)
+                {
+                    filteredTable.ImportRow(row);
+                }
+            }
+            else
+            {
+                filteredTable = fullTable;
+            }
+
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
+
+            return filteredTable.DefaultView.ToTable();
+
+        }
+
+        public DataTable ApplyCapping(DataTable filteredTable, LoadRecordsRequestData userRequest)
+        {
+
+            if (filteredTable.Rows.Count > 0)
+            {
+
+                if (userRequest.RecordCap != 0 && filteredTable.Rows.Count > userRequest.RecordCap)
+                {
+
+                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[filteredTable.Columns["RowPointer"].Ordinal] }; // SET TO THE ROWPOINTER COLUMN
+                    int bookmarkIndex = 0;
+
+                    // CHECK IF THERE IS A BOOKMARK
+
+                    if (userRequest.Bookmark == "<B/>")
+                    {
+
+                        // THERE IS NO BOOKMARK SO THIS IS THE FIRST REQUEST
+
+                        if (filteredTable.Rows.Count > userRequest.RecordCap + 1)
+                        {
+                            filteredTable = filteredTable.AsEnumerable().Take(userRequest.RecordCap + 1).CopyToDataTable();
+                        }
+                        else
+                        {
+                            // NOTHING BECAUSE WE PRECAPPED
+                        }
+
+                        userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                    }
+                    else
+                    {
+
+                        // THERE IS A BOOKMARK SO WE NEED TO SKIP AHEAD
+
+                        bookmarkIndex = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark }));
+
+                        // CHECK TO SEE IF THE BOOKMARK IS THE LAST ROW
+
+                        if (bookmarkIndex == filteredTable.Rows.Count)
+                        {
+
+                            // CLEAR THE TABLE
+
+                            filteredTable.Clear();
+                            userRequest.Bookmark = "<B/>";
+
+                        }
+                        else
+                        {
+
+                            // SKIP AHEAD OF THE BOOKMARK AND GRAB THE NEXT SET OF RECORDS
+
+                            filteredTable = filteredTable.AsEnumerable().Skip(bookmarkIndex + 1).Take(userRequest.RecordCap + 1).CopyToDataTable();
+
+                            // CHECK TO SEE IF THE NEW SET OF RECORDS IS GREATER THAN THE CAP
+
+                            if (filteredTable.Rows.Count > userRequest.RecordCap)
+                            {
+                                userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                            }
+                            else
+                            {
+                                userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                            }
+
+                        }
+                    }
+
+                }
+                else
+                {
+                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                }
+
+            }
+            else
+            {
+                userRequest.Bookmark = "<B/>";
+            }
+
+            return filteredTable;
 
         }
 
