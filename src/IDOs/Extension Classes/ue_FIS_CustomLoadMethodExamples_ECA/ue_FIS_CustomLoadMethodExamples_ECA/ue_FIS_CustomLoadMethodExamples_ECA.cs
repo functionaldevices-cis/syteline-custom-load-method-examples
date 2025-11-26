@@ -57,7 +57,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -165,7 +165,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -351,7 +351,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -567,7 +567,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -788,7 +788,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -1073,7 +1073,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -1395,7 +1395,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -1620,7 +1620,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -1875,7 +1875,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -2224,7 +2224,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 
@@ -2608,7 +2608,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
-            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+            Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
 

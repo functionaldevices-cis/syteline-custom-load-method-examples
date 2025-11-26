@@ -13,13 +13,13 @@ using ue_FIS_CustomLoadMethodExamples_ECA.Models;
 namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 {
 
-    public class ue_FDI_Utilities {
+    public class Utilities {
 
         public IIDOCommands IDOCommands { get; set; }
         public int BGTaskNum { get; set; }
         public int DebugLevel { get; set; }
 
-        public ue_FDI_Utilities(IIDOCommands commands, int bGTaskNum = 0, int debugLevel = 0)
+        public Utilities(IIDOCommands commands, int bGTaskNum = 0, int debugLevel = 0)
         {
             this.IDOCommands = commands;
             this.BGTaskNum = bGTaskNum;
