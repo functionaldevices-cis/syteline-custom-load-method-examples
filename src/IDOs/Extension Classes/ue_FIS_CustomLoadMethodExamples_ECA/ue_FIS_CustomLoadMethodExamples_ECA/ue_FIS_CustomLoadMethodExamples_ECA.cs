@@ -1199,7 +1199,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 },
                 filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
                 orderBy: userRequest.OrderBy,
-                recordCap: (userRequest.Bookmark == "<B/>" || userRequest.OrderBy == "RowPointer") ? userRequest.RecordCap + 1 : 0
+                recordCap: ((userRequest.Bookmark == "<B/>" || userRequest.OrderBy == "RowPointer") && (postQueryFilters["UnitPriceDoubled1"] == "")) ? userRequest.RecordCap + 1 : 0
             );
 
 
@@ -1502,7 +1502,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 },
                 filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
                 orderBy: userRequest.OrderBy,
-                recordCap: (userRequest.Bookmark == "<B/>" || userRequest.OrderBy == "RowPointer") ? userRequest.RecordCap + 1 : 0
+                recordCap: ((userRequest.Bookmark == "<B/>" || userRequest.OrderBy == "RowPointer") && (postQueryFilters["UnitPriceDoubled1"] == "")) ? userRequest.RecordCap + 1 : 0
             );
 
 
