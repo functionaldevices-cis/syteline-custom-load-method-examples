@@ -505,30 +505,19 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         }
 
-        public DataTable ApplyPostFilters(DataTable fullTable, LoadRecordsRequestData userRequest, Dictionary<string, string> postQueryFilters)
+        public DataTable ApplyPostFilters(DataTable fullTable, LoadRecordsRequestData userRequest, string userPostQueryFilterString)
         {
 
             DataTable filteredTable;
 
-            string userPostQueryFilterString = this.BuildFilterString(postQueryFilters.Values.ToList());
-
-            if (userPostQueryFilterString != "")
+            filteredTable = fullTable.Clone();
+            DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
+            foreach (DataRow row in filteredRows)
             {
-                filteredTable = fullTable.Clone();
-                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
-                foreach (DataRow row in filteredRows)
-                {
-                    filteredTable.ImportRow(row);
-                }
+                filteredTable.ImportRow(row);
             }
-            else
-            {
-                filteredTable = fullTable;
-            }
-
-            filteredTable.DefaultView.Sort = userRequest.OrderBy;
-
-            return filteredTable.DefaultView.ToTable();
+ 
+            return filteredTable;
 
         }
 

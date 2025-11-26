@@ -1398,6 +1398,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 commands: this.Context.Commands
             );
 
+            (bool haveBookmark, bool arePostFiltering, bool orderingByRowPointer, bool areCappingResults) flags = (false, false, false, false);
+
 
 
             /********************************************************************/
@@ -1411,6 +1413,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 recordCapOverride: sRecordCap,
                 bookmarkOverride: sBookmark
             );
+
+            userRequest.OrderBy = userRequest.OrderBy == "" ? "Item ASC, EffectDate DESC" : userRequest.OrderBy;
+
+            flags.haveBookmark = userRequest.Bookmark != "<B/>";
+            flags.orderingByRowPointer = userRequest.OrderBy == "RowPointer" || userRequest.OrderBy == "RowPointer ASC";
+            flags.areCappingResults = userRequest.RecordCap != 0;
 
 
 
@@ -1472,10 +1480,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             });
 
-            if ((userRequest.OrderBy == "RowPointer" || userRequest.OrderBy == "RowPointer ASC") && userRequest.Bookmark != "<B/>")
+            if (flags.orderingByRowPointer && flags.haveBookmark)
             {
                 postQueryFilters["RowPointer"] = "RowPointer > '" + userRequest.Bookmark + "'";
             }
+
+            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
+            flags.arePostFiltering = userPostQueryFilterString != "";
 
 
 
@@ -1563,11 +1574,17 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY POST-FILTERS AND SORTING
             /********************************************************************/
 
-            filteredTable = utils.ApplyPostFilters(
-                fullTable: fullTable,
-                userRequest: userRequest,
-                postQueryFilters: postQueryFilters
-            );
+            if (flags.arePostFiltering)
+            {
+                filteredTable = utils.ApplyPostFilters(
+                    fullTable: fullTable,
+                    userRequest: userRequest,
+                    userPostQueryFilterString: userPostQueryFilterString
+                );
+            }
+
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
 
 
 
