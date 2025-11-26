@@ -1590,7 +1590,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyCapping(
+            filteredTable = utils.ApplyPaging(
                 filteredTable: filteredTable,
                 userRequest: userRequest
             );
@@ -1830,7 +1830,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyCapping(
+            filteredTable = utils.ApplyPaging(
                 filteredTable: filteredTable,
                 userRequest: userRequest
             );
@@ -2204,7 +2204,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyCapping(
+            filteredTable = utils.ApplyPaging(
                 filteredTable: filteredTable,
                 userRequest: userRequest
             );
@@ -2587,11 +2587,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             filteredTable.DefaultView.Sort = userRequest.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
 
+
+
             /********************************************************************/
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyCapping(
+            filteredTable = utils.ApplyPaging(
                 filteredTable: filteredTable,
                 userRequest: userRequest
             );

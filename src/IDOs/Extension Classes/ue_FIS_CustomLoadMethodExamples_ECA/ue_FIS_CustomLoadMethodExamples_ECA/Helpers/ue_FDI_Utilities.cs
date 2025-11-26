@@ -521,7 +521,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         }
 
-        public DataTable ApplyCapping(DataTable filteredTable, LoadRecordsRequestData userRequest)
+        public DataTable ApplyPaging(DataTable filteredTable, LoadRecordsRequestData userRequest)
         {
 
             if (filteredTable.Rows.Count > 0)
