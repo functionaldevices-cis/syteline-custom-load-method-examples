@@ -1803,11 +1803,17 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY POST-FILTERS AND SORTING
             /********************************************************************/
 
-            filteredTable = utils.ApplyPostFilters(
-                fullTable: fullTable,
-                userRequest: userRequest,
-                userPostQueryFilterString: userPostQueryFilterString
-            );
+            if (flags.arePostFiltering)
+            {
+                filteredTable = utils.ApplyPostFilters(
+                    fullTable: fullTable,
+                    userRequest: userRequest,
+                    userPostQueryFilterString: userPostQueryFilterString
+                );
+            }
+
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
 
 
 
