@@ -1921,7 +1921,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string userFilterOperator;
 
             Dictionary<string, string> itempriceQueryFilters = new Dictionary<string, string>() {
-                { "Item", "Item LIKE 'BI%'" },
+                { "Item", "" },
                 { "EffectDate", "" },
                 { "RecordDate", "" },
                 { "RowPointer", "" },
