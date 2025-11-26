@@ -1491,14 +1491,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
-            /* SET DEFAULT ORDER BY
-            /********************************************************************/
-
-            userRequest.OrderBy = userRequest.OrderBy == "" ? "Item ASC, EffectDate DESC" : userRequest.OrderBy;
-
-
-
-            /********************************************************************/
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
