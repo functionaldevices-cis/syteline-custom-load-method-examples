@@ -1514,18 +1514,17 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* CREATE EMPTY TABLE
             /********************************************************************/
 
-            DataTable fullTable = new DataTable("FullTable");
-            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataTable outputTable = new DataTable("FullTable");
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
 
-            fullTable.Columns.Add("Item", typeof(string));
-            fullTable.Columns.Add("UnitPrice1", typeof(decimal));
-            fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
-            fullTable.Columns.Add("EffectDate", typeof(DateTime));
-            fullTable.Columns.Add("RecordDate", typeof(DateTime));
-            fullTable.Columns.Add("RowPointer", typeof(string));
+            outputTable.Columns.Add("Item", typeof(string));
+            outputTable.Columns.Add("UnitPrice1", typeof(decimal));
+            outputTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
+            outputTable.Columns.Add("EffectDate", typeof(DateTime));
+            outputTable.Columns.Add("RecordDate", typeof(DateTime));
+            outputTable.Columns.Add("RowPointer", typeof(string));
 
 
 
@@ -1546,7 +1545,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 // CREATE OUTPUT ROW
 
-                outputRow = fullTable.NewRow();
+                outputRow = outputTable.NewRow();
 
                 // FILL IN OUTPUT ROW
 
@@ -1559,7 +1558,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 // ADD ROW TO OUTPUT
 
-                fullTable.Rows.Add(outputRow);
+                outputTable.Rows.Add(outputRow);
 
             });
 
@@ -1571,18 +1570,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             if (flags.arePostFiltering)
             {
-                filteredTable = utils.ApplyPostFilters(
-                    fullTable: fullTable,
+                outputTable = utils.ApplyPostFilters(
+                    fullTable: outputTable,
                     userPostQueryFilterString: userPostQueryFilterString
                 );
             }
-            else
-            {
-                filteredTable = fullTable;
-            }
 
-            filteredTable.DefaultView.Sort = userRequest.OrderBy;
-            filteredTable = filteredTable.DefaultView.ToTable();
+            outputTable.DefaultView.Sort = userRequest.OrderBy;
+            outputTable = outputTable.DefaultView.ToTable();
 
 
 
@@ -1590,12 +1585,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyPaging(
-                filteredTable: filteredTable,
+            outputTable = utils.ApplyPaging(
+                filteredTable: outputTable,
                 userRequest: userRequest
             );
 
-            return filteredTable;
+            return outputTable;
 
         }
 
@@ -1744,19 +1739,18 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* CREATE EMPTY TABLE
             /********************************************************************/
 
-            DataTable fullTable = new DataTable("FullTable");
-            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataTable outputTable = new DataTable("FullTable");
             Dictionary<string, int> itemIndices = new Dictionary<string, int>();
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
             
-            fullTable.Columns.Add("Item", typeof(string));
-            fullTable.Columns.Add("UnitPrice1", typeof(decimal));
-            fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
-            fullTable.Columns.Add("EffectDate", typeof(DateTime));
-            fullTable.Columns.Add("RecordDate", typeof(DateTime));
-            fullTable.Columns.Add("RowPointer", typeof(string));
+            outputTable.Columns.Add("Item", typeof(string));
+            outputTable.Columns.Add("UnitPrice1", typeof(decimal));
+            outputTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
+            outputTable.Columns.Add("EffectDate", typeof(DateTime));
+            outputTable.Columns.Add("RecordDate", typeof(DateTime));
+            outputTable.Columns.Add("RowPointer", typeof(string));
 
 
 
@@ -1780,11 +1774,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // SAVE INDEX
 
-                    itemIndices[item] = fullTable.Rows.Count;
+                    itemIndices[item] = outputTable.Rows.Count;
 
                     // CREATE OUTPUT ROW
 
-                    outputRow = fullTable.NewRow();
+                    outputRow = outputTable.NewRow();
 
                     // FILL IN OUTPUT ROW
 
@@ -1797,7 +1791,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // ADD ROW TO OUTPUT
 
-                    fullTable.Rows.Add(outputRow);
+                    outputTable.Rows.Add(outputRow);
 
                 }
 
@@ -1811,18 +1805,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             if (flags.arePostFiltering)
             {
-                filteredTable = utils.ApplyPostFilters(
-                    fullTable: fullTable,
+                outputTable = utils.ApplyPostFilters(
+                    fullTable: outputTable,
                     userPostQueryFilterString: userPostQueryFilterString
                 );
             }
-            else
-            {
-                filteredTable = fullTable;
-            }
 
-            filteredTable.DefaultView.Sort = userRequest.OrderBy;
-            filteredTable = filteredTable.DefaultView.ToTable();
+            outputTable.DefaultView.Sort = userRequest.OrderBy;
+            outputTable = outputTable.DefaultView.ToTable();
 
 
 
@@ -1830,12 +1820,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyPaging(
-                filteredTable: filteredTable,
+            outputTable = utils.ApplyPaging(
+                filteredTable: outputTable,
                 userRequest: userRequest
             );
 
-            return filteredTable;
+            return outputTable;
 
         }
 
@@ -2103,22 +2093,21 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* CREATE EMPTY TABLE
             /********************************************************************/
 
-            DataTable fullTable = new DataTable("FullTable");
-            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataTable outputTable = new DataTable("FullTable");
             Dictionary<string, int> itemIndices = new Dictionary<string, int>();
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
 
-            fullTable.Columns.Add("PriceCode", typeof(string));
-            fullTable.Columns.Add("Item", typeof(string));
-            fullTable.Columns.Add("ListPrice", typeof(decimal));
-            fullTable.Columns.Add("CustomerPrice", typeof(decimal));
-            fullTable.Columns.Add("EffectDate", typeof(DateTime));
-            fullTable.Columns.Add("RecordDate", typeof(DateTime));
-            fullTable.Columns.Add("RowPointer", typeof(string));
+            outputTable.Columns.Add("PriceCode", typeof(string));
+            outputTable.Columns.Add("Item", typeof(string));
+            outputTable.Columns.Add("ListPrice", typeof(decimal));
+            outputTable.Columns.Add("CustomerPrice", typeof(decimal));
+            outputTable.Columns.Add("EffectDate", typeof(DateTime));
+            outputTable.Columns.Add("RecordDate", typeof(DateTime));
+            outputTable.Columns.Add("RowPointer", typeof(string));
 
-            fullTable.PrimaryKey = new DataColumn[] { fullTable.Columns[6] };
+            outputTable.PrimaryKey = new DataColumn[] { outputTable.Columns[6] };
 
 
             /********************************************************************/
@@ -2155,11 +2144,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                         // SAVE INDEX
 
-                        itemIndices[item] = fullTable.Rows.Count;
+                        itemIndices[item] = outputTable.Rows.Count;
 
                         // CREATE OUTPUT ROW
 
-                        outputRow = fullTable.NewRow();
+                        outputRow = outputTable.NewRow();
 
                         // FILL IN OUTPUT ROW
 
@@ -2173,7 +2162,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                         // ADD ROW TO OUTPUT
 
-                        fullTable.Rows.Add(outputRow);
+                        outputTable.Rows.Add(outputRow);
 
                     }
 
@@ -2187,29 +2176,25 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             if (flags.arePostFiltering)
             {
-                filteredTable = utils.ApplyPostFilters(
-                    fullTable: fullTable,
+                outputTable = utils.ApplyPostFilters(
+                    fullTable: outputTable,
                     userPostQueryFilterString: userPostQueryFilterString
                 );
             }
-            else
-            {
-                filteredTable = fullTable;
-            }
 
-            filteredTable.DefaultView.Sort = userRequest.OrderBy;
-            filteredTable = filteredTable.DefaultView.ToTable();
+            outputTable.DefaultView.Sort = userRequest.OrderBy;
+            outputTable = outputTable.DefaultView.ToTable();
 
             /********************************************************************/
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyPaging(
-                filteredTable: filteredTable,
+            outputTable = utils.ApplyPaging(
+                filteredTable: outputTable,
                 userRequest: userRequest
             );
 
-            return filteredTable;
+            return outputTable;
 
         }
 
@@ -2487,21 +2472,20 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* CREATE EMPTY TABLE
             /********************************************************************/
 
-            DataTable fullTable = new DataTable("FullTable");
-            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataTable outputTable = new DataTable("FullTable");
             Dictionary<string, int> itemIndices = new Dictionary<string, int>();
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
 
-            fullTable.Columns.Add("CustNum", typeof(string));
-            fullTable.Columns.Add("Item", typeof(string));
-            fullTable.Columns.Add("ListPrice", typeof(decimal));
-            fullTable.Columns.Add("CustomerPrice", typeof(decimal));
-            fullTable.Columns.Add("PriceType", typeof(string));
-            fullTable.Columns.Add("EffectDate", typeof(DateTime));
-            fullTable.Columns.Add("RecordDate", typeof(DateTime));
-            fullTable.Columns.Add("RowPointer", typeof(string));
+            outputTable.Columns.Add("CustNum", typeof(string));
+            outputTable.Columns.Add("Item", typeof(string));
+            outputTable.Columns.Add("ListPrice", typeof(decimal));
+            outputTable.Columns.Add("CustomerPrice", typeof(decimal));
+            outputTable.Columns.Add("PriceType", typeof(string));
+            outputTable.Columns.Add("EffectDate", typeof(DateTime));
+            outputTable.Columns.Add("RecordDate", typeof(DateTime));
+            outputTable.Columns.Add("RowPointer", typeof(string));
 
 
 
@@ -2541,11 +2525,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                         // SAVE INDEX
 
-                        itemIndices[item] = fullTable.Rows.Count;
+                        itemIndices[item] = outputTable.Rows.Count;
 
                         // CREATE OUTPUT ROW
 
-                        outputRow = fullTable.NewRow();
+                        outputRow = outputTable.NewRow();
 
                         // FILL IN OUTPUT ROW
 
@@ -2560,7 +2544,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                         // ADD ROW TO OUTPUT
 
-                        fullTable.Rows.Add(outputRow);
+                        outputTable.Rows.Add(outputRow);
 
                     }
 
@@ -2574,18 +2558,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             if (flags.arePostFiltering)
             {
-                filteredTable = utils.ApplyPostFilters(
-                    fullTable: fullTable,
+                outputTable = utils.ApplyPostFilters(
+                    fullTable: outputTable,
                     userPostQueryFilterString: userPostQueryFilterString
                 );
             }
-            else
-            {
-                filteredTable = fullTable;
-            }
 
-            filteredTable.DefaultView.Sort = userRequest.OrderBy;
-            filteredTable = filteredTable.DefaultView.ToTable();
+            outputTable.DefaultView.Sort = userRequest.OrderBy;
+            outputTable = outputTable.DefaultView.ToTable();
 
 
 
@@ -2593,12 +2573,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            filteredTable = utils.ApplyPaging(
-                filteredTable: filteredTable,
+            outputTable = utils.ApplyPaging(
+                filteredTable: outputTable,
                 userRequest: userRequest
             );
 
-            return filteredTable;
+            return outputTable;
 
         }
 
