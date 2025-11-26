@@ -1509,6 +1509,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             );
 
 
+
             /********************************************************************/
             /* CREATE EMPTY TABLE
             /********************************************************************/
@@ -1561,6 +1562,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 fullTable.Rows.Add(outputRow);
 
             });
+
+
 
             /********************************************************************/
             /* APPLY POST-FILTERS AND SORTING
