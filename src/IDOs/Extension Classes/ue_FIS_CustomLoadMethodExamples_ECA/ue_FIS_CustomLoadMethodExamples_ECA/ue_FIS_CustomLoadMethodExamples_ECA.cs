@@ -1043,6 +1043,333 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
         /**********************************************************************************************************/
         /*
+        /* Name:     Example_01F_LoadItemPrices_Optimized
+        /* Date:     2025-11-14
+        /* Authors:  Andy Mercer
+        /* Purpose:  This example loads 10 records from the SLPricecodes IDO. It includes the bound properties of
+        /*           Item, UnitPrice1, and EffectDate, and a calculated property called UnitPriceDoubled1, which
+        /*           is just UnitPrice1 * 2. 
+        /*
+        /*           Version F is a special version with performance tweaks that adds a fast route  if there is 
+        /*           no bookmark specified, and a fast route if the OrderBy is set to RowPointer ASC.
+        /*
+        /*           These fast paths are accomplished by only loading the recordCap's number of ItemPrice records
+        /*           rather than loading all of them and then just returning a subset of the results. This is 
+        /*           always possible on the first load, regardless of ordering. To get the fast path on all subsequent
+        /*           loads, the results MUST be ordered by the bookmark, in this case the RowPointer. This setup
+        /*           allows for full order-agnostic pagination, with fast loading if you need it for integrations.
+        /*
+        /* Copyright 2025, Functional Devices, Inc
+        /*
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+
+        [IDOMethod(MethodFlags.CustomLoad)]
+        public DataTable Example_01F_LoadItemPrices_Optimized(string sFilter = null, string sOrderBy = null, string sRecordCap = null, string sBookmark = null)
+        {
+
+            /********************************************************************/
+            /* SET UP HELPER VARIABLES
+            /********************************************************************/
+
+            ue_FDI_Utilities utils = new ue_FDI_Utilities(
+                commands: this.Context.Commands
+            );
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            string test = (this.Context.Request as LoadCollectionRequestData).RecordCap.ToString();
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap,
+                bookmarkOverride: sBookmark
+            );
+
+
+
+            /********************************************************************/
+            /* PARSE FILTERS
+            /********************************************************************/
+
+            string userFilterValue;
+            string userFilterOperator;
+            List<string> userFilters = new List<string>();
+            if (userRequest.Filter != null && userRequest.Filter != "")
+            {
+                userFilters = userRequest.Filter.Split(
+                    new string[] { "AND" }, StringSplitOptions.None
+                ).Select(
+                    sPropertyFilter =>
+                        "( "
+                        + sPropertyFilter
+                            .Trim()
+                            .Replace(" <> N", " <> ")
+                            .Replace(" = N", " = ")
+                            .Replace(" like N", " like ")
+                            .Replace("DATEPART( yyyy, ", "YEAR( ")
+                            .Replace("DATEPART( mm, ", "MONTH( ")
+                            .Replace("DATEPART( dd, ", "DAY( ")
+                        + " )"
+                ).ToList();
+            }
+
+            Dictionary<string, string> itempricesQueryFilters = new Dictionary<string, string>() {
+                { "Item", "" },
+                { "EffectDate", "" },
+                { "RecordDate", "" },
+                { "RowPointer", "" },
+                { "UnitPrice1", "" }
+            };
+
+            Dictionary<string, string> postQueryFilters = new Dictionary<string, string>() {
+                { "UnitPriceDoubled1", "" }
+            };
+
+            userFilters.ForEach(userFilter =>
+            {
+
+                userFilter = utils.FixParenthesis(userFilter);
+                userFilterValue = utils.ExtractValue(userFilter);
+                userFilterOperator = utils.ExtractOperator(userFilter);
+
+                if (userFilter.Contains("Item"))
+                {
+                    itempricesQueryFilters["Item"] = userFilter;
+                }
+
+                if (userFilter.Contains("EffectDate"))
+                {
+                    itempricesQueryFilters["EffectDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RecordDate"))
+                {
+                    itempricesQueryFilters["RecordDate"] = userFilter;
+                }
+
+                if (userFilter.Contains("RowPointer"))
+                {
+                    itempricesQueryFilters["RowPointer"] = userFilter;
+                }
+
+                if (userFilter.Contains("UnitPrice1"))
+                {
+                    itempricesQueryFilters["UnitPrice1"] = userFilter;
+                }
+
+                if (userFilter.Contains("UnitPriceDoubled1"))
+                {
+                    postQueryFilters["UnitPriceDoubled1"] = userFilter.Replace(" null ", " '' ");
+                }
+
+            });
+
+            if ((userRequest.OrderBy == "RowPointer" || userRequest.OrderBy == "RowPointer ASC") && userRequest.Bookmark != "<B/>")
+            {
+                postQueryFilters["RowPointer"] = "RowPointer > '" + userRequest.Bookmark + "'";
+            }
+
+
+
+            /********************************************************************/
+            /* SET DEFAULT ORDER BY
+            /********************************************************************/
+
+            userRequest.OrderBy = userRequest.OrderBy != "" ? "Item ASC, EffectDate DESC" : "";
+
+
+
+            /********************************************************************/
+            /* QUERY ITEM PRICES TO GET BASE RECORDS
+            /********************************************************************/
+
+            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+                IDOName: "SLItemprices",
+                properties: new List<string>() {
+                    { "Item" },
+                    { "UnitPrice1" },
+                    { "EffectDate" },
+                    { "RecordDate" },
+                    { "RowPointer" }
+                },
+                filter: utils.BuildFilterString(itempricesQueryFilters.Values.ToList()),
+                orderBy: userRequest.OrderBy,
+                recordCap: (userRequest.Bookmark == "<B/>" || userRequest.OrderBy == "RowPointer") ? userRequest.RecordCap + 1 : 0
+            );
+
+
+            /********************************************************************/
+            /* CREATE EMPTY TABLE
+            /********************************************************************/
+
+            DataTable fullTable = new DataTable("FullTable");
+            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataRow outputRow;
+
+            // ADD COLUMN STRUCTURE
+
+            fullTable.Columns.Add("Item", typeof(string));
+            fullTable.Columns.Add("UnitPrice1", typeof(decimal));
+            fullTable.Columns.Add("UnitPriceDoubled1", typeof(decimal));
+            fullTable.Columns.Add("EffectDate", typeof(DateTime));
+            fullTable.Columns.Add("RecordDate", typeof(DateTime));
+            fullTable.Columns.Add("RowPointer", typeof(string));
+
+
+
+            /********************************************************************/
+            /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
+            /********************************************************************/
+
+            itemPriceRecords.Items.ForEach(itemPriceRecord =>
+            {
+
+                // GRAB THE ITEM
+
+                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                decimal price = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+
+                // CREATE OUTPUT ROW
+
+                outputRow = fullTable.NewRow();
+
+                // FILL IN OUTPUT ROW
+
+                outputRow["Item"] = item;
+                outputRow["UnitPrice1"] = price;
+                outputRow["UnitPriceDoubled1"] = price * 2;
+                outputRow["EffectDate"] = effectDate;
+                outputRow["RecordDate"] = recordDate;
+                outputRow["RowPointer"] = rowPointer;
+
+                // ADD ROW TO OUTPUT
+
+                fullTable.Rows.Add(outputRow);
+
+            });
+
+            /********************************************************************/
+            /* APPLY POST-FILTERS AND SORTING
+            /********************************************************************/
+
+            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
+
+            if (userPostQueryFilterString != "")
+            {
+                filteredTable = fullTable.Clone();
+                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
+                foreach (DataRow row in filteredRows)
+                {
+                    filteredTable.ImportRow(row);
+                }
+            }
+            else
+            {
+                filteredTable = fullTable;
+            }
+
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
+            filteredTable = filteredTable.DefaultView.ToTable();
+
+            /********************************************************************/
+            /* APPLY RECORD CAPPING AND CREATE BOOKMARK
+            /********************************************************************/
+
+            if (filteredTable.Rows.Count > 0)
+            {
+
+                filteredTable.Rows[0]["Item"] = test;
+
+                if (userRequest.RecordCap != 0 && filteredTable.Rows.Count > userRequest.RecordCap)
+                {
+
+                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[filteredTable.Columns["RowPointer"].Ordinal] }; // SET TO THE ROWPOINTER COLUMN
+                    int bookmarkIndex = 0;
+
+                    // CHECK IF THERE IS A BOOKMARK
+
+                    if (userRequest.Bookmark == "<B/>")
+                    {
+
+                        // THERE IS NO BOOKMARK SO THIS IS THE FIRST REQUEST
+
+                        if (filteredTable.Rows.Count > userRequest.RecordCap + 1)
+                        {
+                            filteredTable = filteredTable.AsEnumerable().Take(userRequest.RecordCap + 1).CopyToDataTable();
+                        }
+                        else
+                        {
+                            // NOTHING BECAUSE WE PRECAPPED
+                        }
+
+                        userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                    }
+                    else
+                    {
+
+                        // THERE IS A BOOKMARK SO WE NEED TO SKIP AHEAD
+
+                        bookmarkIndex = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark }));
+
+                        // CHECK TO SEE IF THE BOOKMARK IS THE LAST ROW
+
+                        if (bookmarkIndex == filteredTable.Rows.Count)
+                        {
+
+                            // CLEAR THE TABLE
+
+                            filteredTable.Clear();
+                            userRequest.Bookmark = "";
+
+                        }
+                        else
+                        {
+
+                            // SKIP AHEAD OF THE BOOKMARK AND GRAB THE NEXT SET OF RECORDS
+
+                            filteredTable = filteredTable.AsEnumerable().Skip(bookmarkIndex + 1).Take(userRequest.RecordCap + 1).CopyToDataTable();
+
+                            // CHECK TO SEE IF THE NEW SET OF RECORDS IS GREATER THAN THE CAP
+
+                            if (filteredTable.Rows.Count > userRequest.RecordCap)
+                            {
+                                userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
+                            }
+                            else
+                            {
+                                userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                            }
+
+                        }
+                    }
+
+                }
+                else
+                {
+                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
+                }
+
+            }
+
+            return filteredTable;
+
+        }
+
+
+
+        /**********************************************************************************************************/
+        /**********************************************************************************************************/
+        /*
         /* Name:     Example_02_LoadCurrentItemPrices
         /* Date:     2025-11-14
         /* Authors:  Andy Mercer
