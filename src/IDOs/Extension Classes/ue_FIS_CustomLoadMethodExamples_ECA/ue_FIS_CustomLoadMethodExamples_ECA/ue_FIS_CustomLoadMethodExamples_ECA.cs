@@ -2231,7 +2231,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_04A_LoadPricesForCustomer_Matrix(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_04A_LoadPricesForCustomer_Matrix(string sFilter = null, string sOrderBy = null, string sRecordCap = null, string sBookmark = null)
         {
 
             /********************************************************************/
@@ -2242,6 +2242,28 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 commands: this.Context.Commands
             );
 
+            (bool haveBookmark, bool arePostFiltering, bool orderingByRowPointer, bool areCappingResults) flags = (false, false, false, false);
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap,
+                bookmarkOverride: sBookmark
+            );
+
+            userRequest.OrderBy = userRequest.OrderBy == "" ? "Item ASC, EffectDate DESC" : userRequest.OrderBy;
+
+            flags.haveBookmark = userRequest.Bookmark != "<B/>";
+            flags.orderingByRowPointer = userRequest.OrderBy == "RowPointer" || userRequest.OrderBy == "RowPointer ASC";
+            flags.areCappingResults = userRequest.RecordCap != 0;
+
 
 
             /********************************************************************/
@@ -2251,25 +2273,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string custNum = "C000001";
             string userFilterValue;
             string userFilterOperator;
-            List<string> userFilters = new List<string>();
-            if (sFilter != null)
-            {
-                userFilters = sFilter.Split(
-                    new string[] { "AND" }, StringSplitOptions.None
-                ).Select(
-                    sPropertyFilter =>
-                        "( "
-                        + sPropertyFilter
-                            .Trim()
-                            .Replace(" <> N", " <> ")
-                            .Replace(" = N", " = ")
-                            .Replace(" like N", " like ")
-                            .Replace("DATEPART( yyyy, ", "YEAR( ")
-                            .Replace("DATEPART( mm, ", "MONTH( ")
-                            .Replace("DATEPART( dd, ", "DAY( ")
-                        + " )"
-                ).ToList();
-            }
 
             Dictionary<string, string> itempriceQueryFilters = new Dictionary<string, string>() {
                 { "Item", "" },
@@ -2291,7 +2294,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 { "CustomerPrice", "" }
             };
 
-            userFilters.ForEach(userFilter =>
+            userRequest.Filters.ForEach(userFilter =>
             {
 
                 userFilter = utils.FixParenthesis(userFilter);
@@ -2336,26 +2339,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             });
 
-
-
-            /********************************************************************/
-            /* PARSE ORDER BY
-            /********************************************************************/
-
-            string parsedOrderBy = sOrderBy ?? "Item ASC, EffectDate DESC";
-
-
-
-            /********************************************************************/
-            /* PARSE RECORD CAP
-            /********************************************************************/
-
-
-            int parsedRecordCap = 0;
-            if (sRecordCap != null && sRecordCap != "")
+            if (flags.orderingByRowPointer && flags.haveBookmark)
             {
-                int.TryParse(sRecordCap, out parsedRecordCap);
+                postQueryFilters["RowPointer"] = "RowPointer > '" + userRequest.Bookmark + "'";
             }
+
+            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
+            flags.arePostFiltering = userPostQueryFilterString != "";
 
 
 
@@ -2487,7 +2477,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RowPointer" },
                 },
                 filter: utils.BuildFilterString(itempriceQueryFilters.Values.ToList()),
-                orderBy: "Item ASC, EffectDate DESC", // THIS WILL BE HARDCODED SO THAT THE FIRST RECORD FOR EACH ITEM WILL ALWAYS BE THE HIGHEST EFFECT DATE
+                orderBy: "Item ASC, EffectDate DESC",
                 recordCap: 0
             );
 
@@ -2519,87 +2509,92 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
             /********************************************************************/
 
-            foreach (IDOItem itemPriceRecord in itemPriceRecords.Items)
+            if (customerRecords.Items.Count > 0 && priceMatrixRecords.Items.Count > 0)
             {
 
-                // GRAB THE ITEM
-
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
-                decimal customerPrice = listPrice;
-                string priceType = "List";
-                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
-
-                // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
-
-                if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
-                {
-                    customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
-                    recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
-                    priceType = "Matrix";
-                }
-
-                if (item != null && !itemIndices.ContainsKey(item))
+                foreach (IDOItem itemPriceRecord in itemPriceRecords.Items)
                 {
 
-                    // SAVE INDEX
+                    // GRAB THE ITEM
 
-                    itemIndices[item] = fullTable.Rows.Count;
+                    string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
 
-                    // CREATE OUTPUT ROW
+                    if (item != null && !itemIndices.ContainsKey(item))
+                    {
 
-                    outputRow = fullTable.NewRow();
+                        string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                        decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                        decimal customerPrice = listPrice;
+                        string priceType = "List";
+                        DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                        DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                        string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
-                    // FILL IN OUTPUT ROW
+                        // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
-                    outputRow["CustNum"] = custNum;
-                    outputRow["Item"] = item;
-                    outputRow["ListPrice"] = listPrice;
-                    outputRow["CustomerPrice"] = customerPrice;
-                    outputRow["PriceType"] = priceType;
-                    outputRow["EffectDate"] = effectDate;
-                    outputRow["RecordDate"] = recordDate;
-                    outputRow["RowPointer"] = rowPointer;
+                        if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                        {
+                            customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
+                            recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
+                            priceType = "Matrix";
+                        }
 
-                    // ADD ROW TO OUTPUT
+                        // SAVE INDEX
 
-                    fullTable.Rows.Add(outputRow);
+                        itemIndices[item] = fullTable.Rows.Count;
+
+                        // CREATE OUTPUT ROW
+
+                        outputRow = fullTable.NewRow();
+
+                        // FILL IN OUTPUT ROW
+
+                        outputRow["CustNum"] = custNum;
+                        outputRow["Item"] = item;
+                        outputRow["ListPrice"] = listPrice;
+                        outputRow["CustomerPrice"] = customerPrice;
+                        outputRow["PriceType"] = priceType;
+                        outputRow["EffectDate"] = effectDate;
+                        outputRow["RecordDate"] = recordDate;
+                        outputRow["RowPointer"] = rowPointer;
+
+                        // ADD ROW TO OUTPUT
+
+                        fullTable.Rows.Add(outputRow);
+
+                    }
 
                 }
 
             }
 
-
-
             /********************************************************************/
-            /* APPLY POST-FILTERS
+            /* APPLY POST-FILTERS AND SORTING
             /********************************************************************/
 
-            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
-
-            if (userPostQueryFilterString != "")
+            if (flags.arePostFiltering)
             {
-                filteredTable = fullTable.Clone();
-                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
-                foreach (DataRow row in filteredRows)
-                {
-                    filteredTable.ImportRow(row);
-                }
+                filteredTable = utils.ApplyPostFilters(
+                    fullTable: fullTable,
+                    userPostQueryFilterString: userPostQueryFilterString
+                );
             }
             else
             {
                 filteredTable = fullTable;
             }
 
-            filteredTable.DefaultView.Sort = parsedOrderBy;
+            filteredTable.DefaultView.Sort = userRequest.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
-            if (parsedRecordCap > 0)
-            {
-                filteredTable = filteredTable.AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
-            }
+
+            /********************************************************************/
+            /* APPLY RECORD CAPPING AND CREATE BOOKMARK
+            /********************************************************************/
+
+            filteredTable = utils.ApplyCapping(
+                filteredTable: filteredTable,
+                userRequest: userRequest
+            );
 
             return filteredTable;
 
