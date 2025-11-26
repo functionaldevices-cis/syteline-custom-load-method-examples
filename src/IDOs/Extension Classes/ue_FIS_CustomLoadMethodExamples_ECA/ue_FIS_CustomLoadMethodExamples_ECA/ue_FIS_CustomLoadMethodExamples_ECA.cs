@@ -1593,7 +1593,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /* Date:     2025-11-14
         /* Authors:  Andy Mercer
         /* Purpose:  This example loads all current records from the SLPricecodes IDO, meaning the record with the
-        /*           highest non-future effective date for each unique Item value.
+        /*           highest non-future effective date for each unique Item value. Unfortunately we can't use either
+        /*           fast path here due to the post filtering.
         /*
         /* Copyright 2025, Functional Devices, Inc
         /*
@@ -1601,7 +1602,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_02_LoadCurrentItemPrices(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_02_LoadCurrentItemPrices(string sFilter = null, string sOrderBy = null, string sRecordCap = null, string sBookmark = null)
         {
 
             /********************************************************************/
@@ -1613,6 +1614,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             );
 
 
+
             /********************************************************************/
             /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
             /********************************************************************/
@@ -1621,7 +1623,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 contextRequest: this.Context.Request as LoadCollectionRequestData,
                 filterOverride: sFilter,
                 orderByOverride: sOrderBy,
-                recordCapOverride: sRecordCap
+                recordCapOverride: sRecordCap,
+                bookmarkOverride: sBookmark
             );
 
 
@@ -1636,9 +1639,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, string> itempricesQueryFilters = new Dictionary<string, string>() {
                 { "Item", "" },
                 { "EffectDate", "" },
-                { "UnitPrice1", "" },
                 { "RecordDate", "" },
-                { "RowPointer", "" }
+                { "RowPointer", "" },
+                { "UnitPrice1", "" }
             };
 
             Dictionary<string, string> postQueryFilters = new Dictionary<string, string>() {
@@ -1683,6 +1686,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 }
 
             });
+
+            if ((userRequest.OrderBy == "RowPointer" || userRequest.OrderBy == "RowPointer ASC") && userRequest.Bookmark != "<B/>")
+            {
+                postQueryFilters["RowPointer"] = "RowPointer > '" + userRequest.Bookmark + "'";
+            }
 
 
 
@@ -1783,70 +1791,22 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* APPLY POST-FILTERS AND SORTING
             /********************************************************************/
 
-            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
+            filteredTable = utils.ApplyPostFilters(
+                fullTable: fullTable,
+                userRequest: userRequest,
+                postQueryFilters: postQueryFilters
+            );
 
-            if (userPostQueryFilterString != "")
-            {
-                filteredTable = fullTable.Clone();
-                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
-                foreach (DataRow row in filteredRows)
-                {
-                    filteredTable.ImportRow(row);
-                }
-            }
-            else
-            {
-                filteredTable = fullTable;
-            }
 
-            filteredTable.DefaultView.Sort = userRequest.OrderBy;
-            filteredTable = filteredTable.DefaultView.ToTable();
 
             /********************************************************************/
             /* APPLY RECORD CAPPING AND CREATE BOOKMARK
             /********************************************************************/
 
-            if (filteredTable.Rows.Count > 0)
-            {
-
-                if (userRequest.RecordCap != 0 && filteredTable.Rows.Count > userRequest.RecordCap)
-                {
-
-                    filteredTable.PrimaryKey = new DataColumn[] { filteredTable.Columns[filteredTable.Columns["RowPointer"].Ordinal] }; // SET TO THE ROWPOINTER COLUMN
-                    int index = 0;
-                    if (userRequest.Bookmark != null && userRequest.Bookmark != "")
-                    {
-                        index = filteredTable.Rows.IndexOf(filteredTable.Rows.Find(new object[1] { userRequest.Bookmark })) + 1;
-                    }
-
-                    if (index < filteredTable.Rows.Count)
-                    {
-
-                        filteredTable = filteredTable.AsEnumerable().Skip(index).Take(userRequest.RecordCap + 1).CopyToDataTable();
-
-                        if (filteredTable.Rows.Count > userRequest.RecordCap)
-                        {
-                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 2]["RowPointer"].ToString();
-                        }
-                        else
-                        {
-                            userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
-                        }
-
-                    }
-                    else
-                    {
-                        filteredTable.Clear();
-                        userRequest.Bookmark = "";
-                    }
-
-                }
-                else
-                {
-                    userRequest.Bookmark = filteredTable.Rows[filteredTable.Rows.Count - 1]["RowPointer"].ToString();
-                }
-
-            }
+            filteredTable = utils.ApplyCapping(
+                filteredTable: filteredTable,
+                userRequest: userRequest
+            );
 
             return filteredTable;
 
