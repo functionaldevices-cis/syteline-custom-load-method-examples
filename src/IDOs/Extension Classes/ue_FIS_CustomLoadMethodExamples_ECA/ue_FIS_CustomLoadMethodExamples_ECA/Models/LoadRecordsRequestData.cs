@@ -77,7 +77,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
         ).ToList();
 
 
-        public LoadRecordsRequestData(LoadCollectionRequestData contextRequest, string filterOverride = null, string orderByOverride = null, string recordCapOverride = null)
+        public LoadRecordsRequestData(LoadCollectionRequestData contextRequest, string filterOverride = null, string orderByOverride = null, string recordCapOverride = null, string bookmarkOverride = null)
         {
 
             // SAVE THE CONTEXT REQUEST
@@ -109,6 +109,18 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                 int parsedRecordCap = 0;
                 int.TryParse(recordCapOverride, out parsedRecordCap);
                 this.ContextRequest.RecordCap = parsedRecordCap;
+            }
+
+            // APPLY BOOKMARK OVERRIDE IF THERE IS ONE
+
+            if (bookmarkOverride != null)
+            {
+                this.ContextRequest.Bookmark = bookmarkOverride;
+            }
+
+            if (this.ContextRequest.Bookmark == null || this.ContextRequest.Bookmark == "" )
+            {
+                this.ContextRequest.Bookmark = "<B/>";
             }
 
         }
