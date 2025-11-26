@@ -505,7 +505,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         }
 
-        public DataTable ApplyPostFilters(DataTable fullTable, LoadRecordsRequestData userRequest, string userPostQueryFilterString)
+        public DataTable ApplyPostFilters(DataTable fullTable, string userPostQueryFilterString)
         {
 
             DataTable filteredTable;

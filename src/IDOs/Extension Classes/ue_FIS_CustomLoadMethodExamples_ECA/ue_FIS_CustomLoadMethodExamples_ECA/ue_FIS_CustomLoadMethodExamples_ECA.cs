@@ -1570,7 +1570,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
                 filteredTable = utils.ApplyPostFilters(
                     fullTable: fullTable,
-                    userRequest: userRequest,
                     userPostQueryFilterString: userPostQueryFilterString
                 );
             }
@@ -1807,7 +1806,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
                 filteredTable = utils.ApplyPostFilters(
                     fullTable: fullTable,
-                    userRequest: userRequest,
                     userPostQueryFilterString: userPostQueryFilterString
                 );
             }
