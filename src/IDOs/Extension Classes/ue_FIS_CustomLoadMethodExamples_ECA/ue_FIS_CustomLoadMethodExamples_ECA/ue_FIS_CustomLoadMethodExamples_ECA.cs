@@ -1576,6 +1576,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     userPostQueryFilterString: userPostQueryFilterString
                 );
             }
+            else
+            {
+                filteredTable = fullTable;
+            }
 
             filteredTable.DefaultView.Sort = userRequest.OrderBy;
             filteredTable = filteredTable.DefaultView.ToTable();
@@ -1811,6 +1815,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     fullTable: fullTable,
                     userPostQueryFilterString: userPostQueryFilterString
                 );
+            }
+            else
+            {
+                filteredTable = fullTable;
             }
 
             filteredTable.DefaultView.Sort = userRequest.OrderBy;
