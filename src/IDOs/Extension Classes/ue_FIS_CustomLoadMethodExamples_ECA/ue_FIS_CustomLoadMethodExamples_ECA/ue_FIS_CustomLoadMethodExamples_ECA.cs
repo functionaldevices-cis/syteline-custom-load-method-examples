@@ -1,4 +1,5 @@
 ﻿using Mongoose.IDO;
+using Mongoose.IDO.DataAccess;
 using Mongoose.IDO.Metadata;
 using Mongoose.IDO.Protocol;
 using System;
@@ -2600,7 +2601,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_04B_LoadPricesForCustomer_MatrixAndContract(string sFilter = null, string sOrderBy = null, string sRecordCap = null)
+        public DataTable Example_04B_LoadPricesForCustomer_MatrixAndContract(string sFilter = null, string sOrderBy = null, string sRecordCap = null, string sBookmark = null)
         {
 
             /********************************************************************/
@@ -2610,6 +2611,28 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             ue_FDI_Utilities utils = new ue_FDI_Utilities(
                 commands: this.Context.Commands
             );
+
+            (bool haveBookmark, bool arePostFiltering, bool orderingByRowPointer, bool areCappingResults) flags = (false, false, false, false);
+
+
+
+            /********************************************************************/
+            /* LOAD USER INPUT FROM THE REQUEST OBJECT AND PARAMETERS IF SET
+            /********************************************************************/
+
+            LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
+                contextRequest: this.Context.Request as LoadCollectionRequestData,
+                filterOverride: sFilter,
+                orderByOverride: sOrderBy,
+                recordCapOverride: sRecordCap,
+                bookmarkOverride: sBookmark
+            );
+
+            userRequest.OrderBy = userRequest.OrderBy == "" ? "Item ASC, EffectDate DESC" : userRequest.OrderBy;
+
+            flags.haveBookmark = userRequest.Bookmark != "<B/>";
+            flags.orderingByRowPointer = userRequest.OrderBy == "RowPointer" || userRequest.OrderBy == "RowPointer ASC";
+            flags.areCappingResults = userRequest.RecordCap != 0;
 
 
 
@@ -2719,26 +2742,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             });
 
-
-
-            /********************************************************************/
-            /* PARSE ORDER BY
-            /********************************************************************/
-
-            string parsedOrderBy = sOrderBy ?? "Item ASC, EffectDate DESC";
-
-
-
-            /********************************************************************/
-            /* PARSE RECORD CAP
-            /********************************************************************/
-
-
-            int parsedRecordCap = 0;
-            if (sRecordCap != null && sRecordCap != "")
+            if (flags.orderingByRowPointer && flags.haveBookmark)
             {
-                int.TryParse(sRecordCap, out parsedRecordCap);
+                postQueryFilters["RowPointer"] = "RowPointer > '" + userRequest.Bookmark + "'";
             }
+
+            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
+            flags.arePostFiltering = userPostQueryFilterString != "";
 
 
 
@@ -2894,7 +2904,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RowPointer" },
                 },
                 filter: utils.BuildFilterString(itempriceQueryFilters.Values.ToList()),
-                orderBy: "Item ASC, EffectDate DESC", // THIS WILL BE HARDCODED SO THAT THE FIRST RECORD FOR EACH ITEM WILL ALWAYS BE THE HIGHEST EFFECT DATE
+                orderBy: "Item ASC, EffectDate DESC",
                 recordCap: 0
             );
 
@@ -2904,21 +2914,20 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* CREATE EMPTY TABLE
             /********************************************************************/
 
-            DataTable fullTable = new DataTable("FullTable");
-            DataTable filteredTable = new DataTable("PostFilteredTable");
+            DataTable outputTable = new DataTable("FullTable");
             Dictionary<string, int> itemIndices = new Dictionary<string, int>();
             DataRow outputRow;
 
             // ADD COLUMN STRUCTURE
 
-            fullTable.Columns.Add("CustNum", typeof(string));
-            fullTable.Columns.Add("Item", typeof(string));
-            fullTable.Columns.Add("ListPrice", typeof(decimal));
-            fullTable.Columns.Add("CustomerPrice", typeof(decimal));
-            fullTable.Columns.Add("PriceType", typeof(string));
-            fullTable.Columns.Add("EffectDate", typeof(DateTime));
-            fullTable.Columns.Add("RecordDate", typeof(DateTime));
-            fullTable.Columns.Add("RowPointer", typeof(string));
+            outputTable.Columns.Add("CustNum", typeof(string));
+            outputTable.Columns.Add("Item", typeof(string));
+            outputTable.Columns.Add("ListPrice", typeof(decimal));
+            outputTable.Columns.Add("CustomerPrice", typeof(decimal));
+            outputTable.Columns.Add("PriceType", typeof(string));
+            outputTable.Columns.Add("EffectDate", typeof(DateTime));
+            outputTable.Columns.Add("RecordDate", typeof(DateTime));
+            outputTable.Columns.Add("RowPointer", typeof(string));
 
 
 
@@ -2975,11 +2984,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // SAVE INDEX
 
-                    itemIndices[item] = fullTable.Rows.Count;
+                    itemIndices[item] = outputTable.Rows.Count;
 
                     // CREATE OUTPUT ROW
 
-                    outputRow = fullTable.NewRow();
+                    outputRow = outputTable.NewRow();
 
                     // FILL IN OUTPUT ROW
 
@@ -2994,7 +3003,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // ADD ROW TO OUTPUT
 
-                    fullTable.Rows.Add(outputRow);
+                    outputTable.Rows.Add(outputRow);
 
                 }
 
@@ -3003,33 +3012,32 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
-            /* APPLY POST-FILTERS
+            /* APPLY POST-FILTERS AND SORTING
             /********************************************************************/
 
-            string userPostQueryFilterString = utils.BuildFilterString(postQueryFilters.Values.ToList());
-
-            if (userPostQueryFilterString != "")
+            if (flags.arePostFiltering)
             {
-                filteredTable = fullTable.Clone();
-                DataRow[] filteredRows = fullTable.Select(userPostQueryFilterString);
-                foreach (DataRow row in filteredRows)
-                {
-                    filteredTable.ImportRow(row);
-                }
-            }
-            else
-            {
-                filteredTable = fullTable;
+                outputTable = utils.ApplyPostFilters(
+                    fullTable: outputTable,
+                    userPostQueryFilterString: userPostQueryFilterString
+                );
             }
 
-            filteredTable.DefaultView.Sort = parsedOrderBy;
-            filteredTable = filteredTable.DefaultView.ToTable();
-            if (parsedRecordCap > 0)
-            {
-                filteredTable = filteredTable.AsEnumerable().Take(parsedRecordCap).CopyToDataTable();
-            }
+            outputTable.DefaultView.Sort = userRequest.OrderBy;
+            outputTable = outputTable.DefaultView.ToTable();
 
-            return filteredTable;
+
+
+            /********************************************************************/
+            /* APPLY RECORD CAPPING AND CREATE BOOKMARK
+            /********************************************************************/
+
+            outputTable = utils.ApplyPaging(
+                filteredTable: outputTable,
+                userRequest: userRequest
+            );
+
+            return outputTable;
 
         }
 
