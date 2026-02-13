@@ -60,7 +60,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             }
         }
 
-        public List<string> Filters => this.ContextRequest.Filter.Split(
+        public List<string> Filters => this.Filter != "" ? this.Filter.Replace("and", "AND").Split(
             new string[] { "AND" }, StringSplitOptions.None
         ).Select(
             sPropertyFilter =>
@@ -74,7 +74,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                     .Replace("DATEPART( mm, ", "MONTH( ")
                     .Replace("DATEPART( dd, ", "DAY( ")
                 + " )"
-        ).ToList();
+        ).ToList() : new List<string>();
 
 
         public LoadRecordsRequestData(LoadCollectionRequestData contextRequest, string filterOverride = null, string orderByOverride = null, string recordCapOverride = null, string bookmarkOverride = null)

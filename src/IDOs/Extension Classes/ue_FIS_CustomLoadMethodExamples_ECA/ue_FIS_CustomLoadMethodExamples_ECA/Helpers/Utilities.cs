@@ -26,6 +26,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             this.DebugLevel = debugLevel;
         }
 
+        public string ReverseString(string input)
+        {
+            char[] charArray = input.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
         public string ParseFilterArgument(string arg, string defaultVal)
         {
             if (string.IsNullOrEmpty(arg))
@@ -40,44 +47,126 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         public string ParseEffectDate(string sRawDate)
         {
-            DateTime? parsedDateTime = this.TryToParseDateTime(sRawDate);
-            if (parsedDateTime != null)
+            (DateTime parsedDateTime, int precision) = this.TryToParseDateTime(sRawDate);
+            if (parsedDateTime != DateTime.MinValue)
             {
-                return (parsedDateTime ?? new DateTime()).ToString("MM/dd/yyyy");
+                return parsedDateTime.ToString("MM/dd/yyyy");
             }
             return "";
         }
 
-        public DateTime? TryToParseDateTime(string input)
+        public string ConvertDateTimeFilterToPostFilterFormat(string filterPropertyName, string filter)
         {
 
-            DateTime parsedDateTime;
+            string parsedFilter = "";
+            string filterValue = this.ExtractValue(filter);
+            string filterOperator = this.ExtractOperator(filter);
+            (DateTime parsedDateTime, int precision) = this.TryToParseDateTime(filterValue);
 
-            if (DateTime.TryParseExact(input, "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            if (parsedDateTime != DateTime.MinValue)
             {
-                return parsedDateTime;
+                if (precision == 0 && filterOperator == "=")
+                {
+                    parsedFilter += filterPropertyName + " >= #" + parsedDateTime.ToString("MM/dd/yyyy HH:mm:ss.fff") + "#";
+                    parsedFilter += " AND ";
+                    parsedFilter += filterPropertyName + " < #" + parsedDateTime.AddSeconds(1).ToString("MM/dd/yyyy HH:mm:ss.fff") + "#";
+                }
+                else
+                {
+                    if (filter.Contains("dateadd"))
+                    {
+                        parsedDateTime = parsedDateTime.AddDays(1);
+                    }
+                    parsedFilter = filterPropertyName + " " + filterOperator + " #" + parsedDateTime.ToString("MM/dd/yyyy HH:mm:ss.fff") + "#";
+                }
             }
 
-            if (DateTime.TryParseExact(input, "yyyyMMdd HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
-            {
-                return parsedDateTime;
-            }
+            return parsedFilter;
+        }
 
-            if (DateTime.TryParseExact(input, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
-            {
-                return parsedDateTime;
-            }
+        public decimal? TryToParseNumberString(string input)
+        {
 
-            if (DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            decimal parsedDecimal;
+
+            if (decimal.TryParse(input, out parsedDecimal))
             {
-                return parsedDateTime;
+                return parsedDecimal;
             }
 
             return null;
 
         }
 
-        public string ExtractOperator(string sInput)
+        public int TryToParseCheckboxString(string input)
+        {
+
+            if (input == "1")
+            {
+                return 1;
+            }
+
+            if (input == "0" || input == "" || input == null)
+            {
+                return 0;
+            }
+
+            return -1;
+
+        }
+
+        public (DateTime value, int precision) TryToParseDateTime(string input)
+        {
+
+            DateTime parsedDateTime = DateTime.MinValue;
+
+            if (DateTime.TryParseExact(input, "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyyMMdd HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 3);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            return (parsedDateTime, 0);
+
+        }
+
+        public string FilterExtractPropertyName(string sInput)
+        {
+
+            return sInput.Replace("(", "").Replace(")", "").Replace(this.ExtractOperator(sInput), "").Replace(this.ExtractValue(sInput), "").Replace("'", "").Replace("dbo.MidnightOfdateaddday, 1,", "").Replace("cast as datetime", "").Trim();
+
+        }
+
+        public string ExtractOperator(string sInput) // FOR BACKWARDS COMPAT. REMOVE EVENTUALLY
+        {
+            return this.FilterExtractOperator(sInput);
+        }
+
+        public string FilterExtractOperator(string sInput)
         {
             List<string> operators = new List<string>() {
                 ">=",
@@ -85,8 +174,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
                 "=",
                 "<",
                 ">",
-                "LIKE",
-                "NOT LIKE",
+                " NOT LIKE ",
+                " not like ",
+                " LIKE ",
+                " like ",
                 "!=",
                 "<>"
             };
@@ -94,13 +185,18 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             {
                 if (sInput.Contains(op))
                 {
-                    return op;
+                    return op.Trim();
                 }
             }
             return "=";
         }
 
-        public string ExtractValue(string sInput)
+        public string ExtractValue(string sInput) // FOR BACKWARDS COMPAT. REMOVE EVENTUALLY
+        {
+            return this.FilterExtractValue(sInput);
+        }
+
+        public string FilterExtractValue(string sInput)
         {
 
             if (sInput.Contains('\''))
@@ -114,7 +210,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             }
             else
             {
-                string op = ExtractOperator(sInput);
+                string op = this.ExtractOperator(sInput);
                 sInput = sInput.Replace(")", "").Replace("(", "").Replace(" ", "");
                 string[] parts = sInput.Split(new string[] { op }, StringSplitOptions.None);
                 if (parts.Count() == 2)
@@ -154,6 +250,232 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             string joinedFilter = string.Join(" " + joiner + " ", filters.Where(filter => filter != "").Select(filter => "(" + filter + ")"));
 
             return joinedFilter != "" ? $"(" + joinedFilter + ")" : "";
+
+        }
+
+        public bool CheckToSeeIfValuePassesFilters_DateTime(List<(DateTime value, string operatorString)> filters, DateTime value)
+        {
+
+            bool addRowToOutputTable = true;
+
+            filters.ForEach(filter =>
+            {
+                switch (filter.operatorString)
+                {
+                    case ">=":
+                        if (value < filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case ">":
+                        if (value <= filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "<=":
+                        if (value > filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "<":
+                        if (value >= filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "=":
+                        if (value != filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "!=":
+                    case "<>":
+                        if (value == filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                }
+            });
+
+            return addRowToOutputTable;
+
+        }
+
+        public bool CheckToSeeIfValuePassesFilters_Decimal(List<(decimal value, string operatorString)> filters, decimal value)
+        {
+
+            bool addRowToOutputTable = true;
+
+            filters.ForEach(filter =>
+            {
+                switch (filter.operatorString)
+                {
+                    case ">=":
+                        if (value < filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case ">":
+                        if (value <= filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "<=":
+                        if (value > filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "<":
+                        if (value >= filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "=":
+                        if (value != filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "!=":
+                    case "<>":
+                        if (value == filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                }
+            });
+
+            return addRowToOutputTable;
+
+        }
+
+        public bool CheckToSeeIfValuePassesFilters_Int(List<(int value, string operatorString)> filters, int value)
+        {
+
+            bool addRowToOutputTable = true;
+
+            filters.ForEach(filter =>
+            {
+                switch (filter.operatorString)
+                {
+                    case ">=":
+                        if (value < filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case ">":
+                        if (value <= filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "<=":
+                        if (value > filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "<":
+                        if (value >= filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "=":
+                        if (value != filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "!=":
+                    case "<>":
+                        if (value == filter.value)
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                }
+            });
+
+            return addRowToOutputTable;
+
+        }
+
+        public bool CheckToSeeIfValuePassesFilters_String(List<(string value, string operatorString)> filters, string value)
+        {
+
+            string regexPattern;
+            bool addRowToOutputTable = true;
+
+            filters.ForEach(filter =>
+            {
+                switch (filter.operatorString)
+                {
+                    case "=":
+                        // 'rib'
+                        if (!value.Equals(filter.value, StringComparison.OrdinalIgnoreCase))
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "!=":
+                    case "<>":
+                        // '<>rib'
+                        if (value.Equals(filter.value, StringComparison.OrdinalIgnoreCase))
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "LIKE":
+                    case "like":
+                        // '<>ri%b'
+                        regexPattern = "^" + Regex.Escape(filter.value).Replace("%", ".*").Replace("_", ".") + "$";
+                        if (!Regex.IsMatch(value, regexPattern, RegexOptions.IgnoreCase))
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                    case "NOT LIKE":
+                    case "not like":
+                        // '<>ri%b'
+                        regexPattern = "^" + Regex.Escape(filter.value).Replace("%", ".*").Replace("_", ".") + "$";
+                        if (Regex.IsMatch(value, regexPattern, RegexOptions.IgnoreCase))
+                        {
+                            addRowToOutputTable = false;
+                        }
+                        break;
+                }
+            });
+
+            return addRowToOutputTable;
+
+        }
+
+        public bool CheckToSeeIfValuePassesFilters_Checkbox(List<(int value, string operatorString)> filters, int value)
+        {
+
+            bool addRowToOutputTable = true;
+
+            filters.ForEach(filter =>
+            {
+                if ((filter.value == 1 && value == 0) || (filter.value == 0 && value == 1))
+                {
+                    addRowToOutputTable = false;
+                }
+            });
+
+            return addRowToOutputTable;
 
         }
 

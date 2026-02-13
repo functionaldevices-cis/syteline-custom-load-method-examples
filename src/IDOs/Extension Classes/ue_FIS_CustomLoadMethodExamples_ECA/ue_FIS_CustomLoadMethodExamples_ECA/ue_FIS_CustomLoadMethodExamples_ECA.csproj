@@ -77,12 +77,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\IDOPropertyFilterSet.cs" />
+    <Compile Include="Models\IDOPropertyFilter2.cs" />
+    <Compile Include="Models\IDOPropertyFilter.cs" />
     <Compile Include="Models\ItemPriceCodePriceInfo.cs" />
     <Compile Include="Models\LoadRecordsRequestData.cs" />
     <Compile Include="Models\LoadRecordsResponseData.cs" />
     <Compile Include="ue_FIS_CustomLoadMethodExamples_ECA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\ue_FDI_Utilities.cs" />
+    <Compile Include="Helpers\Utilities.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
