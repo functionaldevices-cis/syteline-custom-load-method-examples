@@ -880,7 +880,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /* Date:     2025-11-14
         /* Authors:  Andy Mercer
         /* Purpose:  This example loads all 'current' records from the SLPricecodes IDO, meaning the record with the
-        /*           highest non-future effective date for each unique Item value.
+        /*           highest non-future effective date for each unique Item value. Nearly all filters have to be
+        /*           inline filters, because we are loading multiple item price records for the same item, and only
+        /*           keeping the current one.
         /*
         /* Copyright 2025, Functional Devices, Inc
         /*
@@ -933,6 +935,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             int iStartingCounterItems = 0;
             int iCounterItems = 0;
+            DateTime tomorrow = DateTime.Now.AddDays(1).Date;
             string debug1 = "";
             string debug2 = "";
 
@@ -965,7 +968,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string userFilterPropertyName;
 
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>() }
+                { "Item", new IDOPropertyFilterSet<string>() },
+                { "EffectDate", new IDOPropertyFilterSet<string>($"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'") }
             };
 
             Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
