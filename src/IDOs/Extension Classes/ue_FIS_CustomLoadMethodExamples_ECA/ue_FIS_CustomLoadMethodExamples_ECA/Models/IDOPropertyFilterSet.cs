@@ -12,9 +12,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
     public interface IIDOPropertyFilterSet
     {
+
+        string SourcePropertyName { get; set; }
+
         bool ValueFails(object value);
 
         void AddFilter(string originalString, string propertyName = null, string operatorName = null, string value = null);
+
+        void OverwriteFilter(string filterString, string propertyName = null, string operatorName = null, string value = null)
 
         string GetFilterString();
 
@@ -23,12 +28,16 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
     public class IDOPropertyFilterSet<T> : IIDOPropertyFilterSet
     {
 
+        public string SourcePropertyName { get; set; }
+
+
         public List<IDOPropertyFilter<T>> Filters = new List<IDOPropertyFilter<T>>();
 
         private bool HasChanged { get; set; } = false;
 
-        public IDOPropertyFilterSet(string defaultFilter = null)
+        public IDOPropertyFilterSet(string outputPropertyName = null, string sourcePropertyName = null, string defaultFilter = null)
         {
+            this.SourcePropertyName = sourcePropertyName;
             if (defaultFilter != null)
             {
                 this.Filters.Add(new IDOPropertyFilter<T>(defaultFilter));
@@ -52,6 +61,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             {
                 this.Filters.Add(new IDOPropertyFilter<T>(filterString, propertyName, operatorName, value));
             }
+            this.HasChanged = true;
+
+        }
+
+        public void OverwriteFilter(string filterString, string propertyName = null, string operatorName = null, string value = null)
+        {
+
+            this.Filters[0] = new IDOPropertyFilter<T>(filterString, propertyName, operatorName, value);
             this.HasChanged = true;
 
         }
