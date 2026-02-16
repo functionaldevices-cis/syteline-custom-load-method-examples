@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ue_FIS_CustomLoadMethodExamples_ECA.Helpers;
 
 namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 {
@@ -17,22 +18,23 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         public string OperatorString { get; set; }
 
+        public string ValueString { get; set; }
+
         public int ValueInt { get; set; }
 
         public decimal ValueDecimal { get; set; }
 
-        public string ValueString { get; set; }
-
         public DateTime ValueDateTime { get; set; }
 
-        public IDOPropertyFilter(string filterString)
+        public IDOPropertyFilter(string filterString, string propertyName = null, string operatorName = null, string value = null)
         {
-            this.FilterString = this.FixParenthesis(filterString);
-            this.PropertyName = this.ExtractPropertyName(this.FilterString);
+
+            this.FilterString = filterString;
+            this.OperatorString = operatorName ?? FilterStringParser.ExtractOperator(this.FilterString);
+            this.ValueString = value ?? FilterStringParser.ExtractValue(this.FilterString, this.OperatorString);
+            this.PropertyName = propertyName ?? FilterStringParser.ExtractPropertyName(this.FilterString, this.OperatorString, this.ValueString);
 
             // VALIDATE VALUE TYPE AND PROPERTY TYPE
-
-            string value = this.ExtractValue(this.FilterString);
 
             if (typeof(T) == typeof(int))
             {
@@ -62,95 +64,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                     this.ValueDecimal = (decimal)parsedValueDecimal;
                 }
             }
-            else if (typeof(T) == typeof(string))
-            {
-                this.ValueString = value;
-            }
-
-            this.OperatorString = this.ExtractOperator(this.FilterString);
-        }
-
-        private string FixParenthesis(string input)
-        {
-
-            int counter;
-            int openCount = input.Count(f => f == '(');
-            int closeCount = input.Count(f => f == ')');
-
-            if (openCount > closeCount)
-            {
-                for (counter = 0; counter < openCount - closeCount; counter++)
-                {
-                    input = input + ')';
-                }
-            }
-            else if (closeCount > openCount)
-            {
-                for (counter = 0; counter < closeCount - openCount; counter++)
-                {
-                    input = '(' + input;
-                }
-            }
-
-            return input;
-
-        }
-
-        private string ExtractPropertyName(string sInput)
-        {
-
-            return sInput.Replace("(", "").Replace(")", "").Replace(this.ExtractOperator(sInput), "").Replace(this.ExtractValue(sInput), "").Replace("'", "").Replace("dbo.MidnightOfdateaddday, 1,", "").Replace("cast as datetime", "").Trim();
-
-        }
-
-        private string ExtractOperator(string sInput)
-        {
-            List<string> operators = new List<string>() {
-                ">=",
-                "<=",
-                "=",
-                "<",
-                ">",
-                " NOT LIKE ",
-                " not like ",
-                " LIKE ",
-                " like ",
-                "!=",
-                "<>"
-            };
-            foreach (string op in operators)
-            {
-                if (sInput.Contains(op))
-                {
-                    return op.Trim();
-                }
-            }
-            return "=";
-        }
-
-        private string ExtractValue(string sInput)
-        {
-
-            if (sInput.Contains('\''))
-            {
-
-                int iStart = sInput.IndexOf('\'') + 1;
-                int iEnd = sInput.LastIndexOf('\'');
-
-                return sInput.Substring(iStart, iEnd - iStart);
-
-            }
-            else
-            {
-                string op = this.ExtractOperator(sInput);
-                sInput = sInput.Replace(")", "").Replace("(", "").Replace(" ", "");
-                string[] parts = sInput.Split(new string[] { op }, StringSplitOptions.None);
-                if (parts.Count() == 2)
-                {
-                    return parts[1];
-                }
-            }
-            return "";
 
         }
 

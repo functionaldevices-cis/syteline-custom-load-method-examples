@@ -3,6 +3,7 @@ using Mongoose.IDO.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ue_FIS_CustomLoadMethodExamples_ECA.Helpers;
 
 namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 {
@@ -60,21 +61,20 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             }
         }
 
-        public List<string> Filters => this.Filter != "" ? this.Filter.Replace("and", "AND").Split(
+        public List<(string originalString, string propertyName, string operatorName, string value)> Filters => this.Filter != "" ? this.Filter.Replace("and", "AND").Split(
             new string[] { "AND" }, StringSplitOptions.None
         ).Select(
-            sPropertyFilter =>
-                "( "
-                + sPropertyFilter
-                    .Trim()
-                    .Replace(" <> N", " <> ")
-                    .Replace(" = N", " = ")
-                    .Replace(" like N", " like ")
-                    .Replace("DATEPART( yyyy, ", "YEAR( ")
-                    .Replace("DATEPART( mm, ", "MONTH( ")
-                    .Replace("DATEPART( dd, ", "DAY( ")
-                + " )"
-        ).ToList() : new List<string>();
+            filterString =>
+            {
+                filterString = FixParenthesis("( " + filterString.Trim().Replace(" <> N", " <> ").Replace(" = N", " = ").Replace(" like N", " like ").Replace("DATEPART( yyyy, ", "YEAR( ").Replace("DATEPART( mm, ", "MONTH( ").Replace("DATEPART( dd, ", "DAY( ") + " )");
+
+                string filterOperator = FilterStringParser.ExtractOperator(filterString);
+                string filterValue = FilterStringParser.ExtractValue(filterString, filterOperator);
+                string filterPropertyName = FilterStringParser.ExtractPropertyName(filterString, filterOperator, filterValue);
+
+                return (filterString, filterPropertyName, filterOperator, filterValue);
+            }
+        ).ToList() : new List<(string originalString, string propertyName, string operatorName, string value)>();
 
 
         public LoadRecordsRequestData(LoadCollectionRequestData contextRequest, string filterOverride = null, string orderByOverride = null, string recordCapOverride = null, string bookmarkOverride = null)
@@ -122,6 +122,32 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             {
                 this.ContextRequest.Bookmark = "<B/>";
             }
+
+        }
+
+        private static string FixParenthesis(string input)
+        {
+
+            int counter;
+            int openCount = input.Count(f => f == '(');
+            int closeCount = input.Count(f => f == ')');
+
+            if (openCount > closeCount)
+            {
+                for (counter = 0; counter < openCount - closeCount; counter++)
+                {
+                    input = input + ')';
+                }
+            }
+            else if (closeCount > openCount)
+            {
+                for (counter = 0; counter < closeCount - openCount; counter++)
+                {
+                    input = '(' + input;
+                }
+            }
+
+            return input;
 
         }
 

@@ -13,7 +13,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
     public interface IIDOPropertyFilterSet
     {
         bool ValueFails(object value);
-        void AddFilter(string filterString);
+
+        void AddFilter(string originalString, string propertyName = null, string operatorName = null, string value = null);
 
         string GetFilterString();
 
@@ -40,16 +41,16 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             return joinedFilter != "" ? $"(" + joinedFilter + ")" : "";
         }
 
-        public void AddFilter(string filterString)
+        public void AddFilter(string filterString, string propertyName = null, string operatorName = null, string value = null)
         {
 
             if (!this.HasChanged && this.Filters.Count > 0)
             {
-                this.Filters[0] = new IDOPropertyFilter<T>(filterString);
+                this.Filters[0] = new IDOPropertyFilter<T>(filterString, propertyName, operatorName, value);
             }
             else
             {
-                this.Filters.Add(new IDOPropertyFilter<T>(filterString));
+                this.Filters.Add(new IDOPropertyFilter<T>(filterString, propertyName, operatorName, value));
             }
             this.HasChanged = true;
 

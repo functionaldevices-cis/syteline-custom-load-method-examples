@@ -458,8 +458,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE FILTERS
             /********************************************************************/
 
-            string userFilterPropertyName;
-
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "Item", new IDOPropertyFilterSet<string>() },
                 { "UnitPrice1", new IDOPropertyFilterSet<decimal>() },
@@ -472,11 +470,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             userRequest.Filters.ForEach(userFilter =>
             {
 
-                userFilterPropertyName = utils.FilterExtractPropertyName(userFilter);
-
-                if (itempriceQueryFilters.Keys.Contains(userFilterPropertyName))
+                if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
-                    itempriceQueryFilters[userFilterPropertyName].AddFilter(userFilter);
+                    itempriceQueryFilters[userFilter.propertyName].AddFilter(
+                        userFilter.originalString,
+                        userFilter.propertyName,
+                        userFilter.operatorName,
+                        userFilter.value
+                    );
                 }
 
             });
@@ -686,8 +687,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE FILTERS
             /********************************************************************/
 
-            string userFilterPropertyName;
-
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "Item", new IDOPropertyFilterSet<string>() },
                 { "UnitPrice1", new IDOPropertyFilterSet<decimal>() },
@@ -710,16 +709,24 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             userRequest.Filters.ForEach(userFilter =>
             {
 
-                userFilterPropertyName = utils.FilterExtractPropertyName(userFilter);
-
-                if (itempriceQueryFilters.Keys.Contains(userFilterPropertyName))
+                if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
-                    itempriceQueryFilters[userFilterPropertyName].AddFilter(userFilter);
+                    itempriceQueryFilters[userFilter.propertyName].AddFilter(
+                        userFilter.originalString,
+                        userFilter.propertyName,
+                        userFilter.operatorName,
+                        userFilter.value
+                    );
                 }
 
-                if (inlineFilters.Keys.Contains(userFilterPropertyName))
+                if (inlineFilters.Keys.Contains(userFilter.propertyName))
                 {
-                    inlineFilters[userFilterPropertyName].AddFilter(userFilter);
+                    inlineFilters[userFilter.propertyName].AddFilter(
+                        userFilter.originalString,
+                        userFilter.propertyName,
+                        userFilter.operatorName,
+                        userFilter.value
+                    );
                 }
 
             });
@@ -965,8 +972,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE FILTERS
             /********************************************************************/
 
-            string userFilterPropertyName;
-
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "Item", new IDOPropertyFilterSet<string>() },
                 { "EffectDate", new IDOPropertyFilterSet<string>($"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'") }
@@ -989,16 +994,24 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             userRequest.Filters.ForEach(userFilter =>
             {
 
-                userFilterPropertyName = utils.FilterExtractPropertyName(userFilter);
-
-                if (itempriceQueryFilters.Keys.Contains(userFilterPropertyName))
+                if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
-                    itempriceQueryFilters[userFilterPropertyName].AddFilter(userFilter);
+                    itempriceQueryFilters[userFilter.propertyName].AddFilter(
+                        userFilter.originalString,
+                        userFilter.propertyName,
+                        userFilter.operatorName,
+                        userFilter.value
+                    );
                 }
 
-                if (inlineFilters.Keys.Contains(userFilterPropertyName))
+                if (inlineFilters.Keys.Contains(userFilter.propertyName))
                 {
-                    inlineFilters[userFilterPropertyName].AddFilter(userFilter);
+                    inlineFilters[userFilter.propertyName].AddFilter(
+                        userFilter.originalString,
+                        userFilter.propertyName,
+                        userFilter.operatorName,
+                        userFilter.value
+                    );
                 }
 
             });

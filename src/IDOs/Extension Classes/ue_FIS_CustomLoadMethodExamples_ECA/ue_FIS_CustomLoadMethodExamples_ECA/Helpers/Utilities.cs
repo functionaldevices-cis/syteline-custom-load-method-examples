@@ -33,28 +33,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             return new string(charArray);
         }
 
-        public string ParseFilterArgument(string arg, string defaultVal)
-        {
-            if (string.IsNullOrEmpty(arg))
-            {
-                return defaultVal;
-            }
-            else
-            {
-                return arg.Replace("*", "%");
-            }
-        }
-
-        public string ParseEffectDate(string sRawDate)
-        {
-            (DateTime parsedDateTime, int precision) = this.TryToParseDateTime(sRawDate);
-            if (parsedDateTime != DateTime.MinValue)
-            {
-                return parsedDateTime.ToString("MM/dd/yyyy");
-            }
-            return "";
-        }
-
         public string ConvertDateTimeFilterToPostFilterFormat(string filterPropertyName, string filter)
         {
 
@@ -82,37 +60,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             }
 
             return parsedFilter;
-        }
-
-        public decimal? TryToParseNumberString(string input)
-        {
-
-            decimal parsedDecimal;
-
-            if (decimal.TryParse(input, out parsedDecimal))
-            {
-                return parsedDecimal;
-            }
-
-            return null;
-
-        }
-
-        public int TryToParseCheckboxString(string input)
-        {
-
-            if (input == "1")
-            {
-                return 1;
-            }
-
-            if (input == "0" || input == "" || input == null)
-            {
-                return 0;
-            }
-
-            return -1;
-
         }
 
         public (DateTime value, int precision) TryToParseDateTime(string input)
@@ -154,72 +101,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         }
 
-        public string FilterExtractPropertyName(string sInput)
-        {
-
-            return sInput.Replace("(", "").Replace(")", "").Replace(this.ExtractOperator(sInput), "").Replace(this.ExtractValue(sInput), "").Replace("'", "").Replace("dbo.MidnightOfdateaddday, 1,", "").Replace("cast as datetime", "").Trim();
-
-        }
-
         public string ExtractOperator(string sInput) // FOR BACKWARDS COMPAT. REMOVE EVENTUALLY
         {
-            return this.FilterExtractOperator(sInput);
-        }
-
-        public string FilterExtractOperator(string sInput)
-        {
-            List<string> operators = new List<string>() {
-                ">=",
-                "<=",
-                "=",
-                "<",
-                ">",
-                " NOT LIKE ",
-                " not like ",
-                " LIKE ",
-                " like ",
-                "!=",
-                "<>"
-            };
-            foreach (string op in operators)
-            {
-                if (sInput.Contains(op))
-                {
-                    return op.Trim();
-                }
-            }
-            return "=";
+            return FilterStringParser.ExtractOperator(sInput);
         }
 
         public string ExtractValue(string sInput) // FOR BACKWARDS COMPAT. REMOVE EVENTUALLY
         {
-            return this.FilterExtractValue(sInput);
-        }
-
-        public string FilterExtractValue(string sInput)
-        {
-
-            if (sInput.Contains('\''))
-            {
-
-                int iStart = sInput.IndexOf('\'') + 1;
-                int iEnd = sInput.LastIndexOf('\'');
-
-                return sInput.Substring(iStart, iEnd - iStart);
-
-            }
-            else
-            {
-                string op = this.ExtractOperator(sInput);
-                sInput = sInput.Replace(")", "").Replace("(", "").Replace(" ", "");
-                string[] parts = sInput.Split(new string[] { op }, StringSplitOptions.None);
-                if (parts.Count() == 2)
-                {
-                    return parts[1];
-                }
-            }
-            return "";
-
+            return FilterStringParser.ExtractValue(sInput, FilterStringParser.ExtractOperator(sInput));
         }
 
         public string GetFiltersContaining(string sKeyword, List<string> lFilters)
