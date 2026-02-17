@@ -109,28 +109,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             return days;
         }
 
-        public static List<T> ExtractPropertiesAsList<T>(LoadCollectionResponseData oLdResponse, string propertyName) {
-
-            int index = oLdResponse.PropertyList.IndexOf(propertyName);
-            if (index > -1) {
-                return oLdResponse.Items.Select(record => record.PropertyValues[index].GetValue<T>()).ToList();
-            } else {
-                return new List<T>();
-            }
-
-        }
-
-        public List<Dictionary<string, T>> UnpackRecords<T>(LoadRecordsResponseData records)
-        {
-
-            return records.LoadCollectionResponseData.Items.Select(
-                record => records.PropertyKeys.ToDictionary(
-                    propertyName => propertyName.Key,
-                    propertyName => this.ParseIDOPropertyValue<T>(record.PropertyValues[propertyName.Value])
-                )
-            ).ToList();
-
-        }
 
         public T ParseIDOPropertyValue<T>(IDOPropertyValue value)
         {
