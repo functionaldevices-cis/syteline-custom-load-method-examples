@@ -9,6 +9,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
     public class LoadRecordsResponseData
     {
+        public List<string> Properties { get; set; } = new List<string>();
+
         public Dictionary<string, int> PropertyKeys { get; set; } = new Dictionary<string, int>();
 
         public List<IDOItem> Items { get { return this.LoadCollectionResponseData.Items; } }
@@ -25,11 +27,21 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
             queryProperties = queryProperties ?? new List<string>();
 
-            this.PropertyKeys = Enumerable.Range(0, queryProperties.Count).ToDictionary(
-                i => queryProperties[i],
+            this.Properties = queryProperties;
+            this.PropertyKeys = Enumerable.Range(0, this.Properties.Count).ToDictionary(
+                i => this.Properties[i],
                 i => i
             );
 
+        }
+
+        public void AddProperty(string newProperty)
+        {
+            this.Properties.Add(newProperty);
+            this.PropertyKeys = Enumerable.Range(0, this.Properties.Count).ToDictionary(
+                i => this.Properties[i],
+                i => i
+            );
         }
 
     }
