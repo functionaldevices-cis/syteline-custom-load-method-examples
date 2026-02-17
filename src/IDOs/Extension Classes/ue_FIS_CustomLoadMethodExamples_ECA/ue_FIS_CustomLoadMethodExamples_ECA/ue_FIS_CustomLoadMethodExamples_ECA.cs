@@ -1809,6 +1809,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 new IDOPropertyFilterSet<decimal>(
                     outputPropertyName: "ListPrice"
                 ),
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "PriceType"
+                ),
                 new IDOPropertyFilterSet<DateTime>(
                     outputPropertyName: "EffectDate"
                 ),
@@ -2065,6 +2068,11 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     }
 
                     if (inlineFilters["CustomerPrice"].ValueFails(customerPrice))
+                    {
+                        passesInlineFilters = false;
+                    }
+
+                    if (inlineFilters["PriceType"].ValueFails(priceType))
                     {
                         passesInlineFilters = false;
                     }
