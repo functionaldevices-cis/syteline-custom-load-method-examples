@@ -80,7 +80,6 @@
     <Compile Include="Helpers\FilterStringParser.cs" />
     <Compile Include="Models\IDOPropertyFilterSet.cs" />
     <Compile Include="Models\IDOPropertyFilter.cs" />
-    <Compile Include="Models\ItemPriceCodePriceInfo.cs" />
     <Compile Include="Models\LoadRecordsRequestData.cs" />
     <Compile Include="Models\LoadRecordsResponseData.cs" />
     <Compile Include="ue_FIS_CustomLoadMethodExamples_ECA.cs" />
