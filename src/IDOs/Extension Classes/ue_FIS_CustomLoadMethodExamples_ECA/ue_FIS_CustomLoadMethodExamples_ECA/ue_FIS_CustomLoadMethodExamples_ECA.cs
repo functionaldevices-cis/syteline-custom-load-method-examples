@@ -1012,7 +1012,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     outputPropertyName: "Item"
                 ),
                 new IDOPropertyFilterSet<string>(
-                    outputPropertyName: "EffectDate",
+                    outputPropertyName: "EffectDateHardcoded", // THIS MUST BE APPLIED REGARDLESS OF WHAT THE USER CHOOSES AS EFFECTIVE DATE FILTER, SO IT'S NAME MATCHES NOTHING. THEREFORE IT CANNOT BE OVERRIDDEN
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )
             }.ToDictionary(f => f.OutputPropertyName);
@@ -1378,7 +1378,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     outputPropertyName: "Item"
                 ),
                 new IDOPropertyFilterSet<string>(
-                    outputPropertyName: "EffectDate",
+                    outputPropertyName: "EffectDateHardcoded", // THIS MUST BE APPLIED REGARDLESS OF WHAT THE USER CHOOSES AS EFFECTIVE DATE FILTER, SO IT'S NAME MATCHES NOTHING. THEREFORE IT CANNOT BE OVERRIDDEN
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )
             }.ToDictionary(f => f.OutputPropertyName);
@@ -1782,7 +1782,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     outputPropertyName: "Item"
                 ),
                 new IDOPropertyFilterSet<string>(
-                    outputPropertyName: "EffectDate",
+                    outputPropertyName: "EffectDateHardcoded", // THIS MUST BE APPLIED REGARDLESS OF WHAT THE USER CHOOSES AS EFFECTIVE DATE FILTER, SO IT'S NAME MATCHES NOTHING. THEREFORE IT CANNOT BE OVERRIDDEN
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )
             }.ToDictionary(f => f.OutputPropertyName);
@@ -2232,7 +2232,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     outputPropertyName: "Item"
                 ),
                 new IDOPropertyFilterSet<string>(
-                    outputPropertyName: "EffectDate",
+                    outputPropertyName: "EffectDateHardcoded", // THIS MUST BE APPLIED REGARDLESS OF WHAT THE USER CHOOSES AS EFFECTIVE DATE FILTER, SO IT'S NAME MATCHES NOTHING. THEREFORE IT CANNOT BE OVERRIDDEN
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )
             }.ToDictionary(f => f.OutputPropertyName);
@@ -2250,7 +2250,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     defaultFilter: "CustNum = '" + custNum + "'"
                 ),
                 new IDOPropertyFilterSet<string>(
-                    outputPropertyName: "EffectDate",
+                    outputPropertyName: "EffectDateHardcoded", // THIS MUST BE APPLIED REGARDLESS OF WHAT THE USER CHOOSES AS EFFECTIVE DATE FILTER, SO IT'S NAME MATCHES NOTHING. THEREFORE IT CANNOT BE OVERRIDDEN
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )
             }.ToDictionary(f => f.OutputPropertyName);
