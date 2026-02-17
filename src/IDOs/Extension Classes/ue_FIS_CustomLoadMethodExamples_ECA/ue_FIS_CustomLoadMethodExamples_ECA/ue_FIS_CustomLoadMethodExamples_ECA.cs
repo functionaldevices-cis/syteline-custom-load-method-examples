@@ -468,12 +468,24 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
 
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>() },
-                { "UnitPrice1", new IDOPropertyFilterSet<decimal>() },
-                { "UnitPrice2", new IDOPropertyFilterSet<decimal>() },
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>() },
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>() },
-                { "RowPointer", new IDOPropertyFilterSet<string>() }
+                { "Item", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "Item"
+                )},
+                { "UnitPrice1", new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPrice1"
+                )},
+                { "UnitPrice2", new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPrice2"
+                )},
+                { "EffectDate", new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDate"
+                )},
+                { "RecordDate", new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "RecordDate"
+                )},
+                { "RowPointer", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "RowPointer"
+                )}
             };
 
             userRequest.Filters.ForEach(userFilter =>
@@ -482,10 +494,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     itempriceQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
@@ -697,12 +706,24 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
 
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>() },
-                { "UnitPrice1", new IDOPropertyFilterSet<decimal>() },
-                { "UnitPrice2", new IDOPropertyFilterSet<decimal>() },
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>() },
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>() },
-                { "RowPointer", new IDOPropertyFilterSet<string>() }
+                { "Item", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "Item"
+                )},
+                { "UnitPrice1", new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPrice1"
+                )},
+                { "UnitPrice2", new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPrice2"
+                )},
+                { "EffectDate", new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDate"
+                )},
+                { "RecordDate", new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "RecordDate"
+                )},
+                { "RowPointer", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "RowPointer"
+                )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
@@ -721,20 +742,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     itempriceQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (inlineFilters.Keys.Contains(userFilter.propertyName))
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: inlineFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
@@ -982,8 +997,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
 
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>() },
-                { "EffectDate", new IDOPropertyFilterSet<string>($"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'") }
+                { "Item", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "Item"
+                )},
+                { "EffectDate", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "EffectDate",
+                    defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
+                )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
@@ -1006,20 +1026,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     itempriceQueryFilters[userFilter.propertyName].AddFilter(
-                        userFilter.originalString,
-                        userFilter.propertyName,
-                        userFilter.operatorName,
-                        userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (inlineFilters.Keys.Contains(userFilter.propertyName))
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
-                        userFilter.originalString,
-                        userFilter.propertyName,
-                        userFilter.operatorName,
-                        userFilter.value
+                        filter: userFilter
                     );
                 }
 
@@ -1326,15 +1340,19 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string custPriceCode = "Y00"; // !! CHANGE THIS TO WHATEVER YOUR BASE LIST PRICE CODE IS !!
 
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>()},
+                { "Item", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "Item"
+                )},
                 { "EffectDate", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "PriceCode", new IDOPropertyFilterSet<string>(
-                    sourcePropertyName: "CustPricecode ",
+                    outputPropertyName: "PriceCode",
+                    sourcePropertyName: "CustPricecode",
                     defaultFilter: "CustPricecode = '" + custPriceCode + "'"
                 )}
             };
@@ -1353,10 +1371,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     itempriceQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
@@ -1364,21 +1379,20 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 {
 
                     priceMatrixQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: priceMatrixQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (inlineFilters.Keys.Contains(userFilter.propertyName))
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: inlineFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
+                }
+
+                if (userFilter.propertyName == "PriceCode")
+                {
+                    custPriceCode = userFilter.value;
                 }
 
             });
@@ -1720,20 +1734,25 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string custNum = "C000001";
 
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>()},
+                { "Item", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "Item"
+                )},
                 { "EffectDate", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> customerQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "CustNum", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "CustNum",
                     defaultFilter: "CustNum = '" + custNum + "'"
                 )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "PriceCode", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "PriceCode",
                     sourcePropertyName: "CustPricecode ",
                     defaultFilter: "CustPricecode = ''"
                 )}
@@ -1753,10 +1772,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     itempriceQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
@@ -1764,10 +1780,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 {
 
                     customerQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: customerQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
@@ -1775,20 +1788,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 {
 
                     itempriceQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (inlineFilters.Keys.Contains(userFilter.propertyName))
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
@@ -2167,29 +2174,36 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             string custNum = "C000001";
 
             Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>()},
+                { "Item", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "Item"
+                )},
                 { "EffectDate", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> customerQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "CustNum", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "CustNum",
                     defaultFilter: "CustNum = '" + custNum + "'"
                 )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> itemcustpricesQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "CustNum", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "CustNum",
                     defaultFilter: "CustNum = '" + custNum + "'"
                 )},
                 { "EffectDate", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
                 )}
             };
 
             Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
                 { "PriceCode", new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "PriceCode",
                     sourcePropertyName: "CustPricecode ",
                     defaultFilter: "CustPricecode = ''"
                 )}
@@ -2210,50 +2224,35 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (itempriceQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     itempriceQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (customerQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     customerQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: customerQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (itemcustpricesQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     itemcustpricesQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: itemcustpricesQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (priceMatrixQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
                     priceMatrixQueryFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: priceMatrixQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 
                 if (inlineFilters.Keys.Contains(userFilter.propertyName))
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
-                        originalString: userFilter.originalString,
-                        propertyName: inlineFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
-                        operatorName: userFilter.operatorName,
-                        value: userFilter.value
+                        filter: userFilter
                     );
                 }
 

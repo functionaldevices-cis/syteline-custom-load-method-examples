@@ -12,14 +12,19 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
     public interface IIDOPropertyFilterSet
     {
+        string OutputPropertyName { get; set; }
 
         string SourcePropertyName { get; set; }
 
         bool ValueFails(object value);
 
-        void AddFilter(string originalString, string propertyName = null, string operatorName = null, string value = null);
+        void AddFilter((string originalString, string propertyName, string operatorName, string value) filter);
 
-        void OverwriteFilter(string filterString, string propertyName = null, string operatorName = null, string value = null);
+        void AddFilter(string originalString);
+
+        void OverwriteFilter((string originalString, string propertyName, string operatorName, string value) filter);
+
+        void OverwriteFilter(string originalString);
 
         string GetFilterString();
 
@@ -27,6 +32,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
     public class IDOPropertyFilterSet<T> : IIDOPropertyFilterSet
     {
+        public string OutputPropertyName { get; set; }
 
         public string SourcePropertyName { get; set; }
 
@@ -37,6 +43,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         public IDOPropertyFilterSet(string outputPropertyName = null, string sourcePropertyName = null, string defaultFilter = null)
         {
+            this.OutputPropertyName = outputPropertyName;
             this.SourcePropertyName = sourcePropertyName;
             if (defaultFilter != null)
             {
@@ -50,25 +57,72 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             return joinedFilter != "" ? $"(" + joinedFilter + ")" : "";
         }
 
-        public void AddFilter(string filterString, string propertyName = null, string operatorName = null, string value = null)
+        public void AddFilter((string originalString, string propertyName, string operatorName, string value) filter)
         {
+
+            IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
+                filterString: this.SourcePropertyName == null ? filter.originalString : filter.originalString.Replace(this.OutputPropertyName, this.SourcePropertyName),
+                propertyName: this.SourcePropertyName ?? filter.propertyName,
+                operatorName: filter.operatorName,
+                value: filter.value
+            );
 
             if (!this.HasChanged && this.Filters.Count > 0)
             {
-                this.Filters[0] = new IDOPropertyFilter<T>(filterString, propertyName, operatorName, value);
+                this.Filters[0] = newfilter;
+                this.HasChanged = true;
             }
             else
             {
-                this.Filters.Add(new IDOPropertyFilter<T>(filterString, propertyName, operatorName, value));
+                this.Filters.Add(newfilter);
+                this.HasChanged = true;
             }
+
+        }
+
+        public void AddFilter(string originalString)
+        {
+
+            IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
+                filterString: this.SourcePropertyName == null ? originalString : originalString.Replace(this.OutputPropertyName, this.SourcePropertyName)
+            );
+
+            if (!this.HasChanged && this.Filters.Count > 0)
+            {
+                this.Filters[0] = newfilter;
+                this.HasChanged = true;
+            }
+            else
+            {
+                this.Filters.Add(newfilter);
+                this.HasChanged = true;
+            }
+
+        }
+
+        public void OverwriteFilter((string originalString, string propertyName, string operatorName, string value) filter)
+        {
+
+            IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
+                filterString: this.SourcePropertyName == null ? filter.originalString : filter.originalString.Replace(this.OutputPropertyName, this.SourcePropertyName),
+                propertyName: this.SourcePropertyName ?? filter.propertyName,
+                operatorName: filter.operatorName,
+                value: filter.value
+            );
+
+            this.Filters[0] = newfilter;
             this.HasChanged = true;
 
         }
 
-        public void OverwriteFilter(string filterString, string propertyName = null, string operatorName = null, string value = null)
+        public void OverwriteFilter(string originalString)
         {
 
-            this.Filters[0] = new IDOPropertyFilter<T>(filterString, propertyName, operatorName, value);
+            IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
+                filterString: this.SourcePropertyName == null ? originalString : originalString.Replace(this.OutputPropertyName, this.SourcePropertyName)
+            );
+
+            this.Filters[0] = newfilter;
             this.HasChanged = true;
 
         }
