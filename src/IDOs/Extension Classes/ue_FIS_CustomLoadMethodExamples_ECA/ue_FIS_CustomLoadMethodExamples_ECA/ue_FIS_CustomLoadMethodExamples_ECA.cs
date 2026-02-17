@@ -1444,33 +1444,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
-            /* LOAD THE PRICE MATRIX RECORDS
-            /********************************************************************/
-
-            LoadRecordsResponseData priceMatrixRecords = utils.LoadRecords(
-                IDOName: "SLPricematrixs",
-                properties: new List<string>() {
-                    { "CustPricecode" },
-                    { "ItemPricecode" },
-                    { "Priceformula" },
-                    { "RecordDate" }
-                },
-                filter: utils.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
-                orderBy: "CustPricecode, ItemPricecode",
-                recordCap: 0
-            );
-
-            string uniqueEscapedPriceFormulasCommaDel = priceMatrixRecords.Items.Count > 0 ? string.Join(
-                ",",
-                priceMatrixRecords.Items.Select(record =>
-                {
-                    return "'" + utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]) + "'";
-                }).Distinct()
-            ) : "''";
-
-
-
-            /********************************************************************/
             /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
             /********************************************************************/
 
@@ -1483,46 +1456,73 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "EffectDate" },
                     { "RecordDate" }
                 },
-                filter: "Priceformula IN ( " + uniqueEscapedPriceFormulasCommaDel + " )",
-                orderBy: "Priceformula ASC, EffectDate DESC",
-                recordCap: 0
+                filter: "",
+                orderBy: "Priceformula ASC, EffectDate DESC"
             );
 
             Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
             priceFormulasRecords.Items.ForEach(record => {
-                string priceFormula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
-                if (!activePriceFormulaLookupTable.ContainsKey(priceFormula))
+                string priceformula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                if (!activePriceFormulaLookupTable.ContainsKey(priceformula))
                 {
-                    activePriceFormulaLookupTable[priceFormula] = record;
+                    activePriceFormulaLookupTable[priceformula] = record;
                 }
             });
 
 
 
             /********************************************************************/
-            /* USE THE PRICE FORMULA RECORDS TO GET THE MULTIPLIER OR FIXED 
-            /* PRICE FOR EACH ITEM PRICE CODE
+            /* LOAD THE PRICE MATRIX RECORDS
             /********************************************************************/
 
-            Dictionary<string, ItemPriceCodePriceInfo> priceCalculatorLookupTable = new Dictionary<string, ItemPriceCodePriceInfo>();
-            priceMatrixRecords.Items.ForEach(priceMatrixRecord => {
+            LoadRecordsResponseData priceMatrixRecords = utils.LoadRecords(
+                IDOName: "SLPricematrixs",
+                properties: new List<string>() {
+                    { "CustPricecode" },
+                    { "ItemPricecode" },
+                    { "Priceformula" },
+                    { "RecordDate" }
+                },
+                filter: utils.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                orderBy: "CustPricecode, ItemPricecode"
+            );
 
+            priceMatrixRecords.AddProperty("FirstDolPercent");
+            priceMatrixRecords.AddProperty("FirstPrice");
+            priceMatrixRecords.AddProperty("EffectDate");
+            priceMatrixRecords.AddProperty("PriceFormulaRecordDate");
+
+            Dictionary<string, IDOItem> priceMatrixLookupTable = new Dictionary<string, IDOItem>();
+            priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
+            {
+
+                string custPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
                 string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
-                DateTime priceMatrixRecordDate = utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]);
-                string priceFormula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+                string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
-                if (!priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                if (!priceMatrixLookupTable.ContainsKey(custPricecode + "-" + itemPricecode))
                 {
 
-                    IDOItem priceFormulaRecord = activePriceFormulaLookupTable[priceFormula];
+                    string firstDolPercent = null;
+                    decimal? firstPrice = null;
+                    DateTime? effectDate = null;
+                    DateTime? recordDate = null;
 
-                    priceCalculatorLookupTable[itemPricecode] = new ItemPriceCodePriceInfo(
-                        priceCode: itemPricecode,
-                        priceMatrixRecordDate: priceMatrixRecordDate,
-                        type: utils.ParseIDOPropertyValue<string>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]),
-                        value: utils.ParseIDOPropertyValue<decimal>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]),
-                        priceFormulaRecordDate: utils.ParseIDOPropertyValue<DateTime>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]])
-                    );
+                    if (activePriceFormulaLookupTable.ContainsKey(priceformula))
+                    {
+                        IDOItem priceformulaRecord = activePriceFormulaLookupTable[priceformula];
+                        firstDolPercent = utils.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
+                        firstPrice = utils.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
+                        effectDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
+                        recordDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
+                    }
+
+                    priceMatrixRecord.PropertyValues.Add(firstDolPercent);
+                    priceMatrixRecord.PropertyValues.Add(firstPrice);
+                    priceMatrixRecord.PropertyValues.Add(effectDate);
+                    priceMatrixRecord.PropertyValues.Add(recordDate);
+
+                    priceMatrixLookupTable[custPricecode + "-" + itemPricecode] = priceMatrixRecord;
 
                 }
 
@@ -1600,10 +1600,27 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
-                    if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    if (itemPricecode != null && priceMatrixLookupTable.ContainsKey(itemPricecode))
                     {
-                        customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
-                        recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
+                        IDOItem priceMatrixRecord = priceMatrixLookupTable[itemPricecode];
+
+                        string matrixType = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
+                        decimal matrixValue = utils.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
+
+                        if (matrixType == "A")
+                        {
+                            customerPrice = matrixValue;
+                        }
+                        else if (matrixType == "P")
+                        {
+                            customerPrice = Math.Round(listPrice * (100m + matrixValue) / 100m, 2, MidpointRounding.AwayFromZero);
+                        }
+
+                        recordDate = (new List<DateTime>() {
+                            recordDate,
+                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
+                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
+                        }).Max();
                     }
 
                     // RUN ALL INLINE FILTERS
@@ -1896,6 +1913,34 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
+            /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
+            /********************************************************************/
+
+            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
+                IDOName: "SLPriceformulas",
+                properties: new List<string>() {
+                    { "Priceformula" },
+                    { "FirstDolPercent" },
+                    { "FirstPrice" },
+                    { "EffectDate" },
+                    { "RecordDate" }
+                },
+                filter: "",
+                orderBy: "Priceformula ASC, EffectDate DESC"
+            );
+
+            Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
+            priceFormulasRecords.Items.ForEach(record => {
+                string priceformula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                if (!activePriceFormulaLookupTable.ContainsKey(priceformula))
+                {
+                    activePriceFormulaLookupTable[priceformula] = record;
+                }
+            });
+
+
+
+            /********************************************************************/
             /* LOAD THE PRICE MATRIX RECORDS
             /********************************************************************/
 
@@ -1911,68 +1956,42 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
-            string uniqueEscapedPriceFormulasCommaDel = priceMatrixRecords.Items.Count > 0 ? string.Join(
-                ",",
-                priceMatrixRecords.Items.Select(record =>
-                {
-                    return "'" + utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]) + "'";
-                }).Distinct()
-            ) : "''";
+            priceMatrixRecords.AddProperty("FirstDolPercent");
+            priceMatrixRecords.AddProperty("FirstPrice");
+            priceMatrixRecords.AddProperty("EffectDate");
+            priceMatrixRecords.AddProperty("PriceFormulaRecordDate");
 
+            Dictionary<string, IDOItem> priceMatrixLookupTable = new Dictionary<string, IDOItem>();
+            priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
+            {
 
-
-            /********************************************************************/
-            /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
-            /********************************************************************/
-
-            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
-                IDOName: "SLPriceformulas",
-                properties: new List<string>() {
-                    { "Priceformula" },
-                    { "FirstDolPercent" },
-                    { "FirstPrice" },
-                    { "EffectDate" },
-                    { "RecordDate" }
-                },
-                filter: "Priceformula IN ( " + uniqueEscapedPriceFormulasCommaDel + " )",
-                orderBy: "Priceformula ASC, EffectDate DESC"
-            );
-
-            Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
-            priceFormulasRecords.Items.ForEach(record => {
-                string priceFormula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
-                if (!activePriceFormulaLookupTable.ContainsKey(priceFormula))
-                {
-                    activePriceFormulaLookupTable[priceFormula] = record;
-                }
-            });
-
-
-
-            /********************************************************************/
-            /* USE THE PRICE FORMULA RECORDS TO GET THE MULTIPLIER OR FIXED 
-            /* PRICE FOR EACH ITEM PRICE CODE
-            /********************************************************************/
-
-            Dictionary<string, ItemPriceCodePriceInfo> priceCalculatorLookupTable = new Dictionary<string, ItemPriceCodePriceInfo>();
-            priceMatrixRecords.Items.ForEach(priceMatrixRecord => {
-
+                string custPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
                 string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
-                DateTime priceMatrixRecordDate = utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]);
-                string priceFormula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+                string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
-                if (!priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                if (!priceMatrixLookupTable.ContainsKey(custPricecode + "-" + itemPricecode))
                 {
 
-                    IDOItem priceFormulaRecord = activePriceFormulaLookupTable[priceFormula];
+                    string firstDolPercent = null;
+                    decimal? firstPrice = null;
+                    DateTime? effectDate = null;
+                    DateTime? recordDate = null;
 
-                    priceCalculatorLookupTable[itemPricecode] = new ItemPriceCodePriceInfo(
-                        priceCode: itemPricecode,
-                        priceMatrixRecordDate: priceMatrixRecordDate,
-                        type: utils.ParseIDOPropertyValue<string>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]),
-                        value: utils.ParseIDOPropertyValue<decimal>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]),
-                        priceFormulaRecordDate: utils.ParseIDOPropertyValue<DateTime>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]])
-                    );
+                    if (activePriceFormulaLookupTable.ContainsKey(priceformula))
+                    {
+                        IDOItem priceformulaRecord = activePriceFormulaLookupTable[priceformula];
+                        firstDolPercent = utils.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
+                        firstPrice = utils.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
+                        effectDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
+                        recordDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
+                    }
+
+                    priceMatrixRecord.PropertyValues.Add(firstDolPercent);
+                    priceMatrixRecord.PropertyValues.Add(firstPrice);
+                    priceMatrixRecord.PropertyValues.Add(effectDate);
+                    priceMatrixRecord.PropertyValues.Add(recordDate);
+
+                    priceMatrixLookupTable[custPricecode + "-" + itemPricecode] = priceMatrixRecord;
 
                 }
 
@@ -2051,13 +2070,30 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
-                    if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    if (itemPricecode != null && priceMatrixLookupTable.ContainsKey(itemPricecode))
                     {
-                        customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
-                        recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
+                        IDOItem priceMatrixRecord = priceMatrixLookupTable[itemPricecode];
+
+                        string matrixType = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
+                        decimal matrixValue = utils.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
+
+                        if (matrixType == "A")
+                        {
+                            customerPrice = matrixValue;
+                        }
+                        else if (matrixType == "P")
+                        {
+                            customerPrice = Math.Round(listPrice * (100m + matrixValue) / 100m, 2, MidpointRounding.AwayFromZero);
+                        }
+
                         priceType = "Matrix";
+                        recordDate = (new List<DateTime>() {
+                            recordDate,
+                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
+                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
+                        }).Max();
                     }
-                        
+
                     // RUN ALL INLINE FILTERS
 
                     bool passesInlineFilters = true;
@@ -2367,6 +2403,34 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
+            /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
+            /********************************************************************/
+
+            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
+                IDOName: "SLPriceformulas",
+                properties: new List<string>() {
+                    { "Priceformula" },
+                    { "FirstDolPercent" },
+                    { "FirstPrice" },
+                    { "EffectDate" },
+                    { "RecordDate" }
+                },
+                filter: "",
+                orderBy: "Priceformula ASC, EffectDate DESC"
+            );
+
+            Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
+            priceFormulasRecords.Items.ForEach(record => {
+                string priceformula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                if (!activePriceFormulaLookupTable.ContainsKey(priceformula))
+                {
+                    activePriceFormulaLookupTable[priceformula] = record;
+                }
+            });
+
+
+
+            /********************************************************************/
             /* LOAD THE PRICE MATRIX RECORDS
             /********************************************************************/
 
@@ -2382,40 +2446,45 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
-            string uniqueEscapedPriceFormulasCommaDel = priceMatrixRecords.Items.Count > 0 ? string.Join(
-                ",",
-                priceMatrixRecords.Items.Select(record =>
+            priceMatrixRecords.AddProperty("FirstDolPercent");
+            priceMatrixRecords.AddProperty("FirstPrice");
+            priceMatrixRecords.AddProperty("EffectDate");
+            priceMatrixRecords.AddProperty("PriceFormulaRecordDate");
+
+            Dictionary<string, IDOItem> priceMatrixLookupTable = new Dictionary<string, IDOItem>();
+            priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
+            {
+
+                string custPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
+                string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
+                string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+
+                if (!priceMatrixLookupTable.ContainsKey(custPricecode + "-" + itemPricecode))
                 {
-                    return "'" + utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]) + "'";
-                }).Distinct()
-            ) : "''";
 
+                    string firstDolPercent = null;
+                    decimal? firstPrice = null;
+                    DateTime? effectDate = null;
+                    DateTime? recordDate = null;
 
+                    if (activePriceFormulaLookupTable.ContainsKey(priceformula))
+                    {
+                        IDOItem priceformulaRecord = activePriceFormulaLookupTable[priceformula];
+                        firstDolPercent = utils.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
+                        firstPrice = utils.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
+                        effectDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
+                        recordDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
+                    }
 
-            /********************************************************************/
-            /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
-            /********************************************************************/
+                    priceMatrixRecord.PropertyValues.Add(firstDolPercent);
+                    priceMatrixRecord.PropertyValues.Add(firstPrice);
+                    priceMatrixRecord.PropertyValues.Add(effectDate);
+                    priceMatrixRecord.PropertyValues.Add(recordDate);
 
-            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
-                IDOName: "SLPriceformulas",
-                properties: new List<string>() {
-                    { "Priceformula" },
-                    { "FirstDolPercent" },
-                    { "FirstPrice" },
-                    { "EffectDate" },
-                    { "RecordDate" }
-                },
-                filter: "Priceformula IN ( " + uniqueEscapedPriceFormulasCommaDel + " )",
-                orderBy: "Priceformula ASC, EffectDate DESC"
-            );
+                    priceMatrixLookupTable[custPricecode + "-" + itemPricecode] = priceMatrixRecord;
 
-            Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
-            priceFormulasRecords.Items.ForEach(record => {
-                string priceFormula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
-                if (!activePriceFormulaLookupTable.ContainsKey(priceFormula))
-                {
-                    activePriceFormulaLookupTable[priceFormula] = record;
                 }
+
             });
 
 
@@ -2441,37 +2510,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             customerContractPriceRecords.Items.ForEach(customerContractPriceRecord => {
                 string item = utils.ParseIDOPropertyValue<string>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["Item"]]);
                 customerContractPriceIndexLookupTable[item] = customerContractPriceRecord;
-            });
-
-
-
-            /********************************************************************/
-            /* USE THE PRICE FORMULA RECORDS TO GET THE MULTIPLIER OR FIXED 
-            /* PRICE FOR EACH ITEM PRICE CODE
-            /********************************************************************/
-
-            Dictionary<string, ItemPriceCodePriceInfo> priceCalculatorLookupTable = new Dictionary<string, ItemPriceCodePriceInfo>();
-            priceMatrixRecords.Items.ForEach(priceMatrixRecord => {
-
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
-                DateTime priceMatrixRecordDate = utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]);
-                string priceFormula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
-
-                if (!priceCalculatorLookupTable.ContainsKey(itemPricecode))
-                {
-
-                    IDOItem priceFormulaRecord = activePriceFormulaLookupTable[priceFormula];
-
-                    priceCalculatorLookupTable[itemPricecode] = new ItemPriceCodePriceInfo(
-                        priceCode: itemPricecode,
-                        priceMatrixRecordDate: priceMatrixRecordDate,
-                        type: utils.ParseIDOPropertyValue<string>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]),
-                        value: utils.ParseIDOPropertyValue<decimal>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]),
-                        priceFormulaRecordDate: utils.ParseIDOPropertyValue<DateTime>(priceFormulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]])
-                    );
-
-                }
-
             });
 
 
@@ -2549,14 +2587,27 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // IF THERE IS A MATRIX PRICE FOR THIS ITEM'S PRICECODE, WE NEED TO GET THE DATA FROM IT
 
-                    if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    if (itemPricecode != null && priceMatrixLookupTable.ContainsKey(itemPricecode))
                     {
-                        customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
+                        IDOItem priceMatrixRecord = priceMatrixLookupTable[itemPricecode];
+
+                        string matrixType = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
+                        decimal matrixValue = utils.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
+
+                        if (matrixType == "A")
+                        {
+                            customerPrice = matrixValue;
+                        }
+                        else if (matrixType == "P")
+                        {
+                            customerPrice = Math.Round(listPrice * (100m + matrixValue) / 100m, 2, MidpointRounding.AwayFromZero);
+                        }
+
                         priceType = "Matrix";
                         recordDate = (new List<DateTime>() {
                             recordDate,
-                            priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate,
-                            priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate
+                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
+                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
                         }).Max();
                     }
 
