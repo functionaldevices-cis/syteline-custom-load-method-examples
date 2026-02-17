@@ -18,7 +18,7 @@ The repo contains an IDO and a series of Mongoose forms which can be imported to
 
 To test using Mongoose forms, open the Form -> Open popup menu, search captions for "FIS", and you should see:
 
-![Form -> Open Popup, Filtered to FIS Forms](misc/readme_01.png)
+![Form -> Open Popup, Filtered to FIS Forms](misc/readme_01b.png)
 
 You can also test using the Infor OS API Gateway:
 
