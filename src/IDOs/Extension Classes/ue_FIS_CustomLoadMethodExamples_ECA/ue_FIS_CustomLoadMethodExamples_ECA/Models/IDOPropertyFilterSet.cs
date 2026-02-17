@@ -19,7 +19,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         void AddFilter(string originalString, string propertyName = null, string operatorName = null, string value = null);
 
-        void OverwriteFilter(string filterString, string propertyName = null, string operatorName = null, string value = null)
+        void OverwriteFilter(string filterString, string propertyName = null, string operatorName = null, string value = null);
 
         string GetFilterString();
 

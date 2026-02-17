@@ -5,9 +5,7 @@ using Mongoose.IDO.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using ue_FIS_CustomLoadMethodExamples_ECA.Helpers;
 using ue_FIS_CustomLoadMethodExamples_ECA.Models;
 
@@ -187,7 +185,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
 
         [IDOMethod(MethodFlags.CustomLoad)]
-        public DataTable Example_01B_LoadItemPrices_AddPagination(string sFilter = null, string sOrderBy = null, string sRecordCap = null, string sBookmark = null)
+        public DataTable Example_01B_LoadItemPrices_Pagination(string sFilter = null, string sOrderBy = null, string sRecordCap = null, string sBookmark = null)
         {
 
             /********************************************************************/
@@ -232,6 +230,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             int iStartingCounterItems = 0;
             int iCounterItems = 0;
+            string debug1 = "";
+            string debug2 = "";
 
             LoadRecordsRequestData userRequest = new LoadRecordsRequestData(
                 contextRequest: this.Context.Request as LoadCollectionRequestData,
@@ -271,7 +271,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 },
                 filter: "",
                 orderBy: userRequest.OrderBy,
-                recordCap: userRequest.RecordCap
+                recordCap: userRequest.Bookmark == "<B/>" ? userRequest.RecordCap + 1 : 0
             );
 
 
@@ -357,6 +357,15 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
                 int bookmarkRowIndex = outputTable.Rows.Count > userRequest.RecordCap ? outputTable.Rows.Count - 2 : outputTable.Rows.Count - 1;
                 userRequest.Bookmark = outputTable.Rows[bookmarkRowIndex]["Item"].ToString();
+
+                if (debug1 != "")
+                {
+                    outputTable.Rows[0]["Item"] = debug1;
+                }
+                if (debug2 != "")
+                {
+                    outputTable.Rows[0]["ItemReversed"] = debug2;
+                }
             }
 
             return outputTable;
@@ -723,7 +732,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
                         originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
+                        propertyName: inlineFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
                         operatorName: userFilter.operatorName,
                         value: userFilter.value
                     );
