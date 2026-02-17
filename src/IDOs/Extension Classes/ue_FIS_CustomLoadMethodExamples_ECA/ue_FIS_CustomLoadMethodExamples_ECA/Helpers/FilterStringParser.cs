@@ -11,9 +11,15 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         public static string ExtractPropertyName(string filterString, string operatorName, string value)
         {
-
-            return filterString.Replace("(", "").Replace(")", "").Replace(operatorName, "").Replace(value, "").Replace("'", "").Replace("dbo.MidnightOfdateaddday, 1,", "").Replace("cast as datetime", "").Trim();
-
+            if (operatorName != "")
+            {
+                filterString = filterString.Replace(operatorName, "");
+            }
+            if (value != "")
+            {
+                filterString = filterString.Replace(value, "");
+            }
+            return filterString.Replace("(", "").Replace(")", "").Replace("'", "").Replace("dbo.MidnightOfdateaddday, 1,", "").Replace("cast as datetime", "").Trim();
         }
 
         public static string ExtractOperator(string filterString)

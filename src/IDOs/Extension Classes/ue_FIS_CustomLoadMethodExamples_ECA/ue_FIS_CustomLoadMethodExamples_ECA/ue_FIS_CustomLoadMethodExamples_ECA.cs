@@ -1797,7 +1797,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new List<IIDOPropertyFilterSet>() {
                 new IDOPropertyFilterSet<string>(
                     outputPropertyName: "PriceCode",
-                    sourcePropertyName: "CustPricecode ",
+                    sourcePropertyName: "CustPricecode",
                     defaultFilter: "CustPricecode = ''"
                 )
             }.ToDictionary(f => f.OutputPropertyName);
@@ -2258,7 +2258,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new List<IIDOPropertyFilterSet>() {
                 new IDOPropertyFilterSet<string>(
                     outputPropertyName: "PriceCode",
-                    sourcePropertyName: "CustPricecode ",
+                    sourcePropertyName: "CustPricecode",
                     defaultFilter: "CustPricecode = ''"
                 )
             }.ToDictionary(f => f.OutputPropertyName);
@@ -2352,7 +2352,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 string custPriceCode = utils.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
                 if (queriedCustNum == custNum)
                 {
-                    priceMatrixQueryFilters["CustPricecode"].OverwriteFilter("CustPricecode = '" + custPriceCode + "'");
+                    priceMatrixQueryFilters["PriceCode"].OverwriteFilter("CustPricecode = '" + custPriceCode + "'");
                 }
             }
 
