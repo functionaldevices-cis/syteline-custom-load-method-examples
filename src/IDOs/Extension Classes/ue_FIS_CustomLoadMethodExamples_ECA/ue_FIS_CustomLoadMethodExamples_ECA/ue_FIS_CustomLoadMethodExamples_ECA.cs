@@ -1194,7 +1194,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             }
 
-
             if (outputTable.Rows.Count > 0)
             {
                 int bookmarkRowIndex = outputTable.Rows.Count > userRequest.RecordCap ? outputTable.Rows.Count - 2 : outputTable.Rows.Count - 1;
@@ -1364,9 +1363,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 if (priceMatrixQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
 
-                    itempriceQueryFilters[userFilter.propertyName].AddFilter(
+                    priceMatrixQueryFilters[userFilter.propertyName].AddFilter(
                         originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
+                        propertyName: priceMatrixQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
                         operatorName: userFilter.operatorName,
                         value: userFilter.value
                     );
@@ -1376,7 +1375,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
                         originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
+                        propertyName: inlineFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
                         operatorName: userFilter.operatorName,
                         value: userFilter.value
                     );
@@ -1495,6 +1494,27 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
+            /* PARSE BOOKMARK TO DETERMINE WHERE TO START
+            /********************************************************************/
+
+            if (flags.haveBookmark)
+            {
+
+                string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+
+                if (iStartingCounterItems == -1)
+                {
+                    throw new Exception("Error: The provided bookmark refers to a Item ('" + startingItem + "') that doesn't exist in the queried record set.");
+                }
+
+                iStartingCounterItems++;
+
+            }
+
+
+
+            /********************************************************************/
             /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
             /********************************************************************/
 
@@ -1582,6 +1602,25 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 }
 
+                if (userRequest.RecordCap > 0 && outputTable.Rows.Count == userRequest.RecordCap + 1)
+                {
+                    iCounterItems = itemPriceRecords.Items.Count;
+                }
+
+            }
+
+            if (outputTable.Rows.Count > 0)
+            {
+                int bookmarkRowIndex = outputTable.Rows.Count > userRequest.RecordCap ? outputTable.Rows.Count - 2 : outputTable.Rows.Count - 1;
+                userRequest.Bookmark = outputTable.Rows[bookmarkRowIndex]["Item"].ToString();
+                if (debug1 != "")
+                {
+                    outputTable.Rows[0]["Item"] = debug1;
+                }
+                if (debug2 != "")
+                {
+                    outputTable.Rows[0]["ItemReversed"] = debug2;
+                }
             }
 
             return outputTable;
@@ -1899,101 +1938,136 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
+            /* PARSE BOOKMARK TO DETERMINE WHERE TO START
+            /********************************************************************/
+
+            if (flags.haveBookmark)
+            {
+
+                string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+
+                if (iStartingCounterItems == -1)
+                {
+                    throw new Exception("Error: The provided bookmark refers to a Item ('" + startingItem + "') that doesn't exist in the queried record set.");
+                }
+
+                iStartingCounterItems++;
+
+            }
+
+
+
+            /********************************************************************/
             /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
             /********************************************************************/
 
-            if (customerRecords.Items.Count > 0 && priceMatrixRecords.Items.Count > 0)
+            for (iCounterItems = iStartingCounterItems; iCounterItems < itemPriceRecords.Items.Count; iCounterItems++)
             {
 
-                for (iCounterItems = iStartingCounterItems; iCounterItems < itemPriceRecords.Items.Count; iCounterItems++)
+                // GRAB THE ITEM
+
+                IDOItem itemPriceRecord = itemPriceRecords.Items[iCounterItems];
+                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+
+                if (item != null && !itemIndices.ContainsKey(item))
                 {
 
-                    // GRAB THE ITEM
+                    // SAVE INDEX
 
-                    IDOItem itemPriceRecord = itemPriceRecords.Items[iCounterItems];
-                    string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                    itemIndices[item] = outputTable.Rows.Count;
 
-                    if (item != null && !itemIndices.ContainsKey(item))
+                    string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                    decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                    decimal customerPrice = listPrice;
+                    string priceType = "List";
+                    DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                    DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                    string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+
+                    // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
+
+                    if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
+                    {
+                        customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
+                        recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
+                        priceType = "Matrix";
+                    }
+                        
+                    // RUN ALL INLINE FILTERS
+
+                    bool passesInlineFilters = true;
+
+                    if (inlineFilters["ListPrice"].ValueFails(listPrice))
+                    {
+                        passesInlineFilters = false;
+                    }
+
+                    if (inlineFilters["CustomerPrice"].ValueFails(customerPrice))
+                    {
+                        passesInlineFilters = false;
+                    }
+
+                    if (inlineFilters["EffectDate"].ValueFails(effectDate))
+                    {
+                        passesInlineFilters = false;
+                    }
+
+                    if (inlineFilters["RecordDate"].ValueFails(recordDate))
+                    {
+                        passesInlineFilters = false;
+                    }
+
+                    if (inlineFilters["RowPointer"].ValueFails(rowPointer))
+                    {
+                        passesInlineFilters = false;
+                    }
+
+                    if (passesInlineFilters)
                     {
 
-                        // SAVE INDEX
+                        // CREATE OUTPUT ROW
 
-                        itemIndices[item] = outputTable.Rows.Count;
+                        outputRow = outputTable.NewRow();
 
-                        string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                        decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
-                        decimal customerPrice = listPrice;
-                        string priceType = "List";
-                        DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-                        DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                        string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                        // FILL IN OUTPUT ROW
 
-                        // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
+                        outputRow["CustNum"] = custNum;
+                        outputRow["Item"] = item;
+                        outputRow["ListPrice"] = listPrice;
+                        outputRow["CustomerPrice"] = customerPrice;
+                        outputRow["PriceType"] = priceType;
+                        outputRow["EffectDate"] = effectDate;
+                        outputRow["RecordDate"] = recordDate;
+                        outputRow["RowPointer"] = rowPointer;
 
-                        if (itemPricecode != null && priceCalculatorLookupTable.ContainsKey(itemPricecode))
-                        {
-                            customerPrice = priceCalculatorLookupTable[itemPricecode].GetPrice(listPrice);
-                            recordDate = (new List<DateTime>() { recordDate, priceCalculatorLookupTable[itemPricecode].PriceFormulaRecordDate, priceCalculatorLookupTable[itemPricecode].PriceMatrixRecordDate }).Max();
-                            priceType = "Matrix";
-                        }
-                        
-                        // RUN ALL INLINE FILTERS
+                        // ADD ROW TO OUTPUT
 
-                        bool passesInlineFilters = true;
-
-                        if (inlineFilters["ListPrice"].ValueFails(listPrice))
-                        {
-                            passesInlineFilters = false;
-                        }
-
-                        if (inlineFilters["CustomerPrice"].ValueFails(customerPrice))
-                        {
-                            passesInlineFilters = false;
-                        }
-
-                        if (inlineFilters["EffectDate"].ValueFails(effectDate))
-                        {
-                            passesInlineFilters = false;
-                        }
-
-                        if (inlineFilters["RecordDate"].ValueFails(recordDate))
-                        {
-                            passesInlineFilters = false;
-                        }
-
-                        if (inlineFilters["RowPointer"].ValueFails(rowPointer))
-                        {
-                            passesInlineFilters = false;
-                        }
-
-                        if (passesInlineFilters)
-                        {
-
-                            // CREATE OUTPUT ROW
-
-                            outputRow = outputTable.NewRow();
-
-                            // FILL IN OUTPUT ROW
-
-                            outputRow["CustNum"] = custNum;
-                            outputRow["Item"] = item;
-                            outputRow["ListPrice"] = listPrice;
-                            outputRow["CustomerPrice"] = customerPrice;
-                            outputRow["PriceType"] = priceType;
-                            outputRow["EffectDate"] = effectDate;
-                            outputRow["RecordDate"] = recordDate;
-                            outputRow["RowPointer"] = rowPointer;
-
-                            // ADD ROW TO OUTPUT
-
-                            outputTable.Rows.Add(outputRow);
-
-                        }
+                        outputTable.Rows.Add(outputRow);
 
                     }
 
                 }
 
+                if (userRequest.RecordCap > 0 && outputTable.Rows.Count == userRequest.RecordCap + 1)
+                {
+                    iCounterItems = itemPriceRecords.Items.Count;
+                }
+
+            }
+
+            if (outputTable.Rows.Count > 0)
+            {
+                int bookmarkRowIndex = outputTable.Rows.Count > userRequest.RecordCap ? outputTable.Rows.Count - 2 : outputTable.Rows.Count - 1;
+                userRequest.Bookmark = outputTable.Rows[bookmarkRowIndex]["Item"].ToString();
+                if (debug1 != "")
+                {
+                    outputTable.Rows[0]["Item"] = debug1;
+                }
+                if (debug2 != "")
+                {
+                    outputTable.Rows[0]["ItemReversed"] = debug2;
+                }
             }
 
             return outputTable;
@@ -2165,9 +2239,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 if (priceMatrixQueryFilters.Keys.Contains(userFilter.propertyName))
                 {
-                    itempriceQueryFilters[userFilter.propertyName].AddFilter(
+                    priceMatrixQueryFilters[userFilter.propertyName].AddFilter(
                         originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
+                        propertyName: priceMatrixQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
                         operatorName: userFilter.operatorName,
                         value: userFilter.value
                     );
@@ -2177,7 +2251,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 {
                     inlineFilters[userFilter.propertyName].AddFilter(
                         originalString: userFilter.originalString,
-                        propertyName: itempriceQueryFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
+                        propertyName: inlineFilters[userFilter.propertyName].SourcePropertyName ?? userFilter.propertyName,
                         operatorName: userFilter.operatorName,
                         value: userFilter.value
                     );
@@ -2351,6 +2425,27 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             /********************************************************************/
+            /* PARSE BOOKMARK TO DETERMINE WHERE TO START
+            /********************************************************************/
+
+            if (flags.haveBookmark)
+            {
+
+                string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+
+                if (iStartingCounterItems == -1)
+                {
+                    throw new Exception("Error: The provided bookmark refers to a Item ('" + startingItem + "') that doesn't exist in the queried record set.");
+                }
+
+                iStartingCounterItems++;
+
+            }
+
+
+
+            /********************************************************************/
             /* LOOP THROUGH THE ITEM PRICE RECORDS AND FILL IN THE DATA TABLE
             /********************************************************************/
 
@@ -2466,6 +2561,25 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 }
 
+                if (userRequest.RecordCap > 0 && outputTable.Rows.Count == userRequest.RecordCap + 1)
+                {
+                    iCounterItems = itemPriceRecords.Items.Count;
+                }
+
+            }
+
+            if (outputTable.Rows.Count > 0)
+            {
+                int bookmarkRowIndex = outputTable.Rows.Count > userRequest.RecordCap ? outputTable.Rows.Count - 2 : outputTable.Rows.Count - 1;
+                userRequest.Bookmark = outputTable.Rows[bookmarkRowIndex]["Item"].ToString();
+                if (debug1 != "")
+                {
+                    outputTable.Rows[0]["Item"] = debug1;
+                }
+                if (debug2 != "")
+                {
+                    outputTable.Rows[0]["ItemReversed"] = debug2;
+                }
             }
 
             return outputTable;
