@@ -12,7 +12,8 @@ The repo contains an IDO and a series of Mongoose forms which can be imported to
 ## Setup
 
 1. Import the `IDOs.XML` file into your Syteline instance using the IDO Import Wizard form.
-2. Import the `Mongoose Items.XML` file into your Syteline instance using the FormSync form.
+2. Create an IDO Project called "ue_FIS".
+3. Import the `Mongoose Items.XML` file into your Syteline instance using the FormSync form.
 
 ## Usage
 
