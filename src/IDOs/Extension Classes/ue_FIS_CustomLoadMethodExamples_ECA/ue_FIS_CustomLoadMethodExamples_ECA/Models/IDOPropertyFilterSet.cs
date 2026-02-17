@@ -1,4 +1,5 @@
 ﻿using Mongoose.Core.Extensions;
+using Mongoose.IDO.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,9 +19,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         bool ValueFails(object value);
 
-        void AddFilter((string originalString, string propertyName, string operatorName, string value) filter);
+        void AddFilter((string originalString, string propertyName, string operatorName, string value) filter, bool forceOverwrite = false);
 
-        void AddFilter(string originalString);
+        void AddFilter(string originalString, bool forceOverwrite = false);
 
         void OverwriteFilter((string originalString, string propertyName, string operatorName, string value) filter);
 
@@ -57,7 +58,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             return joinedFilter != "" ? $"(" + joinedFilter + ")" : "";
         }
 
-        public void AddFilter((string originalString, string propertyName, string operatorName, string value) filter)
+        public void AddFilter((string originalString, string propertyName, string operatorName, string value) filter, bool forceOverwrite = false)
         {
 
             IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
@@ -67,7 +68,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                 value: filter.value
             );
 
-            if (!this.HasChanged && this.Filters.Count > 0)
+            if ((!this.HasChanged || forceOverwrite) && this.Filters.Count > 0)
             {
                 this.Filters[0] = newfilter;
                 this.HasChanged = true;
@@ -80,14 +81,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         }
 
-        public void AddFilter(string originalString)
+        public void AddFilter(string originalString, bool forceOverwrite = false)
         {
 
             IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
                 filterString: this.SourcePropertyName == null ? originalString : originalString.Replace(this.OutputPropertyName, this.SourcePropertyName)
             );
 
-            if (!this.HasChanged && this.Filters.Count > 0)
+            if ((!this.HasChanged || forceOverwrite) && this.Filters.Count > 0)
             {
                 this.Filters[0] = newfilter;
                 this.HasChanged = true;
@@ -102,29 +103,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         public void OverwriteFilter((string originalString, string propertyName, string operatorName, string value) filter)
         {
-
-            IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
-                filterString: this.SourcePropertyName == null ? filter.originalString : filter.originalString.Replace(this.OutputPropertyName, this.SourcePropertyName),
-                propertyName: this.SourcePropertyName ?? filter.propertyName,
-                operatorName: filter.operatorName,
-                value: filter.value
-            );
-
-            this.Filters[0] = newfilter;
-            this.HasChanged = true;
-
+            this.AddFilter(filter, true);
         }
 
         public void OverwriteFilter(string originalString)
         {
-
-            IDOPropertyFilter<T> newfilter = new IDOPropertyFilter<T>(
-                filterString: this.SourcePropertyName == null ? originalString : originalString.Replace(this.OutputPropertyName, this.SourcePropertyName)
-            );
-
-            this.Filters[0] = newfilter;
-            this.HasChanged = true;
-
+            this.AddFilter(originalString, true);
         }
 
         bool IIDOPropertyFilterSet.ValueFails(object value)
