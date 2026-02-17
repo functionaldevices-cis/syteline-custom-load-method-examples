@@ -467,26 +467,26 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE FILTERS
             /********************************************************************/
 
-            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "Item"
-                )},
-                { "UnitPrice1", new IDOPropertyFilterSet<decimal>(
+                ),
+                new IDOPropertyFilterSet<decimal>(
                     outputPropertyName: "UnitPrice1"
-                )},
-                { "UnitPrice2", new IDOPropertyFilterSet<decimal>(
+                ),
+                new IDOPropertyFilterSet<decimal>(
                     outputPropertyName: "UnitPrice2"
-                )},
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>(
+                ),
+                new IDOPropertyFilterSet<DateTime>(
                     outputPropertyName: "EffectDate"
-                )},
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>(
+                ),
+                new IDOPropertyFilterSet<DateTime>(
                     outputPropertyName: "RecordDate"
-                )},
-                { "RowPointer", new IDOPropertyFilterSet<string>(
+                ),
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "RowPointer"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
             userRequest.Filters.ForEach(userFilter =>
             {
@@ -705,36 +705,47 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE FILTERS
             /********************************************************************/
 
-            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "Item"
-                )},
-                { "UnitPrice1", new IDOPropertyFilterSet<decimal>(
+                ),
+                new IDOPropertyFilterSet<decimal>(
                     outputPropertyName: "UnitPrice1"
-                )},
-                { "UnitPrice2", new IDOPropertyFilterSet<decimal>(
+                ),
+                new IDOPropertyFilterSet<decimal>(
                     outputPropertyName: "UnitPrice2"
-                )},
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>(
+                ),
+                new IDOPropertyFilterSet<DateTime>(
                     outputPropertyName: "EffectDate"
-                )},
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>(
+                ),
+                new IDOPropertyFilterSet<DateTime>(
                     outputPropertyName: "RecordDate"
-                )},
-                { "RowPointer", new IDOPropertyFilterSet<string>(
+                ),
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "RowPointer"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "ItemReversed", new IDOPropertyFilterSet<string>() },
-                { "UnitPriceDoubled1", new IDOPropertyFilterSet<decimal>() },
-                { "UnitPriceDoubled2", new IDOPropertyFilterSet<decimal>() },
-                { "EffectDateMinus1Day", new IDOPropertyFilterSet<DateTime>() },
-                { "EffectDateIsWeekday", new IDOPropertyFilterSet<int>() },
-                { "EffectDateIsWeekend", new IDOPropertyFilterSet<int>() }
-            };
-
+            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "ItemReversed"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPriceDoubled1"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPriceDoubled2"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDateMinus1Day"
+                ),
+                new IDOPropertyFilterSet<int>(
+                    outputPropertyName: "EffectDateIsWeekday"
+                ),
+                new IDOPropertyFilterSet<int>(
+                    outputPropertyName: "EffectDateIsWeekend"
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
             userRequest.Filters.ForEach(userFilter =>
             {
@@ -996,29 +1007,51 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* PARSE FILTERS
             /********************************************************************/
 
-            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "Item"
-                )},
-                { "EffectDate", new IDOPropertyFilterSet<string>(
+                ),
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "ItemReversed", new IDOPropertyFilterSet<string>() },
-                { "UnitPrice1", new IDOPropertyFilterSet<decimal>() },
-                { "UnitPriceDoubled1", new IDOPropertyFilterSet<decimal>() },
-                { "UnitPrice2", new IDOPropertyFilterSet<decimal>() },
-                { "UnitPriceDoubled2", new IDOPropertyFilterSet<decimal>() },
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>() },
-                { "EffectDateMinus1Day", new IDOPropertyFilterSet<DateTime>() },
-                { "EffectDateIsWeekday", new IDOPropertyFilterSet<int>() },
-                { "EffectDateIsWeekend", new IDOPropertyFilterSet<int>() },
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>() },
-                { "RowPointer", new IDOPropertyFilterSet<string>() }
-            };
+            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "ItemReversed"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPrice1"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPriceDoubled1"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPrice2"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "UnitPriceDoubled2"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDate"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDateMinus1Day"
+                ),
+                new IDOPropertyFilterSet<int>(
+                    outputPropertyName: "EffectDateIsWeekday"
+                ),
+                new IDOPropertyFilterSet<int>(
+                    outputPropertyName: "EffectDateIsWeekend"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "RecordDate"
+                ),
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "RowPointer"
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
             userRequest.Filters.ForEach(userFilter =>
             {
@@ -1339,31 +1372,42 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             string custPriceCode = "Y00"; // !! CHANGE THIS TO WHATEVER YOUR BASE LIST PRICE CODE IS !!
 
-            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>(
+
+            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "Item"
-                )},
-                { "EffectDate", new IDOPropertyFilterSet<string>(
+                ),
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "PriceCode", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "PriceCode",
                     sourcePropertyName: "CustPricecode",
                     defaultFilter: "CustPricecode = '" + custPriceCode + "'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "CustomerPrice", new IDOPropertyFilterSet<decimal>()},
-                { "ListPrice", new IDOPropertyFilterSet<decimal>()},
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>()},
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>()},
-                { "RowPointer", new IDOPropertyFilterSet<string>()}
-            };
+            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "CustomerPrice"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "ListPrice"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDate"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "RecordDate"
+                ),
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "RowPointer"
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
             userRequest.Filters.ForEach(userFilter =>
             {
@@ -1733,38 +1777,48 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             string custNum = "C000001";
 
-            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "Item"
-                )},
-                { "EffectDate", new IDOPropertyFilterSet<string>(
+                ),
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> customerQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "CustNum", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> customerQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "CustNum",
                     defaultFilter: "CustNum = '" + custNum + "'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "PriceCode", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "PriceCode",
                     sourcePropertyName: "CustPricecode ",
                     defaultFilter: "CustPricecode = ''"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "CustomerPrice", new IDOPropertyFilterSet<decimal>()},
-                { "ListPrice", new IDOPropertyFilterSet<decimal>()},
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>()},
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>()},
-                { "RowPointer", new IDOPropertyFilterSet<string>()}
-            };
+            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "CustomerPrice"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "ListPrice"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDate"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "RecordDate"
+                ),
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "RowPointer"
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
             userRequest.Filters.ForEach(userFilter =>
             {
@@ -2173,50 +2227,62 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             string custNum = "C000001";
 
-            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "Item", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> itempriceQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "Item"
-                )},
-                { "EffectDate", new IDOPropertyFilterSet<string>(
+                ),
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> customerQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "CustNum", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> customerQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "CustNum",
                     defaultFilter: "CustNum = '" + custNum + "'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> itemcustpricesQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "CustNum", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> itemcustpricesQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "CustNum",
                     defaultFilter: "CustNum = '" + custNum + "'"
-                )},
-                { "EffectDate", new IDOPropertyFilterSet<string>(
+                ),
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "EffectDate",
                     defaultFilter: $"EffectDate < '{tomorrow.ToString("yyyyMMdd HH:mm:ss.fff")}'"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "PriceCode", new IDOPropertyFilterSet<string>(
+            Dictionary<string, IIDOPropertyFilterSet> priceMatrixQueryFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<string>(
                     outputPropertyName: "PriceCode",
                     sourcePropertyName: "CustPricecode ",
                     defaultFilter: "CustPricecode = ''"
-                )}
-            };
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
-            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new Dictionary<string, IIDOPropertyFilterSet>() {
-                { "CustomerPrice", new IDOPropertyFilterSet<decimal>()},
-                { "ListPrice", new IDOPropertyFilterSet<decimal>()},
-                { "PriceType", new IDOPropertyFilterSet<string>()},
-                { "EffectDate", new IDOPropertyFilterSet<DateTime>()},
-                { "RecordDate", new IDOPropertyFilterSet<DateTime>()},
-                { "RowPointer", new IDOPropertyFilterSet<string>()}
-            };
+            Dictionary<string, IIDOPropertyFilterSet> inlineFilters = new List<IIDOPropertyFilterSet>() {
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "CustomerPrice"
+                ),
+                new IDOPropertyFilterSet<decimal>(
+                    outputPropertyName: "ListPrice"
+                ),
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "PriceType"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "EffectDate"
+                ),
+                new IDOPropertyFilterSet<DateTime>(
+                    outputPropertyName: "RecordDate"
+                ),
+                new IDOPropertyFilterSet<string>(
+                    outputPropertyName: "RowPointer"
+                )
+            }.ToDictionary(f => f.OutputPropertyName);
 
             userRequest.Filters.ForEach(userFilter =>
             {
