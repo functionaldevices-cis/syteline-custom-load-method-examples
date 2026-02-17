@@ -41,7 +41,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         private bool HasChanged { get; set; } = false;
 
-        public IDOPropertyFilterSet(string outputPropertyName = null, string sourcePropertyName = null, string defaultFilter = null)
+        public IDOPropertyFilterSet(string outputPropertyName, string sourcePropertyName = null, string defaultFilter = null)
         {
             this.OutputPropertyName = outputPropertyName;
             this.SourcePropertyName = sourcePropertyName;
