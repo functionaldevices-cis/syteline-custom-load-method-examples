@@ -27,7 +27,7 @@
                <Caption>sEffectDate</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
+               <ContainerSequence>6</ContainerSequence>
                <DataSource>object.EffectDate</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -40,11 +40,80 @@
                <Post301Format>DATE()</Post301Format>
                <EffectiveCaption>sEffectDate</EffectiveCaption>
             </Component>
+            <Component Name="EffectDateIsWeekdayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekday</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>8</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekday</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekday</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekendGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekend</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>9</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekend</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekend</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateMinus1DayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateMinus1Day</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>7</ContainerSequence>
+               <DataSource>object.EffectDateMinus1Day</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Date</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateMinus1Day</EffectiveCaption>
+            </Component>
             <Component Name="FormCollectionGrid">
                <DeviceID>-1</DeviceID>
                <Type>14</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>-0.0555555555555556</TopPos>
+               <TopPos>0</TopPos>
                <LeftPos>0</LeftPos>
                <Height>21</Height>
                <ListHeight>0</ListHeight>
@@ -84,6 +153,73 @@
                <Post301Format />
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
+            <Component Name="ItemReversedGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISItemReversed</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>1</ContainerSequence>
+               <DataSource>object.ItemReversed</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Item</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISItemReversed</EffectiveCaption>
+            </Component>
+            <Component Name="RecordDateGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRecordDate</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>11</ContainerSequence>
+               <DataSource>object.RecordDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRecordDate</EffectiveCaption>
+            </Component>
+            <Component Name="RowPointerGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRowPointer</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>10</ContainerSequence>
+               <DataSource>object.RowPointer</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRowPointer</EffectiveCaption>
+            </Component>
             <Component Name="UnitPrice1GridCol">
                <DeviceID>-1</DeviceID>
                <Type>15</Type>
@@ -96,7 +232,7 @@
                <Caption>sUnitPrice1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
+               <ContainerSequence>2</ContainerSequence>
                <DataSource>object.UnitPrice1</DataSource>
                <Binding>1</Binding>
                <Flags>384</Flags>
@@ -107,6 +243,29 @@
                <PropertyClassName>CostPrc</PropertyClassName>
                <Post301Format />
                <EffectiveCaption>sUnitPrice1</EffectiveCaption>
+            </Component>
+            <Component Name="UnitPrice2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sUnitPrice2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>4</ContainerSequence>
+               <DataSource>object.UnitPrice2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sUnitPrice2</EffectiveCaption>
             </Component>
             <Component Name="UnitPriceDoubled1GridCol">
                <DeviceID>-1</DeviceID>
@@ -120,7 +279,7 @@
                <Caption>sFISUnitPriceDoubled1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
+               <ContainerSequence>3</ContainerSequence>
                <DataSource>object.UnitPriceDoubled1</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -131,6 +290,29 @@
                <Post301Format />
                <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
             </Component>
+            <Component Name="UnitPriceDoubled2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISUnitPriceDoubled2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>5</ContainerSequence>
+               <DataSource>object.UnitPriceDoubled2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISUnitPriceDoubled2</EffectiveCaption>
+            </Component>
          </Components>
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
@@ -140,7 +322,7 @@
          </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_01A_LoadItemPrices_Base( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
+               <Value>ue_FIS_CustomLoadMethodExamples.Example_01A_LoadItemPrices_Base( V(fds1_PrimaryMethodParms) ORDERBY(Item) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
@@ -192,7 +374,7 @@
          </Script>
       </Form>
       <Form Name="ue_FIS_CustomLoadMethodExamples_01B" Scope="1" ScopeName="[NULL]">
-         <Caption>ue_FIS_fCLM01BLoadItemPricesQueryFilteringOrdering</Caption>
+         <Caption>ue_FIS_fCLM01BLoadItemPricesPagination</Caption>
          <Type>1</Type>
          <StandardOperations>161</StandardOperations>
          <Flags>1048584</Flags>
@@ -217,7 +399,7 @@
                <Caption>sEffectDate</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
+               <ContainerSequence>6</ContainerSequence>
                <DataSource>object.EffectDate</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -229,6 +411,75 @@
                <Post301DataType>DATATYPE(DATE)</Post301DataType>
                <Post301Format>DATE()</Post301Format>
                <EffectiveCaption>sEffectDate</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekdayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekday</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>8</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekday</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekday</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekendGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekend</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>9</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekend</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekend</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateMinus1DayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateMinus1Day</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>7</ContainerSequence>
+               <DataSource>object.EffectDateMinus1Day</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Date</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateMinus1Day</EffectiveCaption>
             </Component>
             <Component Name="FormCollectionGrid">
                <DeviceID>-1</DeviceID>
@@ -274,6 +525,73 @@
                <Post301Format />
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
+            <Component Name="ItemReversedGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISItemReversed</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>1</ContainerSequence>
+               <DataSource>object.ItemReversed</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Item</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISItemReversed</EffectiveCaption>
+            </Component>
+            <Component Name="RecordDateGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRecordDate</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>11</ContainerSequence>
+               <DataSource>object.RecordDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRecordDate</EffectiveCaption>
+            </Component>
+            <Component Name="RowPointerGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRowPointer</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>10</ContainerSequence>
+               <DataSource>object.RowPointer</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRowPointer</EffectiveCaption>
+            </Component>
             <Component Name="UnitPrice1GridCol">
                <DeviceID>-1</DeviceID>
                <Type>15</Type>
@@ -286,7 +604,7 @@
                <Caption>sUnitPrice1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
+               <ContainerSequence>2</ContainerSequence>
                <DataSource>object.UnitPrice1</DataSource>
                <Binding>1</Binding>
                <Flags>384</Flags>
@@ -297,6 +615,29 @@
                <PropertyClassName>CostPrc</PropertyClassName>
                <Post301Format />
                <EffectiveCaption>sUnitPrice1</EffectiveCaption>
+            </Component>
+            <Component Name="UnitPrice2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sUnitPrice2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>4</ContainerSequence>
+               <DataSource>object.UnitPrice2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sUnitPrice2</EffectiveCaption>
             </Component>
             <Component Name="UnitPriceDoubled1GridCol">
                <DeviceID>-1</DeviceID>
@@ -310,7 +651,7 @@
                <Caption>sFISUnitPriceDoubled1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
+               <ContainerSequence>3</ContainerSequence>
                <DataSource>object.UnitPriceDoubled1</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -321,6 +662,29 @@
                <Post301Format />
                <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
             </Component>
+            <Component Name="UnitPriceDoubled2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISUnitPriceDoubled2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>5</ContainerSequence>
+               <DataSource>object.UnitPriceDoubled2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISUnitPriceDoubled2</EffectiveCaption>
+            </Component>
          </Components>
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
@@ -330,7 +694,7 @@
          </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_01B_LoadItemPrices_QueryFilteringOrderingAndCapping( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
+               <Value>ue_FIS_CustomLoadMethodExamples.Example_01B_LoadItemPrices_Pagination( V(fds1_PrimaryMethodParms) ORDERBY(Item) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
@@ -382,7 +746,7 @@
          </Script>
       </Form>
       <Form Name="ue_FIS_CustomLoadMethodExamples_01C" Scope="1" ScopeName="[NULL]">
-         <Caption>ue_FIS_fCLM01CLoadItemPricesWithPostFiltering</Caption>
+         <Caption>ue_FIS_fCLM01CLoadItemPricesQueryFiltering</Caption>
          <Type>1</Type>
          <StandardOperations>161</StandardOperations>
          <Flags>1048584</Flags>
@@ -407,7 +771,7 @@
                <Caption>sEffectDate</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
+               <ContainerSequence>6</ContainerSequence>
                <DataSource>object.EffectDate</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -419,6 +783,75 @@
                <Post301DataType>DATATYPE(DATE)</Post301DataType>
                <Post301Format>DATE()</Post301Format>
                <EffectiveCaption>sEffectDate</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekdayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekday</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>8</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekday</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekday</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekendGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekend</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>9</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekend</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekend</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateMinus1DayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateMinus1Day</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>7</ContainerSequence>
+               <DataSource>object.EffectDateMinus1Day</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Date</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateMinus1Day</EffectiveCaption>
             </Component>
             <Component Name="FormCollectionGrid">
                <DeviceID>-1</DeviceID>
@@ -464,6 +897,73 @@
                <Post301Format />
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
+            <Component Name="ItemReversedGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISItemReversed</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>1</ContainerSequence>
+               <DataSource>object.ItemReversed</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Item</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISItemReversed</EffectiveCaption>
+            </Component>
+            <Component Name="RecordDateGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRecordDate</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>11</ContainerSequence>
+               <DataSource>object.RecordDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRecordDate</EffectiveCaption>
+            </Component>
+            <Component Name="RowPointerGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRowPointer</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>10</ContainerSequence>
+               <DataSource>object.RowPointer</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRowPointer</EffectiveCaption>
+            </Component>
             <Component Name="UnitPrice1GridCol">
                <DeviceID>-1</DeviceID>
                <Type>15</Type>
@@ -476,7 +976,7 @@
                <Caption>sUnitPrice1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
+               <ContainerSequence>2</ContainerSequence>
                <DataSource>object.UnitPrice1</DataSource>
                <Binding>1</Binding>
                <Flags>384</Flags>
@@ -487,6 +987,29 @@
                <PropertyClassName>CostPrc</PropertyClassName>
                <Post301Format />
                <EffectiveCaption>sUnitPrice1</EffectiveCaption>
+            </Component>
+            <Component Name="UnitPrice2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sUnitPrice2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>4</ContainerSequence>
+               <DataSource>object.UnitPrice2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sUnitPrice2</EffectiveCaption>
             </Component>
             <Component Name="UnitPriceDoubled1GridCol">
                <DeviceID>-1</DeviceID>
@@ -500,7 +1023,7 @@
                <Caption>sFISUnitPriceDoubled1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
+               <ContainerSequence>3</ContainerSequence>
                <DataSource>object.UnitPriceDoubled1</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -511,6 +1034,29 @@
                <Post301Format />
                <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
             </Component>
+            <Component Name="UnitPriceDoubled2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISUnitPriceDoubled2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>5</ContainerSequence>
+               <DataSource>object.UnitPriceDoubled2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISUnitPriceDoubled2</EffectiveCaption>
+            </Component>
          </Components>
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
@@ -520,7 +1066,7 @@
          </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_01C_LoadItemPrices_PostFiltering( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
+               <Value>ue_FIS_CustomLoadMethodExamples.Example_01C_LoadItemPrices_QueryFiltering( V(fds1_PrimaryMethodParms) ORDERBY(Item) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
@@ -572,7 +1118,7 @@
          </Script>
       </Form>
       <Form Name="ue_FIS_CustomLoadMethodExamples_01D" Scope="1" ScopeName="[NULL]">
-         <Caption>ue_FIS_fCLM01DLoadItemPricesParamOverrides</Caption>
+         <Caption>ue_FIS_fCLM01DLoadItemPricesInlineFiltering</Caption>
          <Type>1</Type>
          <StandardOperations>161</StandardOperations>
          <Flags>1048584</Flags>
@@ -597,7 +1143,7 @@
                <Caption>sEffectDate</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
+               <ContainerSequence>6</ContainerSequence>
                <DataSource>object.EffectDate</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -609,6 +1155,75 @@
                <Post301DataType>DATATYPE(DATE)</Post301DataType>
                <Post301Format>DATE()</Post301Format>
                <EffectiveCaption>sEffectDate</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekdayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekday</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>8</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekday</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekday</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekendGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekend</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>9</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekend</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekend</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateMinus1DayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateMinus1Day</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>7</ContainerSequence>
+               <DataSource>object.EffectDateMinus1Day</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Date</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateMinus1Day</EffectiveCaption>
             </Component>
             <Component Name="FormCollectionGrid">
                <DeviceID>-1</DeviceID>
@@ -654,6 +1269,73 @@
                <Post301Format />
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
+            <Component Name="ItemReversedGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISItemReversed</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>1</ContainerSequence>
+               <DataSource>object.ItemReversed</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Item</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISItemReversed</EffectiveCaption>
+            </Component>
+            <Component Name="RecordDateGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRecordDate</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>11</ContainerSequence>
+               <DataSource>object.RecordDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRecordDate</EffectiveCaption>
+            </Component>
+            <Component Name="RowPointerGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRowPointer</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>10</ContainerSequence>
+               <DataSource>object.RowPointer</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRowPointer</EffectiveCaption>
+            </Component>
             <Component Name="UnitPrice1GridCol">
                <DeviceID>-1</DeviceID>
                <Type>15</Type>
@@ -666,7 +1348,7 @@
                <Caption>sUnitPrice1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
+               <ContainerSequence>2</ContainerSequence>
                <DataSource>object.UnitPrice1</DataSource>
                <Binding>1</Binding>
                <Flags>384</Flags>
@@ -677,6 +1359,29 @@
                <PropertyClassName>CostPrc</PropertyClassName>
                <Post301Format />
                <EffectiveCaption>sUnitPrice1</EffectiveCaption>
+            </Component>
+            <Component Name="UnitPrice2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sUnitPrice2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>4</ContainerSequence>
+               <DataSource>object.UnitPrice2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sUnitPrice2</EffectiveCaption>
             </Component>
             <Component Name="UnitPriceDoubled1GridCol">
                <DeviceID>-1</DeviceID>
@@ -690,7 +1395,7 @@
                <Caption>sFISUnitPriceDoubled1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
+               <ContainerSequence>3</ContainerSequence>
                <DataSource>object.UnitPriceDoubled1</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -701,6 +1406,29 @@
                <Post301Format />
                <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
             </Component>
+            <Component Name="UnitPriceDoubled2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISUnitPriceDoubled2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>5</ContainerSequence>
+               <DataSource>object.UnitPriceDoubled2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISUnitPriceDoubled2</EffectiveCaption>
+            </Component>
          </Components>
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
@@ -710,7 +1438,7 @@
          </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_01D_LoadItemPrices_ParamOverrides( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
+               <Value>ue_FIS_CustomLoadMethodExamples.Example_01D_LoadItemPrices_InlineFiltering( V(fds1_PrimaryMethodParms) ORDERBY(Item) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
@@ -761,576 +1489,6 @@
             </ScriptLines>
          </Script>
       </Form>
-      <Form Name="ue_FIS_CustomLoadMethodExamples_01E" Scope="1" ScopeName="[NULL]">
-         <Caption>ue_FIS_fCLM01ELoadItemPricesBookmarkPagination</Caption>
-         <Type>1</Type>
-         <StandardOperations>161</StandardOperations>
-         <Flags>1048584</Flags>
-         <Height>21</Height>
-         <LeftPos>0</LeftPos>
-         <TopPos>0</TopPos>
-         <Width>69</Width>
-         <HelpContextID>-1</HelpContextID>
-         <PaneZeroSize>10</PaneZeroSize>
-         <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
-         <MasterDeviceID>0</MasterDeviceID>
-         <Components>
-            <Component Name="EffectDateGridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>30</Width>
-               <Caption>sEffectDate</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
-               <DataSource>object.EffectDate</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <DefaultFrom>DateTime()</DefaultFrom>
-               <PropertyClassName>Date</PropertyClassName>
-               <Post301DataType>DATATYPE(DATE)</Post301DataType>
-               <Post301Format>DATE()</Post301Format>
-               <EffectiveCaption>sEffectDate</EffectiveCaption>
-            </Component>
-            <Component Name="FormCollectionGrid">
-               <DeviceID>-1</DeviceID>
-               <Type>14</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>21</Height>
-               <ListHeight>0</ListHeight>
-               <Width>69</Width>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>objects</DataSource>
-               <Binding>3</Binding>
-               <Flags>384</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <MenuName>StdGridWithActions</MenuName>
-               <Post301Format />
-            </Component>
-            <Component Name="ItemGridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>18</Width>
-               <Caption>sItem</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.Item</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <PropertyClassName>Item</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sItem</EffectiveCaption>
-            </Component>
-            <Component Name="UnitPrice1GridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>1</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>0</Height>
-               <ListHeight>0</ListHeight>
-               <Width>15</Width>
-               <Caption>sUnitPrice1</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
-               <DataSource>object.UnitPrice1</DataSource>
-               <Binding>1</Binding>
-               <Flags>384</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <MenuName>StdDefault</MenuName>
-               <PropertyClassName>CostPrc</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sUnitPrice1</EffectiveCaption>
-            </Component>
-            <Component Name="UnitPriceDoubled1GridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>20</Width>
-               <Caption>sFISUnitPriceDoubled1</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
-               <DataSource>object.UnitPriceDoubled1</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <PropertyClassName>CostPrc</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
-            </Component>
-         </Components>
-         <EventHandlers>
-            <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
-               <ResponseType>35</ResponseType>
-               <Response>ShowCurrentFilters() DISABLED()</Response>
-            </EventHandler>
-         </EventHandlers>
-         <Variables>
-            <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_01E_LoadItemPrices_BookmarkPagination( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="fds1_PrimaryMethodParms">
-               <Value>PARMS()</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="InitialCommand">
-               <Value>FilterInPlace</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="PricelistFilter">
-               <Value />
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-         </Variables>
-         <Script Language="Visual Basic">
-            <ScriptLines>
-               <ScriptLine>Option Explicit On</ScriptLine>
-               <ScriptLine>Option Strict On</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>Imports System</ScriptLine>
-               <ScriptLine>Imports Microsoft.VisualBasic</ScriptLine>
-               <ScriptLine>Imports Mongoose.IDO.Protocol</ScriptLine>
-               <ScriptLine>Imports Mongoose.Scripting</ScriptLine>
-               <ScriptLine />
-               <ScriptLine />
-               <ScriptLine>Namespace Mongoose.FormScripts</ScriptLine>
-               <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_01E</ScriptLine>
-               <ScriptLine>   Inherits FormScript</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
-               <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>   End Class</ScriptLine>
-               <ScriptLine>End Namespace</ScriptLine>
-            </ScriptLines>
-         </Script>
-      </Form>
-      <Form Name="ue_FIS_CustomLoadMethodExamples_01F" Scope="1" ScopeName="[NULL]">
-         <Caption>ue_FIS_fCLM01FLoadItemPricesOptimized</Caption>
-         <Type>1</Type>
-         <StandardOperations>161</StandardOperations>
-         <Flags>1048584</Flags>
-         <Height>21</Height>
-         <LeftPos>0</LeftPos>
-         <TopPos>0</TopPos>
-         <Width>69</Width>
-         <HelpContextID>-1</HelpContextID>
-         <PaneZeroSize>10</PaneZeroSize>
-         <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
-         <MasterDeviceID>0</MasterDeviceID>
-         <Components>
-            <Component Name="EffectDateGridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>30</Width>
-               <Caption>sEffectDate</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
-               <DataSource>object.EffectDate</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <DefaultFrom>DateTime()</DefaultFrom>
-               <PropertyClassName>Date</PropertyClassName>
-               <Post301DataType>DATATYPE(DATE)</Post301DataType>
-               <Post301Format>DATE()</Post301Format>
-               <EffectiveCaption>sEffectDate</EffectiveCaption>
-            </Component>
-            <Component Name="FormCollectionGrid">
-               <DeviceID>-1</DeviceID>
-               <Type>14</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>21</Height>
-               <ListHeight>0</ListHeight>
-               <Width>69</Width>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>objects</DataSource>
-               <Binding>3</Binding>
-               <Flags>384</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <MenuName>StdGridWithActions</MenuName>
-               <Post301Format />
-            </Component>
-            <Component Name="ItemGridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>18</Width>
-               <Caption>sItem</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.Item</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <PropertyClassName>Item</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sItem</EffectiveCaption>
-            </Component>
-            <Component Name="UnitPrice1GridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>1</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>0</Height>
-               <ListHeight>0</ListHeight>
-               <Width>15</Width>
-               <Caption>sUnitPrice1</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
-               <DataSource>object.UnitPrice1</DataSource>
-               <Binding>1</Binding>
-               <Flags>384</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <MenuName>StdDefault</MenuName>
-               <PropertyClassName>CostPrc</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sUnitPrice1</EffectiveCaption>
-            </Component>
-            <Component Name="UnitPriceDoubled1GridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>20</Width>
-               <Caption>sFISUnitPriceDoubled1</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
-               <DataSource>object.UnitPriceDoubled1</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <PropertyClassName>CostPrc</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
-            </Component>
-         </Components>
-         <EventHandlers>
-            <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
-               <ResponseType>35</ResponseType>
-               <Response>ShowCurrentFilters() DISABLED()</Response>
-            </EventHandler>
-         </EventHandlers>
-         <Variables>
-            <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_01F_LoadItemPrices_Optimized( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="fds1_PrimaryMethodParms">
-               <Value>PARMS()</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="InitialCommand">
-               <Value>FilterInPlace</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="PricelistFilter">
-               <Value />
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-         </Variables>
-         <Script Language="Visual Basic">
-            <ScriptLines>
-               <ScriptLine>Option Explicit On</ScriptLine>
-               <ScriptLine>Option Strict On</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>Imports System</ScriptLine>
-               <ScriptLine>Imports Microsoft.VisualBasic</ScriptLine>
-               <ScriptLine>Imports Mongoose.IDO.Protocol</ScriptLine>
-               <ScriptLine>Imports Mongoose.Scripting</ScriptLine>
-               <ScriptLine />
-               <ScriptLine />
-               <ScriptLine>Namespace Mongoose.FormScripts</ScriptLine>
-               <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_01F</ScriptLine>
-               <ScriptLine>   Inherits FormScript</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
-               <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>   End Class</ScriptLine>
-               <ScriptLine>End Namespace</ScriptLine>
-            </ScriptLines>
-         </Script>
-      </Form>
-      <Form Name="ue_FIS_CustomLoadMethodExamples_01G" Scope="1" ScopeName="[NULL]">
-         <Caption>ue_FIS_fCLM01GLoadItemPricesStandardized</Caption>
-         <Type>1</Type>
-         <StandardOperations>161</StandardOperations>
-         <Flags>1048584</Flags>
-         <Height>21</Height>
-         <LeftPos>0</LeftPos>
-         <TopPos>0</TopPos>
-         <Width>69</Width>
-         <HelpContextID>-1</HelpContextID>
-         <PaneZeroSize>10</PaneZeroSize>
-         <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
-         <MasterDeviceID>0</MasterDeviceID>
-         <Components>
-            <Component Name="EffectDateGridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>30</Width>
-               <Caption>sEffectDate</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
-               <DataSource>object.EffectDate</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <DefaultFrom>DateTime()</DefaultFrom>
-               <PropertyClassName>Date</PropertyClassName>
-               <Post301DataType>DATATYPE(DATE)</Post301DataType>
-               <Post301Format>DATE()</Post301Format>
-               <EffectiveCaption>sEffectDate</EffectiveCaption>
-            </Component>
-            <Component Name="FormCollectionGrid">
-               <DeviceID>-1</DeviceID>
-               <Type>14</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>21</Height>
-               <ListHeight>0</ListHeight>
-               <Width>69</Width>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName />
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>objects</DataSource>
-               <Binding>3</Binding>
-               <Flags>384</Flags>
-               <ReadOnly>False</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <MenuName>StdGridWithActions</MenuName>
-               <Post301Format />
-            </Component>
-            <Component Name="ItemGridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>18</Width>
-               <Caption>sItem</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>0</ContainerSequence>
-               <DataSource>object.Item</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <PropertyClassName>Item</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sItem</EffectiveCaption>
-            </Component>
-            <Component Name="UnitPrice1GridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>1</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>0</Height>
-               <ListHeight>0</ListHeight>
-               <Width>15</Width>
-               <Caption>sUnitPrice1</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
-               <DataSource>object.UnitPrice1</DataSource>
-               <Binding>1</Binding>
-               <Flags>384</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <MenuName>StdDefault</MenuName>
-               <PropertyClassName>CostPrc</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sUnitPrice1</EffectiveCaption>
-            </Component>
-            <Component Name="UnitPriceDoubled1GridCol">
-               <DeviceID>-1</DeviceID>
-               <Type>15</Type>
-               <TabOrder>0</TabOrder>
-               <TopPos>0</TopPos>
-               <LeftPos>0</LeftPos>
-               <Height>5.88235294117647</Height>
-               <ListHeight>0</ListHeight>
-               <Width>20</Width>
-               <Caption>sFISUnitPriceDoubled1</Caption>
-               <MaxCharacters>0</MaxCharacters>
-               <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
-               <DataSource>object.UnitPriceDoubled1</DataSource>
-               <Binding>1</Binding>
-               <Flags>0</Flags>
-               <ReadOnly>True</ReadOnly>
-               <Hidden>False</Hidden>
-               <HelpContextID>0</HelpContextID>
-               <PropertyClassName>CostPrc</PropertyClassName>
-               <Post301Format />
-               <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
-            </Component>
-         </Components>
-         <EventHandlers>
-            <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
-               <ResponseType>35</ResponseType>
-               <Response>ShowCurrentFilters() DISABLED()</Response>
-            </EventHandler>
-         </EventHandlers>
-         <Variables>
-            <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_01G_LoadItemPrices_Standardized( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="fds1_PrimaryMethodParms">
-               <Value>PARMS()</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="InitialCommand">
-               <Value>FilterInPlace</Value>
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-            <Variable Name="PricelistFilter">
-               <Value />
-               <Value2 />
-               <Value3 />
-               <Description />
-            </Variable>
-         </Variables>
-         <Script Language="Visual Basic">
-            <ScriptLines>
-               <ScriptLine>Option Explicit On</ScriptLine>
-               <ScriptLine>Option Strict On</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>Imports System</ScriptLine>
-               <ScriptLine>Imports Microsoft.VisualBasic</ScriptLine>
-               <ScriptLine>Imports Mongoose.IDO.Protocol</ScriptLine>
-               <ScriptLine>Imports Mongoose.Scripting</ScriptLine>
-               <ScriptLine />
-               <ScriptLine />
-               <ScriptLine>Namespace Mongoose.FormScripts</ScriptLine>
-               <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_01G</ScriptLine>
-               <ScriptLine>   Inherits FormScript</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
-               <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>      End Sub</ScriptLine>
-               <ScriptLine />
-               <ScriptLine>   End Class</ScriptLine>
-               <ScriptLine>End Namespace</ScriptLine>
-            </ScriptLines>
-         </Script>
-      </Form>
       <Form Name="ue_FIS_CustomLoadMethodExamples_02" Scope="1" ScopeName="[NULL]">
          <Caption>ue_FIS_fCLM02LoadCurrentItemPrices</Caption>
          <Type>1</Type>
@@ -1357,7 +1515,7 @@
                <Caption>sEffectDate</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>3</ContainerSequence>
+               <ContainerSequence>6</ContainerSequence>
                <DataSource>object.EffectDate</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -1370,11 +1528,80 @@
                <Post301Format>DATE()</Post301Format>
                <EffectiveCaption>sEffectDate</EffectiveCaption>
             </Component>
+            <Component Name="EffectDateIsWeekdayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekday</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>8</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekday</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekday</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateIsWeekendGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateIsWeekend</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>9</ContainerSequence>
+               <DataSource>object.EffectDateIsWeekend</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ListYesNo</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateIsWeekend</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateMinus1DayGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISEffectDateMinus1Day</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>7</ContainerSequence>
+               <DataSource>object.EffectDateMinus1Day</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Date</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISEffectDateMinus1Day</EffectiveCaption>
+            </Component>
             <Component Name="FormCollectionGrid">
                <DeviceID>-1</DeviceID>
                <Type>14</Type>
                <TabOrder>0</TabOrder>
-               <TopPos>-0.0555555555555556</TopPos>
+               <TopPos>0</TopPos>
                <LeftPos>0</LeftPos>
                <Height>21</Height>
                <ListHeight>0</ListHeight>
@@ -1414,6 +1641,73 @@
                <Post301Format />
                <EffectiveCaption>sItem</EffectiveCaption>
             </Component>
+            <Component Name="ItemReversedGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISItemReversed</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>1</ContainerSequence>
+               <DataSource>object.ItemReversed</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Item</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISItemReversed</EffectiveCaption>
+            </Component>
+            <Component Name="RecordDateGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRecordDate</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>11</ContainerSequence>
+               <DataSource>object.RecordDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRecordDate</EffectiveCaption>
+            </Component>
+            <Component Name="RowPointerGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sRowPointer</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>10</ContainerSequence>
+               <DataSource>object.RowPointer</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <Post301Format />
+               <EffectiveCaption>sRowPointer</EffectiveCaption>
+            </Component>
             <Component Name="UnitPrice1GridCol">
                <DeviceID>-1</DeviceID>
                <Type>15</Type>
@@ -1426,7 +1720,7 @@
                <Caption>sUnitPrice1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>1</ContainerSequence>
+               <ContainerSequence>2</ContainerSequence>
                <DataSource>object.UnitPrice1</DataSource>
                <Binding>1</Binding>
                <Flags>384</Flags>
@@ -1437,6 +1731,29 @@
                <PropertyClassName>CostPrc</PropertyClassName>
                <Post301Format />
                <EffectiveCaption>sUnitPrice1</EffectiveCaption>
+            </Component>
+            <Component Name="UnitPrice2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sUnitPrice2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>4</ContainerSequence>
+               <DataSource>object.UnitPrice2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sUnitPrice2</EffectiveCaption>
             </Component>
             <Component Name="UnitPriceDoubled1GridCol">
                <DeviceID>-1</DeviceID>
@@ -1450,7 +1767,7 @@
                <Caption>sFISUnitPriceDoubled1</Caption>
                <MaxCharacters>0</MaxCharacters>
                <ContainerName>FormCollectionGrid</ContainerName>
-               <ContainerSequence>2</ContainerSequence>
+               <ContainerSequence>3</ContainerSequence>
                <DataSource>object.UnitPriceDoubled1</DataSource>
                <Binding>1</Binding>
                <Flags>0</Flags>
@@ -1461,6 +1778,29 @@
                <Post301Format />
                <EffectiveCaption>sFISUnitPriceDoubled1</EffectiveCaption>
             </Component>
+            <Component Name="UnitPriceDoubled2GridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISUnitPriceDoubled2</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>5</ContainerSequence>
+               <DataSource>object.UnitPriceDoubled2</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISUnitPriceDoubled2</EffectiveCaption>
+            </Component>
          </Components>
          <EventHandlers>
             <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
@@ -1470,7 +1810,7 @@
          </EventHandlers>
          <Variables>
             <Variable Name="fds_DataSource">
-               <Value>ue_FIS_CustomLoadMethodExamples.Example_02_LoadCurrentItemPrices( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
+               <Value>ue_FIS_CustomLoadMethodExamples.Example_02_LoadCurrentItemPrices( V(fds1_PrimaryMethodParms) ORDERBY(Item) LOCKMODE(Row) )</Value>
                <Value2 />
                <Value3 />
                <Description />
@@ -2206,6 +2546,242 @@
             </ScriptLines>
          </Script>
       </Form>
+      <Form Name="ue_FIS_CustomLoadMethodExamples_04C" Scope="1" ScopeName="[NULL]">
+         <Caption>ue_FIS_fCLM04CLoadPricesForCustomer_All</Caption>
+         <Type>1</Type>
+         <StandardOperations>161</StandardOperations>
+         <Flags>1048584</Flags>
+         <Height>21</Height>
+         <LeftPos>0</LeftPos>
+         <TopPos>0</TopPos>
+         <Width>69</Width>
+         <HelpContextID>-1</HelpContextID>
+         <PaneZeroSize>10</PaneZeroSize>
+         <PrimaryDataSource>V(fds_DataSource)</PrimaryDataSource>
+         <MasterDeviceID>0</MasterDeviceID>
+         <Components>
+            <Component Name="CustNumGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sCustNum</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>object.CustNum</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CustNum</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sCustNum</EffectiveCaption>
+            </Component>
+            <Component Name="CustomerPriceGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>20</Width>
+               <Caption>sFISCustomerPrice</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>3</ContainerSequence>
+               <DataSource>object.CustomerPrice</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISCustomerPrice</EffectiveCaption>
+            </Component>
+            <Component Name="EffectDateGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>30</Width>
+               <Caption>sEffectDate</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>5</ContainerSequence>
+               <DataSource>object.EffectDate</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <DefaultFrom>DateTime()</DefaultFrom>
+               <PropertyClassName>Date</PropertyClassName>
+               <Post301DataType>DATATYPE(DATE)</Post301DataType>
+               <Post301Format>DATE()</Post301Format>
+               <EffectiveCaption>sEffectDate</EffectiveCaption>
+            </Component>
+            <Component Name="FormCollectionGrid">
+               <DeviceID>-1</DeviceID>
+               <Type>14</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>-0.0555555555555556</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>21</Height>
+               <ListHeight>0</ListHeight>
+               <Width>69</Width>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName />
+               <ContainerSequence>0</ContainerSequence>
+               <DataSource>objects</DataSource>
+               <Binding>3</Binding>
+               <Flags>384</Flags>
+               <ReadOnly>False</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <MenuName>StdGridWithActions</MenuName>
+               <Post301Format />
+            </Component>
+            <Component Name="ItemGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>18</Width>
+               <Caption>sItem</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>1</ContainerSequence>
+               <DataSource>object.Item</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>Item</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sItem</EffectiveCaption>
+            </Component>
+            <Component Name="ListPriceGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>1</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>0</Height>
+               <ListHeight>0</ListHeight>
+               <Width>15</Width>
+               <Caption>sListPrice</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>2</ContainerSequence>
+               <DataSource>object.ListPrice</DataSource>
+               <Binding>1</Binding>
+               <Flags>384</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <MenuName>StdDefault</MenuName>
+               <PropertyClassName>CostPrc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sListPrice</EffectiveCaption>
+            </Component>
+            <Component Name="PriceTypeGridCol">
+               <DeviceID>-1</DeviceID>
+               <Type>15</Type>
+               <TabOrder>0</TabOrder>
+               <TopPos>0</TopPos>
+               <LeftPos>0</LeftPos>
+               <Height>5.88235294117647</Height>
+               <ListHeight>0</ListHeight>
+               <Width>12.5</Width>
+               <Caption>sFISPriceType</Caption>
+               <MaxCharacters>0</MaxCharacters>
+               <ContainerName>FormCollectionGrid</ContainerName>
+               <ContainerSequence>4</ContainerSequence>
+               <DataSource>object.PriceType</DataSource>
+               <Binding>1</Binding>
+               <Flags>0</Flags>
+               <ReadOnly>True</ReadOnly>
+               <Hidden>False</Hidden>
+               <HelpContextID>0</HelpContextID>
+               <PropertyClassName>ShortDesc</PropertyClassName>
+               <Post301Format />
+               <EffectiveCaption>sFISPriceType</EffectiveCaption>
+            </Component>
+         </Components>
+         <EventHandlers>
+            <EventHandler Name="StdFormFilterInPlaceExecute" Sequence="0">
+               <ResponseType>35</ResponseType>
+               <Response>ShowCurrentFilters() DISABLED()</Response>
+            </EventHandler>
+         </EventHandlers>
+         <Variables>
+            <Variable Name="fds_DataSource">
+               <Value>ue_FIS_CustomLoadMethodExamples.Example_04C_LoadPricesForCustomer_All( V(fds1_PrimaryMethodParms) LOCKMODE(Row) )</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
+            <Variable Name="fds1_PrimaryMethodParms">
+               <Value>PARMS()</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
+            <Variable Name="InitialCommand">
+               <Value>FilterInPlace</Value>
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
+            <Variable Name="PricelistFilter">
+               <Value />
+               <Value2 />
+               <Value3 />
+               <Description />
+            </Variable>
+         </Variables>
+         <Script Language="Visual Basic">
+            <ScriptLines>
+               <ScriptLine>Option Explicit On</ScriptLine>
+               <ScriptLine>Option Strict On</ScriptLine>
+               <ScriptLine />
+               <ScriptLine>Imports System</ScriptLine>
+               <ScriptLine>Imports Microsoft.VisualBasic</ScriptLine>
+               <ScriptLine>Imports Mongoose.IDO.Protocol</ScriptLine>
+               <ScriptLine>Imports Mongoose.Scripting</ScriptLine>
+               <ScriptLine />
+               <ScriptLine />
+               <ScriptLine>Namespace Mongoose.FormScripts</ScriptLine>
+               <ScriptLine>   Public Class ue_FIS_CustomLoadMethodExamples_04C</ScriptLine>
+               <ScriptLine>   Inherits FormScript</ScriptLine>
+               <ScriptLine />
+               <ScriptLine>      Sub ShowCurrentFilters()</ScriptLine>
+               <ScriptLine />
+               <ScriptLine>         Dim sFilterString as String = ThisForm.Variables("FilterInPlaceValues").Value</ScriptLine>
+               <ScriptLine>         Application.ShowMessage(sFilterString)</ScriptLine>
+               <ScriptLine />
+               <ScriptLine>      End Sub</ScriptLine>
+               <ScriptLine />
+               <ScriptLine>   End Class</ScriptLine>
+               <ScriptLine>End Namespace</ScriptLine>
+            </ScriptLines>
+         </Script>
+      </Form>
    </Forms>
    <Scripts Type="6">
       <Script Language="Visual C#" Name="ue_FIS_GenerateFilterString" Scope="1" ScopeName="[NULL]">
@@ -2568,6 +3144,26 @@
          <TableName>Strings</TableName>
          <String>Doubled Price</String>
       </String>
+      <String Name="sFISEffectDateIsMonday" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Effect Date Is Monday</String>
+      </String>
+      <String Name="sFISEffectDateIsWeekday" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Effect Date Is Weekday</String>
+      </String>
+      <String Name="sFISEffectDateIsWeekend" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Effect Date Is Weekend</String>
+      </String>
+      <String Name="sFISEffectDateMinus1Day" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Effect Date Minus1 Day</String>
+      </String>
+      <String Name="sFISItemReversed" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Item Reversed</String>
+      </String>
       <String Name="sFISPriceType" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
          <String>Price Type</String>
@@ -2576,33 +3172,25 @@
          <TableName>Strings</TableName>
          <String>Unit Price 1 Doubled</String>
       </String>
+      <String Name="sFISUnitPriceDoubled2" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>Unit Price 2 Doubled</String>
+      </String>
       <String Name="ue_FIS_fCLM01ALoadItemPricesBase" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
          <String>FIS CLM Example 01A - Load ItemPrices Base</String>
       </String>
-      <String Name="ue_FIS_fCLM01BLoadItemPricesQueryFilteringOrdering" Scope="1" ScopeName="[NULL]">
+      <String Name="ue_FIS_fCLM01BLoadItemPricesPagination" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
-         <String>FIS CLM Example 01B - Load Item Prices Query Filtering Ordering</String>
+         <String>FIS CLM Example 01B - Load ItemPrices - Pagination</String>
       </String>
-      <String Name="ue_FIS_fCLM01CLoadItemPricesWithPostFiltering" Scope="1" ScopeName="[NULL]">
+      <String Name="ue_FIS_fCLM01CLoadItemPricesQueryFiltering" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
-         <String>FIS CLM Example 01C - Load ItemPrices With Post Filtering</String>
+         <String>FIS CLM Example 01C - Load ItemPrices - Query Filtering</String>
       </String>
-      <String Name="ue_FIS_fCLM01DLoadItemPricesParamOverrides" Scope="1" ScopeName="[NULL]">
+      <String Name="ue_FIS_fCLM01DLoadItemPricesInlineFiltering" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
-         <String>FIS CLM Example 01D - Load Item Prices, Param Overrides</String>
-      </String>
-      <String Name="ue_FIS_fCLM01ELoadItemPricesBookmarkPagination" Scope="1" ScopeName="[NULL]">
-         <TableName>Strings</TableName>
-         <String>FIS CLM Example 01E - Load Item Prices, with Bookmark Pagination</String>
-      </String>
-      <String Name="ue_FIS_fCLM01FLoadItemPricesOptimized" Scope="1" ScopeName="[NULL]">
-         <TableName>Strings</TableName>
-         <String>FIS CLM Example 01F - Load Item Prices, Fully Optimized</String>
-      </String>
-      <String Name="ue_FIS_fCLM01GLoadItemPricesStandardized" Scope="1" ScopeName="[NULL]">
-         <TableName>Strings</TableName>
-         <String>FIS CLM Example 01G - Load Item Prices, Standardized</String>
+         <String>FIS CLM Example 01D - Load ItemPrices - Inline Filtering</String>
       </String>
       <String Name="ue_FIS_fCLM02LoadCurrentItemPrices" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
@@ -2614,11 +3202,15 @@
       </String>
       <String Name="ue_FIS_fCLM04ALoadPricesForCustomer_Matrix" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
-         <String>FIS CLM Example 04A - Load Matrix Prices for Customer</String>
+         <String>FIS CLM Example 04A - Load Customer Prices - Matrix</String>
       </String>
       <String Name="ue_FIS_fCLM04BLoadPricesForCustomer_MatrixAndContr" Scope="1" ScopeName="[NULL]">
          <TableName>Strings</TableName>
-         <String>FIS CLM Example 04B - Load Matrix and Contract Prices for Customer</String>
+         <String>FIS CLM Example 04B - Load Customer Prices - Matrix and Contract</String>
+      </String>
+      <String Name="ue_FIS_fCLM04CLoadPricesForCustomer_All" Scope="1" ScopeName="[NULL]">
+         <TableName>Strings</TableName>
+         <String>FIS CLM Example 04C - Load Customer Prices - All Customers</String>
       </String>
    </Strings>
 </FormsAndObjectsExport>
