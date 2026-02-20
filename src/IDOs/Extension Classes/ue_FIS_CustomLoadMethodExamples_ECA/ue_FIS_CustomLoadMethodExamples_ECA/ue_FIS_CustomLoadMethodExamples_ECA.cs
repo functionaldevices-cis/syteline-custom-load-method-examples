@@ -1496,11 +1496,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
             {
 
-                string custPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
                 string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
                 string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
-                if (!priceMatrixLookupTable.ContainsKey(custPricecode + "-" + itemPricecode))
+                if (!priceMatrixLookupTable.ContainsKey(itemPricecode))
                 {
 
                     string firstDolPercent = null;
@@ -1522,7 +1521,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     priceMatrixRecord.PropertyValues.Add(effectDate);
                     priceMatrixRecord.PropertyValues.Add(recordDate);
 
-                    priceMatrixLookupTable[custPricecode + "-" + itemPricecode] = priceMatrixRecord;
+                    priceMatrixLookupTable[itemPricecode] = priceMatrixRecord;
 
                 }
 
@@ -1965,11 +1964,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
             {
 
-                string custPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
                 string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
                 string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
-                if (!priceMatrixLookupTable.ContainsKey(custPricecode + "-" + itemPricecode))
+                if (!priceMatrixLookupTable.ContainsKey(itemPricecode))
                 {
 
                     string firstDolPercent = null;
@@ -1991,7 +1989,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     priceMatrixRecord.PropertyValues.Add(effectDate);
                     priceMatrixRecord.PropertyValues.Add(recordDate);
 
-                    priceMatrixLookupTable[custPricecode + "-" + itemPricecode] = priceMatrixRecord;
+                    priceMatrixLookupTable[itemPricecode] = priceMatrixRecord;
 
                 }
 
@@ -2454,12 +2452,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, IDOItem> priceMatrixLookupTable = new Dictionary<string, IDOItem>();
             priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
             {
-
-                string custPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
                 string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
                 string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
-                if (!priceMatrixLookupTable.ContainsKey(custPricecode + "-" + itemPricecode))
+                if (!priceMatrixLookupTable.ContainsKey(itemPricecode))
                 {
 
                     string firstDolPercent = null;
@@ -2481,7 +2477,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     priceMatrixRecord.PropertyValues.Add(effectDate);
                     priceMatrixRecord.PropertyValues.Add(recordDate);
 
-                    priceMatrixLookupTable[custPricecode + "-" + itemPricecode] = priceMatrixRecord;
+                    priceMatrixLookupTable[itemPricecode] = priceMatrixRecord;
 
                 }
 
