@@ -1713,9 +1713,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /* Name:     Example_04A_LoadPricesForCustomer_Matrix
         /* Date:     2025-11-19
         /* Authors:  Andy Mercer
-        /* Purpose:  This example loads the all prices for a specified customer, taking into account their pricecode
-        /*           and any customer contract prices they have. It does NOT filter which products they are allowed
-        /*           to purchase, which is something that would have to be taken into account for real use.
+        /* Purpose:  This example loads the all prices for a specified customer, taking into account their pricecode.
+        /*           It does NOT filter which products they are allowed to purchase, which is something that would
+        /*           have to be taken into account for real use.
         /*
         /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
         /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
@@ -2190,9 +2190,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /* Name:     Example_04B_LoadPricesForCustomer_MatrixAndContract
         /* Date:     2025-11-19
         /* Authors:  Andy Mercer
-        /* Purpose:  This example loads the all prices for a specified customer, taking into account their pricecode
-        /*           and any customer contract prices they have. It does NOT filter which products they are allowed
-        /*           to purchase, which is something that would have to be taken into account for real use.
+        /* Purpose:  This example is the same as 04A except that is also takes customer contract prices into account.
         /*
         /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
         /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
@@ -2715,12 +2713,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /**********************************************************************************************************/
         /**********************************************************************************************************/
         /*
-        /* Name:     Example_04B_LoadPricesForCustomer_MatrixAndContract
+        /* Name:     Example_04C_LoadPricesForCustomer_All
         /* Date:     2025-11-19
         /* Authors:  Andy Mercer
-        /* Purpose:  This example loads the all prices for a specified customer, taking into account their pricecode
-        /*           and any customer contract prices they have. It does NOT filter which products they are allowed
-        /*           to purchase, which is something that would have to be taken into account for real use.
+        /* Purpose:  This example is the same as 04B, except that it loads all customers, not just one.
         /*
         /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
         /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
