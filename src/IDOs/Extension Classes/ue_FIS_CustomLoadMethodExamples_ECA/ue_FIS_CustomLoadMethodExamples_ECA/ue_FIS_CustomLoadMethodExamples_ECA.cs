@@ -37,10 +37,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /* Name:     Example_01A_LoadItemPrices_Base
         /* Date:     2025-11-14
         /* Authors:  Andy Mercer
-        /* Purpose:  This example loads 10 records from the SLPricecodes IDO. It returns the bound properties of Item,
-        /*           UnitPrice1, UnitPrice2, EffectDate, RecordDate, and RowPointer,, plus calculated properties of,,
+        /* Purpose:  This example loads 10 records from the SLItemPrices IDO. It returns the bound properties of Item,
+        /*           UnitPrice1, UnitPrice2, EffectDate, RecordDate, and RowPointer,, plus calculated properties of
         /*           ItemReversed, UnitPriceDoubled1, UnitPriceDoubled2, EffectDateMinus1Day, EffectDateIsWeekday, and
-        /*           EffectDateIsWeekday. The calculated properties range in type, to demonstrate different possibilities
+        /*           EffectDateIsWeekend. The calculated properties range in type, to demonstrate different possibilities
         /*           that could be calculated.
         /*
         /*           Version A has hardcoded sort order and record cap, and no filtering.
@@ -155,8 +155,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
 
             });
-
-            // FILTER THE TABLE
 
             return outputTable;
 
