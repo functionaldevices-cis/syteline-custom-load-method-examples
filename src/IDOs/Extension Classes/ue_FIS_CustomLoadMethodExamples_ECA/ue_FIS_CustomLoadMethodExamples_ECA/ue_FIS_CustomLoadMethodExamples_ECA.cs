@@ -21,7 +21,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
     /* Purpose:  A series of example CLMs, getting progressively more complex. This is the example code meant
     /*           to go along with Andy Mercer's 2026 SUN Conference session.
     /*
-    /* Copyright 2025, Functional Devices, Inc
+    /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+    /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
     /*
     /**********************************************************************************************************/
     /**********************************************************************************************************/
@@ -45,7 +46,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*
         /*           Version A has hardcoded sort order and record cap, and no filtering.
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -177,7 +179,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           Version B introduces record capping and standard pagination using bookmarks.
         /*
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -387,7 +390,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           Version C introduces query filtering, ie the ability to filter on properties that are page of the
         /*           base IDO.
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -625,7 +629,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           Version D introduces inline filtering, which adds the ability to filter on properties that are
         /*           calculated.
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -924,7 +929,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           inline filters, because we are loading multiple item price records for the same item, and only
         /*           keeping the current one.
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -1288,8 +1294,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           is what the example will assume. You will need to change it though, if you don't have that item price
         /*           code.
         /*           
-        /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -1711,7 +1717,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           and any customer contract prices they have. It does NOT filter which products they are allowed
         /*           to purchase, which is something that would have to be taken into account for real use.
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -2187,7 +2194,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           and any customer contract prices they have. It does NOT filter which products they are allowed
         /*           to purchase, which is something that would have to be taken into account for real use.
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
@@ -2714,7 +2722,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
         /*           and any customer contract prices they have. It does NOT filter which products they are allowed
         /*           to purchase, which is something that would have to be taken into account for real use.
         /*
-        /* Copyright 2025, Functional Devices, Inc
+        /* Free to use under MIT License, Copyright (c) 2025 FDI Information Systems. See full license at
+        /* https://github.com/functionaldevices-cis/syteline-custom-load-method-examples?tab=MIT-1-ov-file#readme
         /*
         /**********************************************************************************************************/
         /**********************************************************************************************************/
