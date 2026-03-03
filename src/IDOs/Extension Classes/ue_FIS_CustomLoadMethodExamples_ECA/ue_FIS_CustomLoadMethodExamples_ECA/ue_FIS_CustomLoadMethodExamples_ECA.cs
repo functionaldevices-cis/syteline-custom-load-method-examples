@@ -787,7 +787,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 },
                 filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: userRequest.OrderBy,
-                recordCap: userRequest.Bookmark == "<B/>" ? userRequest.RecordCap + 1 : 0
+                recordCap: 0
             );
 
 
