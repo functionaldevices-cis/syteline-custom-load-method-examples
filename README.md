@@ -4,7 +4,7 @@ The repo contains a series of examples of Custom Load Method that go along with 
 
 ## Overview
 
-The repo contains an IDO and a series of Mongoose forms which can be imported to your Syteline instance, in order to test out the example CLMs which will be convered in the session. There are five examples, some of which have multiple variations which are separated in order to fully explain how different functionality works. 
+The repo contains an IDO and a series of Mongoose forms which can be imported to your Syteline instance, in order to test out the example CLMs which will be convered in the session. There are four examples, some of which have multiple variations which are separated in order to fully explain how different functionality works. 
 
 ## Setup
 
