@@ -2,11 +2,6 @@
 
 The repo contains a series of examples of Custom Load Method that go along with the ["Custom Load Method Extension Classes: How-Tos and Performance Tips"](https://www.sytelineusernetwork.com/assets/ConferenceInfo/Atlanta%202026%20Session%20List%20as%20of%20Oct%2026%202025.pdf) session for the [2026 Syteline User Network Conference](https://www.sytelineusernetwork.com/conference).
 
-> [!WARNING]
-> **This repo is not finished! It is subject to continued and major breaking changes without warning. It will be stablized before the conference in March.**
->
-> Edit Feb 17, 2026: The repo is 90% finalized. Additional examples may be added, but the current examples will not change significantly, other than bug fixes or performance optimizations.
-
 ## Overview
 
 The repo contains an IDO and a series of Mongoose forms which can be imported to your Syteline instance, in order to test out the example CLMs which will be convered in the session. There are five examples, some of which have multiple variations which are separated in order to fully explain how different functionality works. 
