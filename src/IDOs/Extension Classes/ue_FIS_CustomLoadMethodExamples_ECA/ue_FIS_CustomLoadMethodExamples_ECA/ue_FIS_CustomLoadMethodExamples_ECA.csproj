@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\FilterStringParser.cs" />
+    <Compile Include="Helpers\StringConverter.cs" />
     <Compile Include="Models\IDOPropertyFilterSet.cs" />
     <Compile Include="Models\IDOPropertyFilter.cs" />
     <Compile Include="Models\LoadRecordsRequestData.cs" />
