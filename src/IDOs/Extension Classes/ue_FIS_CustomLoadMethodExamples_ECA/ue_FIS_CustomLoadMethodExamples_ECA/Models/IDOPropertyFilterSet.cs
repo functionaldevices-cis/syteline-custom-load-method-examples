@@ -33,6 +33,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         bool IsEmpty();
 
+        int GetCountFilters();
+
+        int GetCountActiveFilters();
+
     }
 
     public class IDOPropertyFilterSet<T> : IIDOPropertyFilterSet
@@ -40,6 +44,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
         public string OutputPropertyName { get; set; }
 
         public string SourcePropertyName { get; set; }
+
+        private int CountFilters { get; set; }
+        private int CountActiveFilters { get; set; }
 
 
         public List<IDOPropertyFilter<T>> Filters = new List<IDOPropertyFilter<T>>();
@@ -83,6 +90,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                 this.HasChanged = true;
             }
 
+            this.CountFilters = this.Filters.Count();
+            this.CountActiveFilters = this.Filters.Where(f => f.FilterString != "").Count();
+
         }
 
         public void AddFilter(string originalString, bool forceOverwrite = false)
@@ -102,6 +112,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                 this.Filters.Add(newfilter);
                 this.HasChanged = true;
             }
+
+            this.CountFilters = this.Filters.Count();
+            this.CountActiveFilters = this.Filters.Where(f => f.FilterString != "").Count();
 
         }
 
@@ -134,28 +147,35 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         public bool ValuePasses(T value)
         {
-            if (typeof(T) == typeof(DateTime))
+            if (this.CountActiveFilters > 0)
             {
-                return this.ValuePasses_DateTime((DateTime)Convert.ChangeType(value, typeof(DateTime)));
-            }
-            else if (typeof(T) == typeof(decimal))
-            {
-                return this.ValuePasses_Decimal((decimal)Convert.ChangeType(value, typeof(decimal)));
-            }
-            else if (typeof(T) == typeof(int))
-            {
-                return this.ValuePasses_Int((int)Convert.ChangeType(value, typeof(int)));
-            }
-            else if (typeof(T) == typeof(string))
-            {
-                return this.ValuePasses_String((string)Convert.ChangeType(value, typeof(string)));
+                if (typeof(T) == typeof(DateTime))
+                {
+                    return this.ValuePasses_DateTime((DateTime)Convert.ChangeType(value, typeof(DateTime)));
+                }
+                else if (typeof(T) == typeof(decimal))
+                {
+                    return this.ValuePasses_Decimal((decimal)Convert.ChangeType(value, typeof(decimal)));
+                }
+                else if (typeof(T) == typeof(int))
+                {
+                    return this.ValuePasses_Int((int)Convert.ChangeType(value, typeof(int)));
+                }
+                else if (typeof(T) == typeof(string))
+                {
+                    return this.ValuePasses_String((string)Convert.ChangeType(value, typeof(string)));
+                }
             }
             return true;
         }
 
-        public bool IsNotEmpty() => this.GetFilterString() != "";
+        public bool IsNotEmpty() => this.CountActiveFilters > 0;
 
-        public bool IsEmpty() => this.GetFilterString() == "";
+        public bool IsEmpty() => this.CountActiveFilters == 0;
+
+        public int GetCountFilters() => this.CountFilters;
+
+        public int GetCountActiveFilters() => this.CountActiveFilters;
 
         private bool ValuePasses_DateTime(DateTime value)
         {
