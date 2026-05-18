@@ -49,10 +49,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                 (DateTime parsedValueDateTime, int precision) = StringConverter.TryToParseDateTimeString(value);
                 if (parsedValueDateTime != DateTime.MinValue)
                 {
-                    if (filterString.Contains("dateadd(day")) // THIS FIXES THE ISSUE FROM INFOR WHERE THEY PASS IN A STRING LIKE: "EffectDate < dbo.MidnightOf(dateadd(day, 1, cast('20240219' as datetime))"
-                    {
-                        parsedValueDateTime = parsedValueDateTime.AddDays(1);
-                    }
                     this.ValueDateTime = parsedValueDateTime;
                 }
             }
