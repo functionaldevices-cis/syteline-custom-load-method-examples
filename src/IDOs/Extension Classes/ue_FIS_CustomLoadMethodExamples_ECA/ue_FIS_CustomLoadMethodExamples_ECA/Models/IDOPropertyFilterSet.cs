@@ -29,10 +29,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         string GetFilterString();
 
-        bool IsNotEmpty();
-
-        bool IsEmpty();
-
     }
 
     public class IDOPropertyFilterSet<T> : IIDOPropertyFilterSet
@@ -152,10 +148,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             }
             return true;
         }
-
-        public bool IsNotEmpty() => this.GetFilterString() != "";
-
-        public bool IsEmpty() => this.GetFilterString() == "";
 
         private bool ValuePasses_DateTime(DateTime value)
         {

@@ -122,46 +122,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         }
 
-        public (bool success, T value) LoadHighestValue<T>(string IDOName, string property, string filter = null)
-        {
-
-            LoadRecordsResponseData records = this.LoadRecords(
-                IDOName: IDOName,
-                filter: filter ?? "",
-                properties: new List<string>() { property },
-                orderBy: property + " DESC",
-                recordCap: 1
-            );
-
-            if (records.Items.Count > 0)
-            {
-                return (true, this.ParseIDOPropertyValue<T>(records.Items[0].PropertyValues[records.PropertyKeys[property]]));
-            }
-
-            return (false, default);
-
-        }
-
-        public (bool success, T value) LoadLowestValue<T>(string IDOName, string property, string filter = null)
-        {
-
-            LoadRecordsResponseData records = this.LoadRecords(
-                IDOName: IDOName,
-                filter: filter ?? "",
-                properties: new List<string>() { property },
-                orderBy: property + " ASC",
-                recordCap: 1
-            );
-
-            if (records.Items.Count > 0)
-            {
-                return (true, this.ParseIDOPropertyValue<T>(records.Items[0].PropertyValues[records.PropertyKeys[property]]));
-            }
-
-            return (false, default);
-
-        }
-
 
         public LoadRecordsResponseData LoadRecords(string IDOName, string filter, string orderBy, List<string> properties, int recordCap = 0)
         {

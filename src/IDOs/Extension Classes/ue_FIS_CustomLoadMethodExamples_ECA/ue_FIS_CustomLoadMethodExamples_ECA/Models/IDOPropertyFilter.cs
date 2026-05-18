@@ -38,7 +38,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
             if (typeof(T) == typeof(int))
             {
-                int parsedValueInt = StringConverter.TryToParseIntString(value);
+                int parsedValueInt = this.TryToParseIntString(value);
                 if (parsedValueInt != -1)
                 {
                     this.ValueInt = parsedValueInt;
@@ -46,7 +46,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             }
             else if (typeof(T) == typeof(DateTime))
             {
-                (DateTime parsedValueDateTime, int precision) = StringConverter.TryToParseDateTimeString(value);
+                (DateTime parsedValueDateTime, int precision) = this.TryToParseDateTimeString(value);
                 if (parsedValueDateTime != DateTime.MinValue)
                 {
                     if (filterString.Contains("dateadd(day")) // THIS FIXES THE ISSUE FROM INFOR WHERE THEY PASS IN A STRING LIKE: "EffectDate < dbo.MidnightOf(dateadd(day, 1, cast('20240219' as datetime))"
@@ -58,7 +58,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             }
             else if (typeof(T) == typeof(decimal))
             {
-                decimal? parsedValueDecimal = StringConverter.TryToParseDecimalString(value);
+                decimal? parsedValueDecimal = this.TryToParseDecimalString(value);
                 if (parsedValueDecimal != null)
                 {
                     this.ValueDecimal = (decimal)parsedValueDecimal;
@@ -67,6 +67,75 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
         }
 
-    }
+        private decimal? TryToParseDecimalString(string input)
+        {
 
+            decimal parsedDecimal;
+
+            if (decimal.TryParse(input, out parsedDecimal))
+            {
+                return parsedDecimal;
+            }
+
+            return null;
+
+        }
+
+        private int TryToParseIntString(string input)
+        {
+
+            if (input == "1")
+            {
+                return 1;
+            }
+
+            if (input == "0" || input == "" || input == null)
+            {
+                return 0;
+            }
+
+            return -1;
+
+        }
+
+        private (DateTime value, int precision) TryToParseDateTimeString(string input)
+        {
+
+            DateTime parsedDateTime = DateTime.MinValue;
+
+            if (DateTime.TryParseExact(input, "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyyMMdd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyyMMdd HH:mm:ss.fff", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 3);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParseExact(input, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            if (DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDateTime))
+            {
+                return (parsedDateTime, 0);
+            }
+
+            return (parsedDateTime, 0);
+
+        }
+
+    }
 }
