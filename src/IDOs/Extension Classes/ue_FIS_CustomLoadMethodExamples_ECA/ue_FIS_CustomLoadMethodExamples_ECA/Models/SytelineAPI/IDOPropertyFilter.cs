@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ue_FIS_CustomLoadMethodExamples_ECA.Helpers;
 
-namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
+namespace ue_FIS_CustomLoadMethodExamples_ECA.Models.SytelineAPI
 {
     public class IDOPropertyFilter<T>
     {

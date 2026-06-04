@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
+namespace ue_FIS_CustomLoadMethodExamples_ECA.Models.SytelineAPI
 {
 
     public interface IIDOPropertyFilterSet

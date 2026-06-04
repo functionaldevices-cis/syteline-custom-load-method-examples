@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using ue_FIS_CustomLoadMethodExamples_ECA.Helpers;
-using ue_FIS_CustomLoadMethodExamples_ECA.Models;
+using ue_FIS_CustomLoadMethodExamples_ECA.Models.SytelineAPI;
 
 namespace ue_FIS_CustomLoadMethodExamples_ECA
 {
@@ -60,6 +60,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
+
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
@@ -94,7 +98,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -120,18 +124,18 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 // EXTRACT AND CALCULATE OUTPUT DATA
 
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 string itemReversed = utils.ReverseString(item);
-                decimal unitPrice1 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                decimal unitPrice1 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 decimal unitPriceDoubled1 = unitPrice1 * 2;
-                decimal unitPrice2 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
+                decimal unitPrice2 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
                 decimal unitPriceDoubled2 = unitPrice2 * 2;
-                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
                 DateTime effectDateMinus1Day = effectDate.AddDays(-1);
                 int effectDateIsWeekend = (effectDateMinus1Day.DayOfWeek == DayOfWeek.Saturday || effectDateMinus1Day.DayOfWeek == DayOfWeek.Sunday) ? 1 : 0;
                 int effectDateIsWeekday = effectDateIsWeekend == 0 ? 1 : 0;
-                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                 // CREATE OUTPUT ROW
 
@@ -193,6 +197,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
+
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
 
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
@@ -261,7 +269,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -286,7 +294,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
 
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterItems == -1)
                 {
@@ -312,18 +320,18 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 // EXTRACT AND CALCULATE OUTPUT DATA
 
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 string itemReversed = utils.ReverseString(item);
-                decimal unitPrice1 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                decimal unitPrice1 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 decimal unitPriceDoubled1 = unitPrice1 * 2;
-                decimal unitPrice2 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
+                decimal unitPrice2 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
                 decimal unitPriceDoubled2 = unitPrice2 * 2;
-                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
                 DateTime effectDateMinus1Day = effectDate.AddDays(-1);
                 int effectDateIsWeekend = (effectDateMinus1Day.DayOfWeek == DayOfWeek.Saturday || effectDateMinus1Day.DayOfWeek == DayOfWeek.Sunday) ? 1 : 0;
                 int effectDateIsWeekday = effectDateIsWeekend == 0 ? 1 : 0;
-                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                 // CREATE OUTPUT ROW
 
@@ -404,6 +412,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
+
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
 
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
@@ -509,7 +521,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -519,7 +531,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RecordDate" },
                     { "RowPointer" }
                 },
-                filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: userRequest.OrderBy,
                 recordCap: userRequest.Bookmark == "<B/>" ? userRequest.RecordCap + 1 : 0
             );
@@ -534,7 +546,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
 
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterItems == -1)
                 {
@@ -560,18 +572,18 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 // EXTRACT AND CALCULATE OUTPUT DATA
 
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 string itemReversed = utils.ReverseString(item);
-                decimal unitPrice1 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                decimal unitPrice1 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 decimal unitPriceDoubled1 = unitPrice1 * 2;
-                decimal unitPrice2 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
+                decimal unitPrice2 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
                 decimal unitPriceDoubled2 = unitPrice2 * 2;
-                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
                 DateTime effectDateMinus1Day = effectDate.AddDays(-1);
                 int effectDateIsWeekend = (effectDateMinus1Day.DayOfWeek == DayOfWeek.Saturday || effectDateMinus1Day.DayOfWeek == DayOfWeek.Sunday) ? 1 : 0;
                 int effectDateIsWeekday = effectDateIsWeekend == 0 ? 1 : 0;
-                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                 // CREATE OUTPUT ROW
 
@@ -643,6 +655,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
+
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
 
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
@@ -776,7 +792,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -786,7 +802,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RecordDate" },
                     { "RowPointer" }
                 },
-                filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: userRequest.OrderBy,
                 recordCap: 0
             );
@@ -801,7 +817,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
 
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterItems == -1)
                 {
@@ -827,18 +843,18 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                 // EXTRACT AND CALCULATE OUTPUT DATA
 
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
                 string itemReversed = utils.ReverseString(item);
-                decimal unitPrice1 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                decimal unitPrice1 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                 decimal unitPriceDoubled1 = unitPrice1 * 2;
-                decimal unitPrice2 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
+                decimal unitPrice2 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
                 decimal unitPriceDoubled2 = unitPrice2 * 2;
-                DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
                 DateTime effectDateMinus1Day = effectDate.AddDays(-1);
                 int effectDateIsWeekend = (effectDateMinus1Day.DayOfWeek == DayOfWeek.Saturday || effectDateMinus1Day.DayOfWeek == DayOfWeek.Sunday) ? 1 : 0;
                 int effectDateIsWeekday = effectDateIsWeekend == 0 ? 1 : 0;
-                DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                 // RUN ALL INLINE FILTERS
 
@@ -943,6 +959,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
+
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
 
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
@@ -1083,7 +1103,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -1093,7 +1113,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RecordDate" },
                     { "RowPointer" }
                 },
-                filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "Item ASC, EffectDate DESC",
                 recordCap: 0
             );
@@ -1108,7 +1128,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
 
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterItems == -1)
                 {
@@ -1131,7 +1151,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 // GRAB THE ITEM
 
                 IDOItem itemPriceRecord = itemPriceRecords.Items[iCounterItems];
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
 
                 if (item != null && !itemIndices.ContainsKey(item))
                 {
@@ -1143,16 +1163,16 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     // LOAD DATA FROM THE ITEM PRICE RECORD AND RUN CUSTOM LOGIC
 
                     string itemReversed = utils.ReverseString(item);
-                    decimal unitPrice1 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                    decimal unitPrice1 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                     decimal unitPriceDoubled1 = unitPrice1 * 2;
-                    decimal unitPrice2 = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
+                    decimal unitPrice2 = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice2"]]);
                     decimal unitPriceDoubled2 = unitPrice2 * 2;
-                    DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                    DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
                     DateTime effectDateMinus1Day = effectDate.AddDays(-1);
                     int effectDateIsWeekend = (effectDateMinus1Day.DayOfWeek == DayOfWeek.Saturday || effectDateMinus1Day.DayOfWeek == DayOfWeek.Sunday) ? 1 : 0;
                     int effectDateIsWeekday = effectDateIsWeekend == 0 ? 1 : 0;
-                    DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                    string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                    DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                    string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                     // RUN ALL INLINE FILTERS
 
@@ -1309,6 +1329,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* SET UP HELPER VARIABLES
             /********************************************************************/
 
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
+
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
             );
@@ -1452,7 +1476,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
             /********************************************************************/
 
-            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceFormulasRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPriceformulas",
                 properties: new List<string>() {
                     { "Priceformula" },
@@ -1467,7 +1491,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
             priceFormulasRecords.Items.ForEach(record => {
-                string priceformula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
                 if (!activePriceFormulaLookupTable.ContainsKey(priceformula))
                 {
                     activePriceFormulaLookupTable[priceformula] = record;
@@ -1480,7 +1504,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE MATRIX RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData priceMatrixRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceMatrixRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPricematrixs",
                 properties: new List<string>() {
                     { "CustPricecode" },
@@ -1488,7 +1512,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Priceformula" },
                     { "RecordDate" }
                 },
-                filter: utils.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
@@ -1501,8 +1525,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
             {
 
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
-                string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+                string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
                 if (!priceMatrixLookupTable.ContainsKey(itemPricecode))
                 {
@@ -1515,10 +1539,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     if (activePriceFormulaLookupTable.ContainsKey(priceformula))
                     {
                         IDOItem priceformulaRecord = activePriceFormulaLookupTable[priceformula];
-                        firstDolPercent = utils.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
-                        firstPrice = utils.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
-                        effectDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
-                        recordDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
+                        firstDolPercent = sytelineAPI.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
+                        firstPrice = sytelineAPI.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
+                        effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
+                        recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
                     }
 
                     priceMatrixRecord.PropertyValues.Add(firstDolPercent);
@@ -1538,7 +1562,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -1548,7 +1572,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RecordDate" },
                     { "RowPointer" },
                 },
-                filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "Item ASC, EffectDate DESC",
                 recordCap: 0
             );
@@ -1563,7 +1587,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
 
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterItems == -1)
                 {
@@ -1586,7 +1610,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 // GRAB THE ITEM
 
                 IDOItem itemPriceRecord = itemPriceRecords.Items[iCounterItems];
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
 
                 if (item != null && !itemIndices.ContainsKey(item))
                 {
@@ -1595,12 +1619,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     itemIndices[item] = outputTable.Rows.Count;
 
-                    string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                    decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                    string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                    decimal listPrice = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                     decimal customerPrice = listPrice;
-                    DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-                    DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                    string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                    DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                    DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                    string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                     // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
@@ -1608,8 +1632,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     {
                         IDOItem priceMatrixRecord = priceMatrixLookupTable[itemPricecode];
 
-                        string matrixType = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
-                        decimal matrixValue = utils.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
+                        string matrixType = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
+                        decimal matrixValue = sytelineAPI.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
 
                         if (matrixType == "A")
                         {
@@ -1622,8 +1646,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                         recordDate = (new List<DateTime>() {
                             recordDate,
-                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
-                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
+                            sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
+                            sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
                         }).Max();
                     }
 
@@ -1731,6 +1755,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
+
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
 
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
@@ -1893,22 +1921,22 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE CUSTOMER RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData customerRecords = utils.LoadRecords(
+            LoadRecordsResponseData customerRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLCustomers",
                 properties: new List<string>() {
                     { "CustNum" },
                     { "Name" },
                     { "Pricecode" }
                 },
-                filter: utils.BuildFilterString(customerQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(customerQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "CustNum",
                 recordCap: 1
             );
 
             if (customerRecords.Items.Count == 1)
             {
-                string queriedCustNum = utils.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
-                string custPriceCode = utils.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
+                string queriedCustNum = sytelineAPI.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
+                string custPriceCode = sytelineAPI.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
                 if (queriedCustNum == custNum)
                 {
                     priceMatrixQueryFilters["PriceCode"].OverwriteFilter("CustPricecode = '" + custPriceCode + "'");
@@ -1921,7 +1949,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
             /********************************************************************/
 
-            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceFormulasRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPriceformulas",
                 properties: new List<string>() {
                     { "Priceformula" },
@@ -1936,7 +1964,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
             priceFormulasRecords.Items.ForEach(record => {
-                string priceformula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
                 if (!activePriceFormulaLookupTable.ContainsKey(priceformula))
                 {
                     activePriceFormulaLookupTable[priceformula] = record;
@@ -1949,7 +1977,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE MATRIX RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData priceMatrixRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceMatrixRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPricematrixs",
                 properties: new List<string>() {
                     { "CustPricecode" },
@@ -1957,7 +1985,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Priceformula" },
                     { "RecordDate" }
                 },
-                filter: utils.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
@@ -1970,8 +1998,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
             {
 
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
-                string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+                string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
                 if (!priceMatrixLookupTable.ContainsKey(itemPricecode))
                 {
@@ -1984,10 +2012,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     if (activePriceFormulaLookupTable.ContainsKey(priceformula))
                     {
                         IDOItem priceformulaRecord = activePriceFormulaLookupTable[priceformula];
-                        firstDolPercent = utils.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
-                        firstPrice = utils.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
-                        effectDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
-                        recordDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
+                        firstDolPercent = sytelineAPI.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
+                        firstPrice = sytelineAPI.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
+                        effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
+                        recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
                     }
 
                     priceMatrixRecord.PropertyValues.Add(firstDolPercent);
@@ -2007,7 +2035,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -2017,7 +2045,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RecordDate" },
                     { "RowPointer" },
                 },
-                filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "Item ASC, EffectDate DESC",
                 recordCap: 0
             );
@@ -2032,7 +2060,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
 
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterItems == -1)
                 {
@@ -2055,7 +2083,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 // GRAB THE ITEM
 
                 IDOItem itemPriceRecord = itemPriceRecords.Items[iCounterItems];
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
 
                 if (item != null && !itemIndices.ContainsKey(item))
                 {
@@ -2064,13 +2092,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     itemIndices[item] = outputTable.Rows.Count;
 
-                    string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                    decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                    string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                    decimal listPrice = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                     decimal customerPrice = listPrice;
                     string priceType = "List";
-                    DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-                    DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                    string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                    DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                    DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                    string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                     // IF THERE IS A PRICE CODE, WE NEED TO GET THE CALCULATED CUSTOMER PRICE AND THE HIGHEST RECORD DATE FROM THE ITEMPRICE, PRICE MATRIX, AND PRICE FORMULA RECORDS
 
@@ -2078,8 +2106,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     {
                         IDOItem priceMatrixRecord = priceMatrixLookupTable[itemPricecode];
 
-                        string matrixType = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
-                        decimal matrixValue = utils.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
+                        string matrixType = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
+                        decimal matrixValue = sytelineAPI.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
 
                         if (matrixType == "A")
                         {
@@ -2093,8 +2121,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                         priceType = "Matrix";
                         recordDate = (new List<DateTime>() {
                             recordDate,
-                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
-                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
+                            sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
+                            sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
                         }).Max();
                     }
 
@@ -2206,6 +2234,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
+
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
 
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
@@ -2382,21 +2414,21 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE CUSTOMER RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData customerRecords = utils.LoadRecords(
+            LoadRecordsResponseData customerRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLCustomers",
                 properties: new List<string>() {
                     { "CustNum" },
                     { "Pricecode" }
                 },
-                filter: utils.BuildFilterString(customerQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(customerQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "CustNum",
                 recordCap: 1
             );
 
             if (customerRecords.Items.Count == 1)
             {
-                string queriedCustNum = utils.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
-                string custPriceCode = utils.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
+                string queriedCustNum = sytelineAPI.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
+                string custPriceCode = sytelineAPI.ParseIDOPropertyValue<string>(customerRecords.Items[0].PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
                 if (queriedCustNum == custNum)
                 {
                     priceMatrixQueryFilters["PriceCode"].OverwriteFilter("CustPricecode = '" + custPriceCode + "'");
@@ -2409,7 +2441,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
             /********************************************************************/
 
-            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceFormulasRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPriceformulas",
                 properties: new List<string>() {
                     { "Priceformula" },
@@ -2424,7 +2456,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
             priceFormulasRecords.Items.ForEach(record => {
-                string priceformula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
                 if (!activePriceFormulaLookupTable.ContainsKey(priceformula))
                 {
                     activePriceFormulaLookupTable[priceformula] = record;
@@ -2437,7 +2469,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE MATRIX RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData priceMatrixRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceMatrixRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPricematrixs",
                 properties: new List<string>() {
                     { "CustPricecode" },
@@ -2445,7 +2477,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Priceformula" },
                     { "RecordDate" }
                 },
-                filter: utils.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
@@ -2457,8 +2489,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, IDOItem> priceMatrixLookupTable = new Dictionary<string, IDOItem>();
             priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
             {
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
-                string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+                string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
                 if (!priceMatrixLookupTable.ContainsKey(itemPricecode))
                 {
@@ -2471,10 +2503,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     if (activePriceFormulaLookupTable.ContainsKey(priceformula))
                     {
                         IDOItem priceformulaRecord = activePriceFormulaLookupTable[priceformula];
-                        firstDolPercent = utils.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
-                        firstPrice = utils.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
-                        effectDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
-                        recordDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
+                        firstDolPercent = sytelineAPI.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
+                        firstPrice = sytelineAPI.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
+                        effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
+                        recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
                     }
 
                     priceMatrixRecord.PropertyValues.Add(firstDolPercent);
@@ -2494,7 +2526,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY CUSTOMER CONTRACT PRICES TO GET PRICE AND DATE OVERRIDES
             /********************************************************************/
 
-            LoadRecordsResponseData customerContractPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData customerContractPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemCustPrices",
                 properties: new List<string>() {
                     { "CustNum" },
@@ -2503,13 +2535,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "EffectDate" },
                     { "RecordDate"}
                 },
-                filter: utils.BuildFilterString(itemcustpricesQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itemcustpricesQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "Item ASC, EffectDate DESC"
             );
 
             Dictionary<string, IDOItem> customerContractPriceIndexLookupTable = new Dictionary<string, IDOItem>();
             customerContractPriceRecords.Items.ForEach(customerContractPriceRecord => {
-                string item = utils.ParseIDOPropertyValue<string>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["Item"]]);
                 customerContractPriceIndexLookupTable[item] = customerContractPriceRecord;
             });
 
@@ -2519,7 +2551,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -2529,7 +2561,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RecordDate" },
                     { "RowPointer" },
                 },
-                filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "Item ASC, EffectDate DESC",
                 recordCap: 0
             );
@@ -2544,7 +2576,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             {
 
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterItems == -1)
                 {
@@ -2567,7 +2599,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 // GRAB THE ITEM
 
                 IDOItem itemPriceRecord = itemPriceRecords.Items[iCounterItems];
-                string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
 
                 if (item != null && !itemIndices.ContainsKey(item))
                 {
@@ -2578,13 +2610,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                     // LOAD DATA FROM THE ITEM PRICE RECORD
 
-                    string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                    decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                    string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                    decimal listPrice = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                     decimal customerPrice = listPrice;
                     string priceType = "List";
-                    DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-                    DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                    string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                    DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                    DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                    string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                     // IF THERE IS A MATRIX PRICE FOR THIS ITEM'S PRICECODE, WE NEED TO GET THE DATA FROM IT
 
@@ -2592,8 +2624,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     {
                         IDOItem priceMatrixRecord = priceMatrixLookupTable[itemPricecode];
 
-                        string matrixType = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
-                        decimal matrixValue = utils.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
+                        string matrixType = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
+                        decimal matrixValue = sytelineAPI.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
 
                         if (matrixType == "A")
                         {
@@ -2607,8 +2639,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                         priceType = "Matrix";
                         recordDate = (new List<DateTime>() {
                             recordDate,
-                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
-                            utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
+                            sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
+                            sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
                         }).Max();
                     }
 
@@ -2617,12 +2649,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     if (item != null && customerContractPriceIndexLookupTable.ContainsKey(item))
                     {
                         IDOItem customerContractPriceRecord = customerContractPriceIndexLookupTable[item];
-                        customerPrice = utils.ParseIDOPropertyValue<decimal>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["ContPrice"]]);
-                        effectDate = utils.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["EffectDate"]]);
+                        customerPrice = sytelineAPI.ParseIDOPropertyValue<decimal>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["ContPrice"]]);
+                        effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["EffectDate"]]);
                         priceType = "Contract";
                         recordDate = (new List<DateTime>() {
                             recordDate,
-                            utils.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["RecordDate"]])
+                            sytelineAPI.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["RecordDate"]])
                         }).Max();
                     }
 
@@ -2732,6 +2764,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /********************************************************************/
             /* SET UP HELPER VARIABLES
             /********************************************************************/
+
+            SytelineInternalAPI sytelineAPI = new SytelineInternalAPI(
+                IDOCommands: this.Context.Commands
+            );
 
             Utilities utils = new Utilities(
                 commands: this.Context.Commands
@@ -2896,13 +2932,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE CUSTOMER RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData customerRecords = utils.LoadRecords(
+            LoadRecordsResponseData customerRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLCustomers",
                 properties: new List<string>() {
                     { "CustNum" },
                     { "Pricecode" }
                 },
-                filter: utils.BuildFilterString(customerQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(customerQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "CustNum",
                 recordCap: 0
             );
@@ -2910,8 +2946,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             Dictionary<string, string> customerPricecodeLookupTable = new Dictionary<string, string>();
             customerRecords.Items.ForEach(record =>
             {
-                string custNum = utils.ParseIDOPropertyValue<string>(record.PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
-                string priceCode = utils.ParseIDOPropertyValue<string>(record.PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
+                string custNum = sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
+                string priceCode = sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
                 if (!customerPricecodeLookupTable.ContainsKey(custNum))
                 {
                     customerPricecodeLookupTable[custNum] = priceCode;
@@ -2928,7 +2964,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE FORMULA RECORDS FOR THE LOADED PRICE MATRICES
             /********************************************************************/
 
-            LoadRecordsResponseData priceFormulasRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceFormulasRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPriceformulas",
                 properties: new List<string>() {
                     { "Priceformula" },
@@ -2943,7 +2979,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
             Dictionary<string, IDOItem> activePriceFormulaLookupTable = new Dictionary<string, IDOItem>();
             priceFormulasRecords.Items.ForEach(record => {
-                string priceformula = utils.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[priceFormulasRecords.PropertyKeys["Priceformula"]]);
                 if (!activePriceFormulaLookupTable.ContainsKey(priceformula))
                 {
                     activePriceFormulaLookupTable[priceformula] = record;
@@ -2956,7 +2992,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* LOAD THE PRICE MATRIX RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData priceMatrixRecords = utils.LoadRecords(
+            LoadRecordsResponseData priceMatrixRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLPricematrixs",
                 properties: new List<string>() {
                     { "CustPricecode" },
@@ -2964,7 +3000,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "Priceformula" },
                     { "RecordDate" }
                 },
-                filter: utils.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(priceMatrixQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "CustPricecode, ItemPricecode"
             );
 
@@ -2977,9 +3013,9 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             priceMatrixRecords.Items.ForEach(priceMatrixRecord =>
             {
 
-                string custPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
-                string itemPricecode = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
-                string priceformula = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
+                string custPricecode = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["CustPricecode"]]);
+                string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["ItemPricecode"]]);
+                string priceformula = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["Priceformula"]]);
 
                 if (!priceMatrixLookupTable.ContainsKey(custPricecode + "-" + itemPricecode))
                 {
@@ -2992,10 +3028,10 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     if (activePriceFormulaLookupTable.ContainsKey(priceformula))
                     {
                         IDOItem priceformulaRecord = activePriceFormulaLookupTable[priceformula];
-                        firstDolPercent = utils.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
-                        firstPrice = utils.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
-                        effectDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
-                        recordDate = utils.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
+                        firstDolPercent = sytelineAPI.ParseIDOPropertyValue<string>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstDolPercent"]]);
+                        firstPrice = sytelineAPI.ParseIDOPropertyValue<decimal?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["FirstPrice"]]);
+                        effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["EffectDate"]]);
+                        recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime?>(priceformulaRecord.PropertyValues[priceFormulasRecords.PropertyKeys["RecordDate"]]);
                     }
 
                     priceMatrixRecord.PropertyValues.Add(firstDolPercent);
@@ -3015,7 +3051,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY CUSTOMER CONTRACT PRICES TO GET PRICE AND DATE OVERRIDES
             /********************************************************************/
 
-            LoadRecordsResponseData customerContractPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData customerContractPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemCustPrices",
                 properties: new List<string>() {
                     { "CustNum" },
@@ -3024,14 +3060,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "EffectDate" },
                     { "RecordDate"}
                 },
-                filter: utils.BuildFilterString(itemcustpricesQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itemcustpricesQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "Item ASC, EffectDate DESC"
             );
 
             Dictionary<string, IDOItem> customerContractPriceIndexLookupTable = new Dictionary<string, IDOItem>();
             customerContractPriceRecords.Items.ForEach(customerContractPriceRecord => {
-                string custNum = utils.ParseIDOPropertyValue<string>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["CustNum"]]);
-                string item = utils.ParseIDOPropertyValue<string>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["Item"]]);
+                string custNum = sytelineAPI.ParseIDOPropertyValue<string>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["CustNum"]]);
+                string item = sytelineAPI.ParseIDOPropertyValue<string>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["Item"]]);
                 customerContractPriceIndexLookupTable[custNum + "-" + item] = customerContractPriceRecord;
             });
 
@@ -3041,7 +3077,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
             /* QUERY ITEM PRICES TO GET BASE RECORDS
             /********************************************************************/
 
-            LoadRecordsResponseData itemPriceRecords = utils.LoadRecords(
+            LoadRecordsResponseData itemPriceRecords = sytelineAPI.LoadRecords(
                 IDOName: "SLItemprices",
                 properties: new List<string>() {
                     { "Item" },
@@ -3051,7 +3087,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     { "RecordDate" },
                     { "RowPointer" },
                 },
-                filter: utils.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
+                filter: sytelineAPI.BuildFilterString(itempriceQueryFilters.Values.Select(filter => filter.GetFilterString()).ToList()),
                 orderBy: "Item ASC, EffectDate DESC",
                 recordCap: 0
             );
@@ -3068,8 +3104,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 string startingCustNum = userRequest.Bookmark.Substring(0, userRequest.Bookmark.IndexOf(','));
                 string startingItem = userRequest.Bookmark.Substring(userRequest.Bookmark.IndexOf(',') + 1);
 
-                iStartingCounterCustomers = customerRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[customerRecords.PropertyKeys["CustNum"]]) == startingCustNum);
-                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => utils.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
+                iStartingCounterCustomers = customerRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[customerRecords.PropertyKeys["CustNum"]]) == startingCustNum);
+                iStartingCounterItems = itemPriceRecords.Items.FindIndex(record => sytelineAPI.ParseIDOPropertyValue<string>(record.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]) == startingItem);
 
                 if (iStartingCounterCustomers == -1)
                 {
@@ -3102,8 +3138,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                 // GRAB THE CUSTOMER
 
                 IDOItem customerRecord = customerRecords.Items[iCounterCustomers];
-                string custNum = utils.ParseIDOPropertyValue<string>(customerRecord.PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
-                string custPricecode = utils.ParseIDOPropertyValue<string>(customerRecord.PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
+                string custNum = sytelineAPI.ParseIDOPropertyValue<string>(customerRecord.PropertyValues[customerRecords.PropertyKeys["CustNum"]]);
+                string custPricecode = sytelineAPI.ParseIDOPropertyValue<string>(customerRecord.PropertyValues[customerRecords.PropertyKeys["Pricecode"]]);
                 itemIndices = new Dictionary<string, int>();
 
                 for (iCounterItems = iStartingCounterItems; iCounterItems < itemPriceRecords.Items.Count; iCounterItems++)
@@ -3112,7 +3148,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                     // GRAB THE ITEM
 
                     IDOItem itemPriceRecord = itemPriceRecords.Items[iCounterItems];
-                    string item = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
+                    string item = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Item"]]);
 
                     if (item != null && !itemIndices.ContainsKey(item))
                     {
@@ -3123,13 +3159,13 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
 
                         // LOAD DATA FROM THE ITEM PRICE RECORD
 
-                        string itemPricecode = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
-                        decimal listPrice = utils.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
+                        string itemPricecode = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["Pricecode"]]);
+                        decimal listPrice = sytelineAPI.ParseIDOPropertyValue<decimal>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["UnitPrice1"]]);
                         decimal customerPrice = listPrice;
                         string priceType = "List";
-                        DateTime effectDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
-                        DateTime recordDate = utils.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
-                        string rowPointer = utils.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
+                        DateTime effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["EffectDate"]]);
+                        DateTime recordDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RecordDate"]]);
+                        string rowPointer = sytelineAPI.ParseIDOPropertyValue<string>(itemPriceRecord.PropertyValues[itemPriceRecords.PropertyKeys["RowPointer"]]);
 
                         // IF THERE IS A MATRIX PRICE FOR THIS ITEM'S PRICECODE, WE NEED TO GET THE DATA FROM IT
 
@@ -3137,8 +3173,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                         {
                             IDOItem priceMatrixRecord = priceMatrixLookupTable[custPricecode + "-" + itemPricecode];
 
-                            string matrixType = utils.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
-                            decimal matrixValue = utils.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
+                            string matrixType = sytelineAPI.ParseIDOPropertyValue<string>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstDolPercent"]]);
+                            decimal matrixValue = sytelineAPI.ParseIDOPropertyValue<decimal>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["FirstPrice"]]);
 
                             if (matrixType == "A")
                             {
@@ -3152,8 +3188,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                             priceType = "Matrix";
                             recordDate = (new List<DateTime>() {
                                 recordDate,
-                                utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
-                                utils.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
+                                sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["RecordDate"]]),
+                                sytelineAPI.ParseIDOPropertyValue<DateTime>(priceMatrixRecord.PropertyValues[priceMatrixRecords.PropertyKeys["PriceFormulaRecordDate"]])
                             }).Max();
                         }
 
@@ -3162,12 +3198,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA
                         if (item != null && customerContractPriceIndexLookupTable.ContainsKey(custNum + "-" + item))
                         {
                             IDOItem customerContractPriceRecord = customerContractPriceIndexLookupTable[custNum + "-" + item];
-                            customerPrice = utils.ParseIDOPropertyValue<decimal>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["ContPrice"]]);
-                            effectDate = utils.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["EffectDate"]]);
+                            customerPrice = sytelineAPI.ParseIDOPropertyValue<decimal>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["ContPrice"]]);
+                            effectDate = sytelineAPI.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["EffectDate"]]);
                             priceType = "Contract";
                             recordDate = (new List<DateTime>() {
                                 recordDate,
-                                utils.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["RecordDate"]])
+                                sytelineAPI.ParseIDOPropertyValue<DateTime>(customerContractPriceRecord.PropertyValues[customerContractPriceRecords.PropertyKeys["RecordDate"]])
                             }).Max();
                         }
 

@@ -21,6 +21,12 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
 
         public Utilities(IIDOCommands commands, int bGTaskNum = 0, int debugLevel = 0)
         {
+
+            if ((debugLevel < 0) || (2 < debugLevel))
+            {
+                debugLevel = 0;
+            }
+
             this.IDOCommands = commands;
             this.BGTaskNum = bGTaskNum;
             this.DebugLevel = debugLevel;
@@ -33,13 +39,14 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
             return new string(charArray);
         }
 
-        public string BuildFilterString(List<string> filters, string joiner = "AND")
+        public string BuildNumberDecimalMask(int precision)
         {
-
-            string joinedFilter = string.Join(" " + joiner + " ", filters.Where(filter => filter != "").Select(filter => "(" + filter + ")"));
-
-            return joinedFilter != "" ? $"(" + joinedFilter + ")" : "";
-
+            string precisionMask = (precision > 0 ? "." : "");
+            for (int counter = 0; counter < precision; counter++)
+            {
+                precisionMask += "f";
+            }
+            return precisionMask;
         }
 
         public void WriteLogMessage(string sMessage, int iMinDebugLevel = 0) {
@@ -110,284 +117,6 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Helpers
         }
 
 
-        public T ParseIDOPropertyValue<T>(IDOPropertyValue value)
-        {
-
-            if (!value.IsNull)
-            {
-                return value.GetValue<T>();
-            }
-
-            return default;
-
-        }
-
-        public (bool success, T value) LoadHighestValue<T>(string IDOName, string property, string filter = null)
-        {
-
-            LoadRecordsResponseData records = this.LoadRecords(
-                IDOName: IDOName,
-                filter: filter ?? "",
-                properties: new List<string>() { property },
-                orderBy: property + " DESC",
-                recordCap: 1
-            );
-
-            if (records.Items.Count > 0)
-            {
-                return (true, this.ParseIDOPropertyValue<T>(records.Items[0].PropertyValues[records.PropertyKeys[property]]));
-            }
-
-            return (false, default);
-
-        }
-
-        public (bool success, T value) LoadLowestValue<T>(string IDOName, string property, string filter = null)
-        {
-
-            LoadRecordsResponseData records = this.LoadRecords(
-                IDOName: IDOName,
-                filter: filter ?? "",
-                properties: new List<string>() { property },
-                orderBy: property + " ASC",
-                recordCap: 1
-            );
-
-            if (records.Items.Count > 0)
-            {
-                return (true, this.ParseIDOPropertyValue<T>(records.Items[0].PropertyValues[records.PropertyKeys[property]]));
-            }
-
-            return (false, default);
-
-        }
-
-
-        public LoadRecordsResponseData LoadRecords(string IDOName, string filter, string orderBy, List<string> properties, int recordCap = 0)
-        {
-
-            // GENERIC SYSTEM PROPS
-
-            LoadCollectionRequestData oLoadRequest;
-            LoadCollectionResponseData oLoadResponse = new LoadCollectionResponseData();
-
-            // SET UP DATA LOAD REQUEST PARAMETERS
-
-            oLoadRequest = new LoadCollectionRequestData()
-            {
-                IDOName = IDOName,
-                RecordCap = recordCap,
-                Filter = filter,
-                OrderBy = orderBy,
-                ReadMode = ReadMode.ReadCommitted
-            };
-            oLoadRequest.PropertyList.SetProperties(string.Join(", ", properties));
-
-            // LOAD THE RECORD(S)
-
-            oLoadResponse = this.IDOCommands.LoadCollection(oLoadRequest);
-
-            // IF WE HAVE A VALID RECORD
-
-            return new LoadRecordsResponseData(
-                queryIDOName: IDOName,
-                queryFilter: filter,
-                queryOrderBy: orderBy,
-                queryProperties: properties,
-                loadCollectionResponseData: oLoadResponse,
-                loadCollectionRequestData: oLoadRequest
-            );
-
-        }
-
-        public LoadRecordsResponseData RefreshRequest(LoadRecordsResponseData loadRecordsResponseData)
-        {
-
-            // REFRESH THE RECORD(S)
-
-            loadRecordsResponseData.LoadCollectionResponseData = this.IDOCommands.LoadCollection(loadRecordsResponseData.LoadCollectionRequestData);
-
-            return loadRecordsResponseData;
-
-        }
-
-        public int CreateRecord(string IDOName, IDOUpdateItem record) {
-
-            if (this.IDOCommands != null) {
-
-
-                // CREATE THE UPDATE REQUEST WRAPPER
-
-                UpdateCollectionRequestData oUpdateRequest = new UpdateCollectionRequestData(IDOName);
-                oUpdateRequest.Items.Add(record);
-
-                // SEND THE UPDATE REQUEST
-
-                this.IDOCommands.UpdateCollection(oUpdateRequest);
-
-                return 1;
-
-            }
-
-            return 0;
-
-        }
-
-        public int CreateRecords(string IDOName, List<IDOUpdateItem> records)
-        {
-
-            if (this.IDOCommands != null)
-            {
-
-                // CREATE THE UPDATE REQUEST WRAPPER
-
-                UpdateCollectionRequestData oUpdateRequest = new UpdateCollectionRequestData(IDOName);
-                oUpdateRequest.Items.AddRange(records);
-
-                // SEND THE UPDATE REQUEST
-
-                this.IDOCommands.UpdateCollection(oUpdateRequest);
-
-                return 1;
-
-            }
-
-            return 0;
-
-        }
-
-        public int UpdateRecord(string IDOName, IDOUpdateItem record)
-        {
-
-            if (this.IDOCommands != null)
-            {
-
-                // GENERIC SYSTEM PROPS
-
-                UpdateCollectionRequestData oUpdateRequest = new UpdateCollectionRequestData(IDOName);
-                oUpdateRequest.Items.Add(record);
-
-                this.IDOCommands.UpdateCollection(oUpdateRequest);
-
-                return 1;
-
-            }
-
-            return 0;
-
-        }
-
-        public int UpdateRecords(string IDOName, List<IDOUpdateItem> records) {
-
-            if (this.IDOCommands != null) {
-
-                // GENERIC SYSTEM PROPS
-
-                UpdateCollectionRequestData oUpdateRequest = new UpdateCollectionRequestData(IDOName);
-                oUpdateRequest.Items.AddRange(records);
-
-                this.IDOCommands.UpdateCollection(oUpdateRequest);
-
-                return 1;
-
-            }
-
-            return 0;
-
-        }
-
-        public IDOUpdateItem BuildInsertItem(Dictionary<string, object> propertyUpdates)
-        {
-
-            // CREATE AN UPDATE ITEM OBJECT
-
-            IDOUpdateItem oUpdateItem = new IDOUpdateItem(UpdateAction.Insert);
-
-            foreach (KeyValuePair<string, object> propertyUpdate in propertyUpdates)
-            {
-
-                // IF WE HAVE A VALUE IN THE VALUE PROP, USE THAT. OTHERWISE, USE WHAT IS IN THE LOAD COLLECTION.
-
-                if (propertyUpdate.Value != null)
-                {
-
-                    oUpdateItem.Properties.Add(propertyUpdate.Key, propertyUpdate.Value, true);
-
-                }
-
-            }
-
-            return oUpdateItem;
-
-        }
-
-        public IDOUpdateItem BuildUpdateItem(string itemID = null, List<IDOUpdateProperty> propertyUpdates = null)
-        {
-
-            IDOUpdateItem oUpdateItem = itemID != null ? new IDOUpdateItem(UpdateAction.Update, itemID)
-            {
-                ItemID = itemID
-            } : new IDOUpdateItem(UpdateAction.Update)
-            {
-                UseOptimisticLocking = false
-            };
-
-            this.WriteLogMessage(
-                itemID,
-                2
-            );
-
-            if (propertyUpdates != null)
-            {
-
-                foreach (IDOUpdateProperty propertyUpdate in propertyUpdates)
-                {
-
-                    // IF WE HAVE A VALUE IN THE VALUE PROP, USE THAT. OTHERWISE, USE WHAT IS IN THE LOAD COLLECTION.
-
-                    if (propertyUpdate.Value != null)
-                    {
-
-
-
-                        this.WriteLogMessage(
-                            propertyUpdate.Name + "|"+ propertyUpdate.Value + "|true",
-                            2
-                        );
-
-                        oUpdateItem.Properties.Add(propertyUpdate.Name, propertyUpdate.Value, propertyUpdate.Modified);
-
-                    }
-
-                }
-
-            }
-
-            return oUpdateItem;
-
-        }
-
-    }
-
-    public class ComparerNumericStrings : IComparer<string>
-    {
-        public int Compare(string x, string y)
-        {
-            var regex = new Regex("^(d+)");
-
-            // run the regex on both strings
-            var xRegexResult = regex.Match(x);
-            var yRegexResult = regex.Match(y);
-
-            // check if they are both numbers
-            if (xRegexResult.Success && yRegexResult.Success)
-            {
-                return int.Parse(xRegexResult.Groups[1].Value).CompareTo(int.Parse(yRegexResult.Groups[1].Value));
-            }
-
-            // otherwise return as string comparison
-            return x.CompareTo(y);
-        }
     }
 
 }

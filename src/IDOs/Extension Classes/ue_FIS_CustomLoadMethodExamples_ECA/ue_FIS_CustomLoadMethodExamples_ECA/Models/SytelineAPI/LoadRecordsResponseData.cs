@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
+namespace ue_FIS_CustomLoadMethodExamples_ECA.Models.SytelineAPI
 {
 
     public class LoadRecordsResponseData
     {
-        public List<string> Properties { get; set; } = new List<string>();
-
         public Dictionary<string, int> PropertyKeys { get; set; } = new Dictionary<string, int>();
+
+        public List<string> PropertyNames { get; set; } = new List<string>();
 
         public List<IDOItem> Items { get { return this.LoadCollectionResponseData.Items; } }
 
@@ -25,23 +25,26 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
             this.LoadCollectionRequestData = loadCollectionRequestData;
             this.LoadCollectionResponseData = loadCollectionResponseData;
 
-            queryProperties = queryProperties ?? new List<string>();
-
-            this.Properties = queryProperties;
-            this.PropertyKeys = Enumerable.Range(0, this.Properties.Count).ToDictionary(
-                i => this.Properties[i],
+            this.PropertyNames = queryProperties ?? new List<string>();
+            this.PropertyKeys = Enumerable.Range(0, this.PropertyNames.Count).ToDictionary(
+                i => this.PropertyNames[i],
                 i => i
             );
 
         }
 
-        public void AddProperty(string newProperty)
+        public void AddProperty(string propertyName)
         {
-            this.Properties.Add(newProperty);
-            this.PropertyKeys = Enumerable.Range(0, this.Properties.Count).ToDictionary(
-                i => this.Properties[i],
-                i => i
-            );
+
+            if (!this.PropertyNames.Contains(propertyName))
+            {
+                this.PropertyNames.Add(propertyName);
+                this.PropertyKeys = Enumerable.Range(0, this.PropertyNames.Count).ToDictionary(
+                    i => this.PropertyNames[i],
+                    i => i
+                );
+            }
+
         }
 
     }

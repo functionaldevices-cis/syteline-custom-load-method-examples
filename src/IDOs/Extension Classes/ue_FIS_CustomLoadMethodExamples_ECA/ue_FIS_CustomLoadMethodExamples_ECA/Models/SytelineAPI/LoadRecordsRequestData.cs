@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ue_FIS_CustomLoadMethodExamples_ECA.Helpers;
 
-namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
+namespace ue_FIS_CustomLoadMethodExamples_ECA.Models.SytelineAPI
 {
 
     public class LoadRecordsRequestData
@@ -110,25 +110,25 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
                     }
 
-
                 }
 
                 return filters;
 
             }
+
         }
 
 
-        public LoadRecordsRequestData(LoadCollectionRequestData contextRequest, string filterOverride = null, string orderByOverride = null, string recordCapOverride = null, string bookmarkOverride = null)
+        public LoadRecordsRequestData(LoadCollectionRequestData contextRequest = null, string filterOverride = null, string orderByOverride = null, string recordCapOverride = null, string bookmarkOverride = null)
         {
 
             // SAVE THE CONTEXT REQUEST
 
-            this.ContextRequest = contextRequest;
+            this.ContextRequest = contextRequest ?? new LoadCollectionRequestData();
 
             // APPLY FILTER OVERRIDE IF THERE IS ONE
 
-            if (filterOverride != null)
+            if (filterOverride != null && filterOverride != "")
             {
                 this.ContextRequest.Filter = filterOverride;
             }
@@ -137,7 +137,7 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
 
             // APPLY ORDERBY OVERRIDE IF THERE IS ONE
 
-            if (orderByOverride != null)
+            if (orderByOverride != null && orderByOverride != "")
             {
                 this.ContextRequest.OrderBy = orderByOverride;
             }
@@ -153,14 +153,19 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models
                 this.ContextRequest.RecordCap = parsedRecordCap;
             }
 
+            if (this.ContextRequest.RecordCap == -1)
+            {
+                this.ContextRequest.RecordCap = 200;
+            }
+
             // APPLY BOOKMARK OVERRIDE IF THERE IS ONE
 
-            if (bookmarkOverride != null)
+            if (bookmarkOverride != null && bookmarkOverride != "")
             {
                 this.ContextRequest.Bookmark = bookmarkOverride;
             }
 
-            if (this.ContextRequest.Bookmark == null || this.ContextRequest.Bookmark == "" )
+            if (this.ContextRequest.Bookmark == null || this.ContextRequest.Bookmark == "")
             {
                 this.ContextRequest.Bookmark = "<B/>";
             }
