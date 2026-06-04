@@ -46,8 +46,8 @@ namespace ue_FIS_CustomLoadMethodExamples_ECA.Models.SytelineAPI
         public string SourcePropertyName { get; set; }
 
         private int CountFilters { get; set; }
-        private int CountActiveFilters { get; set; }
 
+        private int CountActiveFilters { get; set; }
 
         public List<IDOPropertyFilter<T>> Filters = new List<IDOPropertyFilter<T>>();
 

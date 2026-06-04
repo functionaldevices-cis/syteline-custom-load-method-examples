@@ -78,11 +78,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\FilterStringParser.cs" />
+    <Compile Include="Helpers\PerfDebugger.cs" />
     <Compile Include="Helpers\StringConverter.cs" />
-    <Compile Include="Models\IDOPropertyFilterSet.cs" />
-    <Compile Include="Models\IDOPropertyFilter.cs" />
-    <Compile Include="Models\LoadRecordsRequestData.cs" />
-    <Compile Include="Models\LoadRecordsResponseData.cs" />
+    <Compile Include="Helpers\SytelineInternalAPI.cs" />
+    <Compile Include="Models\SytelineAPI\IDOPropertyFilterSet.cs" />
+    <Compile Include="Models\SytelineAPI\IDOPropertyFilter.cs" />
+    <Compile Include="Models\SytelineAPI\LoadRecordsRequestData.cs" />
+    <Compile Include="Models\SytelineAPI\LoadRecordsResponseData.cs" />
     <Compile Include="ue_FIS_CustomLoadMethodExamples_ECA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\Utilities.cs" />
